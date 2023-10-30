@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>거래 게시판 | K Store</title>
+    <link
+            rel="shortcut icon"
+            href="/assets/images/favicon.png"
+            type="image/x-icon"
+    />
+    <link rel="stylesheet" href="/assets/css/animate.css"/>
+    <link rel="stylesheet" href="/assets/css/tailwind.css"/>
+    <!-- ==== WOW JS ==== -->
+    <script src="/assets/js/wow.min.js"></script>
+    <script>
+        new WOW().init();
+    </script>
+
+</head>
+<body>
+<!-- ====== Navbar Section Start -->
+<div th:replace="~{template/fragment/header :: frag1}"></div>
+<!-- ====== Navbar Section End -->
+
+<!-- ====== 거래 배너 Section Start -->
+<div th:replace="~{template/fragment/banner :: trade-banner}"></div>
+<!-- ====== 거래 배너 Section End -->
+
+<!-- ====== Blog Section Start -->
+<section class="pt-20 pb-10 lg:pt-[120px] lg:pb-20">
+    <div class="container">
+        <div class="-mx-4 flex flex-wrap">
+            <div class="w-full px-4 md:w-1/2 lg:w-1/3">
+                <div class="wow fadeInUp group mb-10" data-wow-delay=".1s">
+                    <div class="mb-8 overflow-hidden rounded">
+                        <a href="/board/trade/1" class="block">
+                            <img
+                                    src="/assets/images/blog/blog-01.jpg"
+                                    alt="image"
+                                    class="w-full transition group-hover:rotate-6 group-hover:scale-125"
+                            />
+                        </a>
+                    </div>
+                    <div>
+                <span
+                        class="mb-5 inline-block rounded bg-primary py-1 px-4 text-center text-xs font-semibold leading-loose text-white"
+                >
+                  날짜
+                </span>
+                        <h3>
+                            <a
+                                    href="trade-detail.html"
+                                    class="mb-4 inline-block text-xl font-semibold text-dark hover:text-primary sm:text-2xl lg:text-xl xl:text-2xl"
+                            >
+                                제목
+                            </a>
+                        </h3>
+                        <p class="text-base text-body-color">
+                            소제목
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="w-full px-4 md:w-1/2 lg:w-1/3">
+                <div class="wow fadeInUp group mb-10" data-wow-delay=".15s">
+                    <div class="mb-8 overflow-hidden rounded">
+                        <a href="trade-detail.html" class="block">
+                            <img
+                                    src="/assets/images/blog/blog-02.jpg"
+                                    alt="image"
+                                    class="w-full transition group-hover:rotate-6 group-hover:scale-125"
+                            />
+                        </a>
+                    </div>
+                    <div>
+                <span
+                        class="mb-5 inline-block rounded bg-primary py-1 px-4 text-center text-xs font-semibold leading-loose text-white"
+                >
+                  Mar 15, 2023
+                </span>
+                        <h3>
+                            <a
+                                    href="trade-detail.html"
+                                    class="mb-4 inline-block text-xl font-semibold text-dark hover:text-primary sm:text-2xl lg:text-xl xl:text-2xl"
+                            >
+                                How to earn more money as a wellness coach
+                            </a>
+                        </h3>
+                        <p class="text-base text-body-color">
+                            Lorem Ipsum is simply dummy text of the printing and
+                            typesetting industry.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="w-full px-4 md:w-1/2 lg:w-1/3">
+                <div class="wow fadeInUp group mb-10" data-wow-delay=".2s">
+                    <div class="mb-8 overflow-hidden rounded">
+                        <a href="trade-detail.html" class="block">
+                            <img
+                                    src="/assets/images/blog/blog-03.jpg"
+                                    alt="image"
+                                    class="w-full transition group-hover:rotate-6 group-hover:scale-125"
+                            />
+                        </a>
+                    </div>
+                    <div>
+                <span
+                        class="mb-5 inline-block rounded bg-primary py-1 px-4 text-center text-xs font-semibold leading-loose text-white"
+                >
+                  Jan 05, 2023
+                </span>
+                        <h3>
+                            <a
+                                    href="trade-detail.html"
+                                    class="mb-4 inline-block text-xl font-semibold text-dark hover:text-primary sm:text-2xl lg:text-xl xl:text-2xl"
+                            >
+                                The no-fuss guide to upselling and cross selling
+                            </a>
+                        </h3>
+                        <p class="text-base text-body-color">
+                            Lorem Ipsum is simply dummy text of the printing and
+                            typesetting industry.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <ul class="list-style-none flex">
+                <li>
+                    <a
+                            class="relative block rounded bg-transparent px-3 py-1.5 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"
+                            href="#"
+                            aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li>
+                    <a
+                            class="relative block rounded bg-transparent px-3 py-1.5 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"
+                            href="#"
+                    >1</a
+                    >
+                </li>
+                <li aria-current="page">
+                    <a
+                            class="relative block rounded bg-transparent px-3 py-1.5 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"
+                            href="#"
+                    >2</a
+                    >
+                </li>
+                <li>
+                    <a
+                            class="relative block rounded bg-transparent px-3 py-1.5 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"
+                            href="#"
+                    >3</a
+                    >
+                </li>
+                <li>
+                    <a
+                            class="relative block rounded bg-transparent px-3 py-1.5 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"
+                            href="#"
+                            aria-label="Next"
+                    ><span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</section>
+<!-- ====== Blog Section End -->
+
+<!-- ====== Footer Start ====== -->
+<div th:replace="~{template/fragment/footer :: frag1}"></div>
+<!-- ====== Footer End ====== -->
+
+<!-- ====== Back To Top Start -->
+<a
+        href="javascript:void(0)"
+        class="back-to-top fixed bottom-8 right-8 left-auto z-[999] hidden h-10 w-10 items-center justify-center rounded-md bg-primary text-white shadow-md transition duration-300 ease-in-out hover:bg-dark"
+>
+      <span
+              class="mt-[6px] h-3 w-3 rotate-45 border-t border-l border-white"
+      ></span>
+</a>
+<!-- ====== Back To Top End -->
+
+<!-- ====== All Scripts -->
+<script src="/assets/js/main.js"></script>
+</body>
+</html>
