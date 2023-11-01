@@ -14,7 +14,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class Trade {
 
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "TRADE_ID")
     private Long id;
 

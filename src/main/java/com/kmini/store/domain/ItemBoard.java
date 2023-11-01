@@ -1,6 +1,7 @@
 package com.kmini.store.domain;
 
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -8,6 +9,8 @@ import javax.persistence.Entity;
 @Entity
 @DiscriminatorValue("I")
 @NoArgsConstructor
+@SuperBuilder
+@Getter @Setter
 public class ItemBoard extends Board{
 
     public ItemBoard(User user, BoardCategory category, String content, String itemName) {

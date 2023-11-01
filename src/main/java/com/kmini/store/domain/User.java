@@ -11,17 +11,19 @@ import javax.persistence.*;
 @Getter @Setter
 @AllArgsConstructor
 @Builder
+@ToString
 public class User {
     public User() {
     }
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="USER_ID")
     private Long id;
 
     private String username;
 
-    private String password;
+    private String password; 
 
+    // 변경 불가
     private String email;
 
     @Enumerated(EnumType.STRING)

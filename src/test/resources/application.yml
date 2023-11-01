@@ -10,7 +10,6 @@ spring:
       ddl-auto: create
     properties:
       hibernate:
-#        show_sql: true
         format_sql: true
   h2:
     console:
@@ -21,3 +20,7 @@ logging:
   level:
     org.hibernate.SQL: debug
 #    org.hibernate.type: trace
+
+
+
+

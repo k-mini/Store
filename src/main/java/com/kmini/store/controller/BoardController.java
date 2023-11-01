@@ -27,7 +27,7 @@ public class BoardController {
         return "board/trade-detail";
     }
 
-    @GetMapping("/board/saveForm")
+    @GetMapping("/saveForm")
     public String saveForm() {
         return "board/saveForm";
     }

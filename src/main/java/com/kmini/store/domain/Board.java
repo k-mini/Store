@@ -1,9 +1,8 @@
 package com.kmini.store.domain;
 
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 
@@ -11,12 +10,13 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
+@SuperBuilder
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn // 자식 객체 구분 컬럼 기본 값 "DType"
 public abstract class Board {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "BOARD_ID")
     private Long id;
 
