@@ -1,11 +1,13 @@
 package com.kmini.store.service;
 
 import com.kmini.store.domain.User;
+import com.kmini.store.domain.type.UserRole;
 import com.kmini.store.domain.type.UserStatus;
 import com.kmini.store.dto.UserUpdateDto;
 import com.kmini.store.ex.CustomUserNotFoundException;
 import com.kmini.store.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -15,6 +17,16 @@ import org.springframework.util.StringUtils;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    // 회원가입
+    @Transactional
+    public void save(User user) {
+        user.setRole(UserRole.USER);
+        user.setUserStatus(UserStatus.SIGNUP);
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+    }
 
     // 회원 수정
     @Transactional

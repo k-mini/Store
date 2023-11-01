@@ -17,7 +17,7 @@ public class AuthApiController {
 
     private final AuthService authService;
 
-    // 회원가입
+    // 회원가입 (API 방식)
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody SignupDto signupDto) {
         log.info("signupDto = {}", signupDto);
