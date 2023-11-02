@@ -23,6 +23,5 @@ public class AuthService {
         user.setRole(UserRole.USER);
         userRepository.save(user);
         log.info("user = {}", user);
-
     }
 }

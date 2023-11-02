@@ -1,5 +1,6 @@
 package com.kmini.store.domain;
 
+import com.kmini.store.domain.type.BoardType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,9 +16,9 @@ public class BoardCategory {
     @Column(name = "CATEGORY_ID")
     private Long id;
 
-    private String categoryName;
+    private BoardType boardType;
 
-    public BoardCategory(Long id) {
-        this.id = id;
+    public BoardCategory(BoardType boardType) {
+        this.boardType = boardType;
     }
 }

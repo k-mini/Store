@@ -1,19 +1,21 @@
 package com.kmini.store.config.auth;
 
 import com.kmini.store.domain.User;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class PrincipalDetails implements UserDetails {
+@Getter
+public class PrincipalDetail implements UserDetails {
 
     private static final long serialVersionUID = 1L;
 
     public User user;
 
-    public PrincipalDetails(User user) {
+    public PrincipalDetail(User user) {
         this.user = user;
     }
 
