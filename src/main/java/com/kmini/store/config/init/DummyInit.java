@@ -1,18 +1,26 @@
 package com.kmini.store.config.init;
 
+import com.kmini.store.config.auth.PrincipalDetail;
 import com.kmini.store.domain.BoardCategory;
 import com.kmini.store.domain.User;
 import com.kmini.store.domain.type.BoardType;
 import com.kmini.store.domain.type.UserRole;
 import com.kmini.store.domain.type.UserStatus;
+import com.kmini.store.dto.ItemBoardUploadDto;
 import com.kmini.store.repository.BoardCategoryRepository;
+import com.kmini.store.service.ItemBoardService;
 import com.kmini.store.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 @Component
 @Profile({"default","dev","local"})
@@ -22,6 +30,7 @@ public class DummyInit implements ApplicationRunner {
 
     private final UserService userService;
     private final BoardCategoryRepository boardCategoryRepository;
+    private final ItemBoardService itemBoardService;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
@@ -32,5 +41,15 @@ public class DummyInit implements ApplicationRunner {
         log.info("카테고리 넣기! ..");
         boardCategoryRepository.save(new BoardCategory(BoardType.COMMUNITY));
         boardCategoryRepository.save(new BoardCategory(BoardType.TRADE));
+
+        log.info("인증 정보 넣기");
+        PrincipalDetail principal = new PrincipalDetail(user);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        log.info("샘플 게시물 넣기! ..");
+        ItemBoardUploadDto itemBoardUploadDto =
+                new ItemBoardUploadDto(2L, "titleTest", "abcd", null, "item11");
+        itemBoardService.upload(itemBoardUploadDto,principal);
     }
 }

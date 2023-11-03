@@ -1,18 +1,23 @@
 package com.kmini.store.controller;
 
 import com.kmini.store.config.auth.PrincipalDetail;
+import com.kmini.store.dto.ItemBoardRespDto.ItemBoardRespAllDto;
+import com.kmini.store.dto.ItemBoardRespDto.ItemBoardRespDetailDto;
 import com.kmini.store.dto.ItemBoardUploadDto;
-import com.kmini.store.dto.RespDto;
 import com.kmini.store.service.ItemBoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+
+import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @Controller
 @RequestMapping("/boards/trade")
@@ -22,15 +27,24 @@ public class ItemBoardController {
 
     private final ItemBoardService itemBoardService;
 
-    // 거래 카테고리 게시판 클릭
+    // 게시물 조회
     @GetMapping
-    public String category() {
+    public String load(
+            @PageableDefault(sort = "createdDate", direction = DESC) Pageable pageable,
+                           Model model) {
+        Page<ItemBoardRespAllDto> results = itemBoardService.load(pageable);
+        for (ItemBoardRespAllDto result : results.getContent()) {
+            log.info("result = {}", result);
+        }
+        model.addAttribute("results", results);
         return "board/trade";
     }
 
-    // 특정 거래 게시글 클릭
+    // 게시물 자세히 조회
     @GetMapping("/{boardId}")
-    public String board(@PathVariable("boardId") int boardId, Model model) {
+    public String detail(@PathVariable("boardId") Long boardId, Model model) {
+        ItemBoardRespDetailDto result = itemBoardService.detail(boardId);
+        model.addAttribute("result",result);
         return "board/trade-detail";
     }
 
@@ -46,8 +60,8 @@ public class ItemBoardController {
     public String upload(
             @ModelAttribute ItemBoardUploadDto itemBoardUploadDto,
                                     @AuthenticationPrincipal PrincipalDetail principal) throws IOException {
-        log.info("ItemBoardUploadDto = {}", itemBoardUploadDto);
+        log.info("itemBoardUploadDto = {}", itemBoardUploadDto);
         itemBoardService.upload(itemBoardUploadDto, principal);
-        return "board/trade";
+        return "redirect:/boards/trade";
     }
 }

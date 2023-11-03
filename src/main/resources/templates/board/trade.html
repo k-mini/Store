@@ -14,6 +14,10 @@
     <link rel="stylesheet" href="/assets/css/tailwind.css"/>
     <!-- ==== WOW JS ==== -->
     <script src="/assets/js/wow.min.js"></script>
+
+    <!-- ==== JQuery ==== -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
+
     <script>
         new WOW().init();
     </script>
@@ -31,142 +35,52 @@
 <!-- ====== Blog Section Start -->
 <section class="pt-20 pb-10 lg:pt-[120px] lg:pb-20">
     <div class="container">
-        <div class="-mx-4 flex flex-wrap">
-            <div class="w-full px-4 md:w-1/2 lg:w-1/3">
+        <div class="-mx-4 flex flex-wrap" id="boardList">
+
+            <div th:each="result : ${results.content}" class="w-full px-4 md:w-1/2 lg:w-1/3">
                 <div class="wow fadeInUp group mb-10" data-wow-delay=".1s">
                     <div class="mb-8 overflow-hidden rounded">
-                        <a href="/boards/trade/1" class="block">
+                        <a th:href="@{/boards/trade/{id}(id = ${result.id})}" class="block">
                             <img
-                                    src="/assets/images/blog/blog-01.jpg"
+                                    th:src="@{/images/{thumbnail}(thumbnail=${result.thumbnail})}"
                                     alt="image"
                                     class="w-full transition group-hover:rotate-6 group-hover:scale-125"
+                                    onerror="this.onerror=null; this.src='/assets/images/blog/blog-02.jpg'"
                             />
                         </a>
                     </div>
                     <div>
                 <span
+                        th:text="${result.createdDate}"
                         class="mb-5 inline-block rounded bg-primary py-1 px-4 text-center text-xs font-semibold leading-loose text-white"
                 >
                   날짜
                 </span>
                         <h3>
                             <a
-                                    href="trade-detail.html"
+                                    th:text="${result.title}"
+                                    th:href="@{/boards/trade/{id}(id = ${result.id})}"
                                     class="mb-4 inline-block text-xl font-semibold text-dark hover:text-primary sm:text-2xl lg:text-xl xl:text-2xl"
                             >
                                 제목
                             </a>
                         </h3>
-                        <p class="text-base text-body-color">
+                        <p  class="text-base text-body-color">
                             소제목
                         </p>
                     </div>
                 </div>
             </div>
-            <div class="w-full px-4 md:w-1/2 lg:w-1/3">
-                <div class="wow fadeInUp group mb-10" data-wow-delay=".15s">
-                    <div class="mb-8 overflow-hidden rounded">
-                        <a href="trade-detail.html" class="block">
-                            <img
-                                    src="/assets/images/blog/blog-02.jpg"
-                                    alt="image"
-                                    class="w-full transition group-hover:rotate-6 group-hover:scale-125"
-                            />
-                        </a>
-                    </div>
-                    <div>
-                <span
-                        class="mb-5 inline-block rounded bg-primary py-1 px-4 text-center text-xs font-semibold leading-loose text-white"
-                >
-                  Mar 15, 2023
-                </span>
-                        <h3>
-                            <a
-                                    href="trade-detail.html"
-                                    class="mb-4 inline-block text-xl font-semibold text-dark hover:text-primary sm:text-2xl lg:text-xl xl:text-2xl"
-                            >
-                                How to earn more money as a wellness coach
-                            </a>
-                        </h3>
-                        <p class="text-base text-body-color">
-                            Lorem Ipsum is simply dummy text of the printing and
-                            typesetting industry.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="w-full px-4 md:w-1/2 lg:w-1/3">
-                <div class="wow fadeInUp group mb-10" data-wow-delay=".2s">
-                    <div class="mb-8 overflow-hidden rounded">
-                        <a href="trade-detail.html" class="block">
-                            <img
-                                    src="/assets/images/blog/blog-03.jpg"
-                                    alt="image"
-                                    class="w-full transition group-hover:rotate-6 group-hover:scale-125"
-                            />
-                        </a>
-                    </div>
-                    <div>
-                <span
-                        class="mb-5 inline-block rounded bg-primary py-1 px-4 text-center text-xs font-semibold leading-loose text-white"
-                >
-                  Jan 05, 2023
-                </span>
-                        <h3>
-                            <a
-                                    href="trade-detail.html"
-                                    class="mb-4 inline-block text-xl font-semibold text-dark hover:text-primary sm:text-2xl lg:text-xl xl:text-2xl"
-                            >
-                                The no-fuss guide to upselling and cross selling
-                            </a>
-                        </h3>
-                        <p class="text-base text-body-color">
-                            Lorem Ipsum is simply dummy text of the printing and
-                            typesetting industry.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="w-full px-4 md:w-1/2 lg:w-1/3">
-                <div class="wow fadeInUp group mb-10" data-wow-delay=".2s">
-                    <div class="mb-8 overflow-hidden rounded">
-                        <a href="trade-detail.html" class="block">
-                            <img
-                                    src="/assets/images/blog/blog-03.jpg"
-                                    alt="image"
-                                    class="w-full transition group-hover:rotate-6 group-hover:scale-125"
-                            />
-                        </a>
-                    </div>
-                    <div>
-                <span
-                        class="mb-5 inline-block rounded bg-primary py-1 px-4 text-center text-xs font-semibold leading-loose text-white"
-                >
-                  Jan 05, 2023
-                </span>
-                        <h3>
-                            <a
-                                    href="trade-detail.html"
-                                    class="mb-4 inline-block text-xl font-semibold text-dark hover:text-primary sm:text-2xl lg:text-xl xl:text-2xl"
-                            >
-                                The no-fuss guide to upselling and cross selling
-                            </a>
-                        </h3>
-                        <p class="text-base text-body-color">
-                            Lorem Ipsum is simply dummy text of the printing and
-                            typesetting industry.
-                        </p>
-                    </div>
-                </div>
-            </div>
         </div>
+
+
         <div class="flex flex-wrap">
             <div class="w-full px-4 md:w-1/2">
                 <ul class="list-style-none flex md:justify-start">
-                    <li>
+                    <li th:if="${results.hasPrevious()}">
                         <a
                                 class="relative block rounded bg-transparent px-3 py-1.5 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"
-                                href="#"
+                                th:href="@{/boards/trade(page=${results.number}-1)}"
                                 aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
@@ -192,7 +106,7 @@
                         >3</a
                         >
                     </li>
-                    <li>
+                    <li th:if="${results.hasNext()}">
                         <a
                                 class="relative block rounded bg-transparent px-3 py-1.5 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"
                                 href="#"
@@ -211,6 +125,8 @@
                 </div>
             </div>
         </div>
+
+
     </div>
 </section>
 <!-- ====== Blog Section End -->

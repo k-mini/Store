@@ -15,12 +15,14 @@ import org.springframework.web.multipart.MultipartFile;
 public class ItemBoardUploadDto {
 
     private Long categoryId;
+    private String title;
     private String content;
     private MultipartFile file;
     private String itemName;
 
     public ItemBoard toEntity(String imageUrl) {
         return ItemBoard.builder()
+                .title(title)
                 .content(content)
                 .thumbnail(imageUrl)
                 .itemName(itemName)

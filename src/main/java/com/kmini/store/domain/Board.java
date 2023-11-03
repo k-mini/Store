@@ -5,6 +5,8 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -13,7 +15,7 @@ import javax.persistence.*;
 @SuperBuilder
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn // 자식 객체 구분 컬럼 기본 값 "DType"
-public abstract class Board {
+public abstract class Board extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,10 +30,13 @@ public abstract class Board {
     @JoinColumn(name = "CATEGORY_ID", foreignKey = @ForeignKey(name = "BoardToCategory"))
     private BoardCategory category;
 
-    private String thumbnail;
-    private String content;
+    @OneToMany(mappedBy = "board")
+    private List<Comment> comments = new ArrayList<>();
 
-    private int boardCount;
+    private String thumbnail;
+    private String title;
+    private String content;
+    private int views;
 
     public Board(User user, BoardCategory category, String content) {
         this.user = user;

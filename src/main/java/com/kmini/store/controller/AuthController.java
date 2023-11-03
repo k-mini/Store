@@ -18,6 +18,7 @@ public class AuthController {
 
     @GetMapping({"/","/index.html","/index"})
     public String home() {
+        log.info("메인화면");
         return "index";
     }
 
