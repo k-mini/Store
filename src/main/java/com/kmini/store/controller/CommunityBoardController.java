@@ -35,15 +35,8 @@ public class CommunityBoardController {
         return "board/trade-detail";
     }
 
-    // 게시글 작성
-    @GetMapping("/saveForm")
-    public String saveForm(Model model) {
-        model.addAttribute("categoryName", "community");
-        return "board/saveForm";
-    }
-
     // 게시물 저장
-    @PostMapping("/saveForm")
+    @PostMapping("/form")
     public ResponseEntity<?> upload(@ModelAttribute ItemBoardUploadDto itemBoardUploadDto,
                                     @AuthenticationPrincipal PrincipalDetail principal) throws IOException {
         log.info("ItemBoardUploadDto = {}", itemBoardUploadDto);

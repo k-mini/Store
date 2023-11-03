@@ -37,10 +37,15 @@ public class ItemBoardRespDto {
                     .id(itemBoard.getId())
                     .username(itemBoard.getUser().getUsername())
                     .title(itemBoard.getTitle())
-                    .content(itemBoard.getContent())
+                    .content(getMinContent(10, itemBoard))
                     .thumbnail(itemBoard.getThumbnail())
                     .createdDate(createdDate)
                     .build();
+        }
+
+        private static String getMinContent(int cnt, ItemBoard itemBoard) {
+            int lastIndex = Math.min(cnt, itemBoard.getContent().length());
+            return itemBoard.getContent().substring(0, lastIndex) + "...";
         }
     }
 

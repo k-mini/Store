@@ -55,7 +55,7 @@ class AuthApiControllerTest {
         ResultActions resultActions = mockMvc.perform(
                 post("/api/auth/signup")
                         .content(requestBody)
-                        .contentType(MediaType.APPLICATION_JSON));
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED));
 
         // then  (아이디가 있어야 성공)
         resultActions.andExpect(status().isCreated());

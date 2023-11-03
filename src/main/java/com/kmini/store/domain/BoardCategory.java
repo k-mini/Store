@@ -19,7 +19,15 @@ public class BoardCategory {
     @Enumerated(EnumType.STRING)
     private BoardType boardType;
 
+    @ManyToOne
+    private BoardCategory parentCategory;
+
     public BoardCategory(BoardType boardType) {
         this.boardType = boardType;
+    }
+
+    public BoardCategory(BoardType boardType, BoardCategory parentCategory) {
+        this.boardType = boardType;
+        this.parentCategory = parentCategory;
     }
 }

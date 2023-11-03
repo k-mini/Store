@@ -22,6 +22,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
+import static com.kmini.store.domain.type.BoardType.*;
+
 @Component
 @Profile({"default","dev","local"})
 @Slf4j
@@ -31,6 +33,7 @@ public class DummyInit implements ApplicationRunner {
     private final UserService userService;
     private final BoardCategoryRepository boardCategoryRepository;
     private final ItemBoardService itemBoardService;
+    private final CategoryHolder categoryHolder;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
@@ -39,8 +42,22 @@ public class DummyInit implements ApplicationRunner {
         userService.save(user);
 
         log.info("카테고리 넣기! ..");
-        boardCategoryRepository.save(new BoardCategory(BoardType.COMMUNITY));
-        boardCategoryRepository.save(new BoardCategory(BoardType.TRADE));
+        BoardCategory community = new BoardCategory(COMMUNITY);
+        BoardCategory trade = new BoardCategory(TRADE);
+        boardCategoryRepository.save(community);
+        boardCategoryRepository.save(trade);
+
+        log.info("소카테고리 넣기! ..");
+        boardCategoryRepository.save(new BoardCategory(ELECTRONICS,trade));
+        boardCategoryRepository.save(new BoardCategory(FOODS,trade));
+        boardCategoryRepository.save(new BoardCategory(FREE,community));
+        boardCategoryRepository.save(new BoardCategory(QNA,community));
+
+        log.info("서버에 카테고리 정보 저장..");
+        categoryHolder.getMap().add(TRADE, ELECTRONICS);
+        categoryHolder.getMap().add(TRADE, FOODS);
+        categoryHolder.getMap().add(COMMUNITY, FREE);
+        categoryHolder.getMap().add(COMMUNITY, QNA);
 
         log.info("인증 정보 넣기");
         PrincipalDetail principal = new PrincipalDetail(user);

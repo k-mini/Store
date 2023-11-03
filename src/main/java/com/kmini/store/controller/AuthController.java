@@ -16,7 +16,7 @@ public class AuthController {
 
     private final UserService userService;
 
-    @GetMapping({"/","/index.html","/index"})
+    @GetMapping({"/","/index"})
     public String home() {
         log.info("메인화면");
         return "index";

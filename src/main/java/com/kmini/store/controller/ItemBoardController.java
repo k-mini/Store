@@ -29,13 +29,13 @@ public class ItemBoardController {
     private final ItemBoardService itemBoardService;
 
     // 게시물 조회
-    @GetMapping
+//    @GetMapping
     public String load(
             @PageableDefault(sort = "createdDate", direction = DESC) Pageable pageable,
                            Model model) {
         Page<ItemBoardRespAllDto> results = itemBoardService.load(pageable);
         for (ItemBoardRespAllDto result : results.getContent()) {
-            log.info("result = {}", result);
+            log.debug("result = {}", result);
         }
 
         CustomPageUtils.configure(results,5, model);
@@ -45,22 +45,15 @@ public class ItemBoardController {
     }
 
     // 게시물 자세히 조회
-    @GetMapping("/{boardId}")
+//    @GetMapping("/{boardId}")
     public String detail(@PathVariable("boardId") Long boardId, Model model) {
         ItemBoardRespDetailDto result = itemBoardService.detail(boardId);
         model.addAttribute("result",result);
         return "board/trade-detail";
     }
 
-    // 게시글 작성
-    @GetMapping("/saveForm")
-    public String saveForm(Model model) {
-        model.addAttribute("categoryName", "trade");
-        return "board/saveForm";
-    }
-
     // 게시물 저장
-    @PostMapping("/saveForm")
+    @PostMapping("/form")
     public String upload(
             @ModelAttribute ItemBoardUploadDto itemBoardUploadDto,
                                     @AuthenticationPrincipal PrincipalDetail principal) throws IOException {
