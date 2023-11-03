@@ -1,6 +1,7 @@
 package com.kmini.store.controller;
 
 import com.kmini.store.config.auth.PrincipalDetail;
+import com.kmini.store.config.util.CustomPageUtils;
 import com.kmini.store.dto.ItemBoardRespDto.ItemBoardRespAllDto;
 import com.kmini.store.dto.ItemBoardRespDto.ItemBoardRespDetailDto;
 import com.kmini.store.dto.ItemBoardUploadDto;
@@ -36,6 +37,9 @@ public class ItemBoardController {
         for (ItemBoardRespAllDto result : results.getContent()) {
             log.info("result = {}", result);
         }
+
+        CustomPageUtils.configure(results,5, model);
+
         model.addAttribute("results", results);
         return "board/trade";
     }

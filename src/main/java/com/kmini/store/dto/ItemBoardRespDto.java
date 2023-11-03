@@ -1,6 +1,6 @@
 package com.kmini.store.dto;
 
-import com.kmini.store.config.time.CustomTimeUtils;
+import com.kmini.store.config.util.CustomTimeUtils;
 import com.kmini.store.domain.Comment;
 import com.kmini.store.domain.ItemBoard;
 import com.kmini.store.dto.CommentDto.ItemBoardCommentDto;

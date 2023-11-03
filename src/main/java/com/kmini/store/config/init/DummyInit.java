@@ -48,8 +48,11 @@ public class DummyInit implements ApplicationRunner {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         log.info("샘플 게시물 넣기! ..");
-        ItemBoardUploadDto itemBoardUploadDto =
-                new ItemBoardUploadDto(2L, "titleTest", "abcd", null, "item11");
-        itemBoardService.upload(itemBoardUploadDto,principal);
+
+        for (int i = 1; i < 157; i++) {
+            ItemBoardUploadDto itemBoardUploadDto =
+                    new ItemBoardUploadDto(2L, "title" + i, "content" + i, null, "item" + i);
+            itemBoardService.upload(itemBoardUploadDto,principal);
+        }
     }
 }

@@ -65,7 +65,7 @@
                                 제목
                             </a>
                         </h3>
-                        <p  class="text-base text-body-color">
+                        <p class="text-base text-body-color">
                             소제목
                         </p>
                     </div>
@@ -76,45 +76,49 @@
 
         <div class="flex flex-wrap">
             <div class="w-full px-4 md:w-1/2">
-                <ul class="list-style-none flex md:justify-start">
-                    <li th:if="${results.hasPrevious()}">
+                <ul class="list-style-none flex md:justify-start items-center">
+                    <li th:if="${prev}">
                         <a
                                 class="relative block rounded bg-transparent px-3 py-1.5 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"
-                                th:href="@{/boards/trade(page=${results.number}-1)}"
+                                th:href="@{/boards/trade(page=${startPage} - 2)}"
                                 aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
-                    <li>
+                    <div th:each="num : ${#numbers.sequence(startPage,endPage)}">
+                        <li aria-current="page" th:if="${results.getNumber() == num - 1 }">
+                            <a
+                                    class="relative block font-bold rounded bg-transparent px-3 py-1.5 text-lg text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"
+                                    th:href="@{/boards/trade(page=${num}-1) }"
+                            >[[${num}]]</a
+                            >
+                        </li>
+                        <li aria-current="page" th:unless="${results.getNumber() == num - 1 }">
+                            <a
+                                    class="relative block rounded bg-transparent px-3 py-1.5 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"
+                                    th:href="@{/boards/trade(page=${num}-1) }"
+                            >[[${num}]]</a
+                            >
+                        </li>
+<!--                        <li>-->
+<!--                            <a-->
+<!--                                    class="relative block rounded bg-transparent px-3 py-1.5 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"-->
+<!--                                    href="#"-->
+<!--                            >3</a-->
+<!--                            >-->
+<!--                        </li>-->
+                    </div>
+                    <li th:if="${next}">
                         <a
                                 class="relative block rounded bg-transparent px-3 py-1.5 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"
-                                href="#"
-                        >1</a
-                        >
-                    </li>
-                    <li aria-current="page">
-                        <a
-                                class="relative block rounded bg-transparent px-3 py-1.5 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"
-                                href="#"
-                        >2</a
-                        >
-                    </li>
-                    <li>
-                        <a
-                                class="relative block rounded bg-transparent px-3 py-1.5 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"
-                                href="#"
-                        >3</a
-                        >
-                    </li>
-                    <li th:if="${results.hasNext()}">
-                        <a
-                                class="relative block rounded bg-transparent px-3 py-1.5 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"
-                                href="#"
+                                th:href="@{/boards/trade(page=${endPage})}"
                                 aria-label="Next"
                         ><span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>
+
                 </ul>
+
             </div>
             <div class="w-full px-4 md:w-1/2">
                 <div class="flex items-center md:justify-end">

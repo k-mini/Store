@@ -1,6 +1,5 @@
-package com.kmini.store.config.time;
+package com.kmini.store.config.util;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
