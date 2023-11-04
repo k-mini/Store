@@ -416,7 +416,10 @@
     <div class="-mx-4 flex flex-wrap items-center">
       <div class="w-full px-4">
         <div class="text-center">
-          <h1 th:text="|${categoryName} 게시판|" class="text-4xl font-semibold text-white"></h1>
+          <div th:each="type : ${T(com.kmini.store.domain.type.CategoryType).values()}">
+<!--            [[${type}]] [[${category}]] [[${type.name() == #strings.toUpperCase(category) }]]-->
+            <h1 th:if="${type.name() == #strings.toUpperCase(subCategory)}" th:text="|${type.koName} 게시판 글쓰기|" class="text-4xl font-semibold text-white"></h1>
+          </div>
         </div>
       </div>
     </div>

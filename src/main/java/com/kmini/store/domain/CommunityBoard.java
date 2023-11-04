@@ -10,7 +10,7 @@ import javax.persistence.Entity;
 @NoArgsConstructor
 public class CommunityBoard extends Board {
 
-    public CommunityBoard(User user, BoardCategory category, String content) {
-        super(user, category, content);
+    public CommunityBoard(User user,  String content) {
+        super(user, content);
     }
 }

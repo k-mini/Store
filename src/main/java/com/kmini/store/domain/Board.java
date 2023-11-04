@@ -26,9 +26,9 @@ public abstract class Board extends BaseTime {
     @JoinColumn(name = "USER_ID", foreignKey = @ForeignKey(name = "BoardToUser"))
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CATEGORY_ID", foreignKey = @ForeignKey(name = "BoardToCategory"))
-    private BoardCategory category;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "CATEGORY_ID", foreignKey = @ForeignKey(name = "BoardToCategory"))
+//    private BoardCategory category;
 
     @OneToMany(mappedBy = "board")
     private List<Comment> comments = new ArrayList<>();
@@ -41,9 +41,9 @@ public abstract class Board extends BaseTime {
     @Column(insertable = false, updatable = false)
     private String dtype;
 
-    public Board(User user, BoardCategory category, String content) {
+    public Board(User user, String content) {
         this.user = user;
-        this.category = category;
+//        this.category = category;
         this.content = content;
     }
 }

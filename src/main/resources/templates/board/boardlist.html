@@ -81,7 +81,8 @@
                     <li th:if="${prev}">
                         <a
                                 class="relative block rounded bg-transparent px-3 py-1.5 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"
-                                th:href="@{/boards/trade(page=${startPage} - 2)}"
+                                th:href="@{/boards/{category}/{subCategory}(category=${category},subCategory=${subCategory},
+                                 page=${startPage} - 2)}"
                                 aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
@@ -90,14 +91,14 @@
                         <li aria-current="page" th:if="${results.getNumber() == num - 1 }">
                             <a
                                     class="relative block font-bold rounded bg-transparent px-3 py-1.5 text-lg text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"
-                                    th:href="@{/boards/trade(page=${num}-1) }"
+                                    th:href="@{/boards/{category}/{subCategory}(category=${category},subCategory=${subCategory},page=${num}-1) }"
                             >[[${num}]]</a
                             >
                         </li>
                         <li aria-current="page" th:unless="${results.getNumber() == num - 1 }">
                             <a
                                     class="relative block rounded bg-transparent px-3 py-1.5 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"
-                                    th:href="@{/boards/trade(page=${num}-1) }"
+                                    th:href="@{/boards/{category}/{subCategory}(category=${category},subCategory=${subCategory},page=${num}-1) }"
                             >[[${num}]]</a
                             >
                         </li>
@@ -112,7 +113,7 @@
                     <li th:if="${next}">
                         <a
                                 class="relative block rounded bg-transparent px-3 py-1.5 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"
-                                th:href="@{/boards/trade(page=${endPage})}"
+                                th:href="@{/boards/{category}/{subCategory}(category=${category},subCategory=${subCategory},page=${endPage})}"
                                 aria-label="Next"
                         ><span aria-hidden="true">&raquo;</span>
                         </a>
@@ -123,9 +124,9 @@
             </div>
             <div class="w-full px-4 md:w-1/2">
                 <div class="flex items-center md:justify-end">
-                    <a href="/boards/trade/form">
+                    <a th:href="@{/boards/{category}/{subCategory}/form(category=${category}, subCategory=${subCategory})}">
                     <span class="mb-5 inline-block rounded bg-primary py-1 px-4 text-center text-xs font-semibold leading-loose text-white">
-                        글 쓰기</span>
+                        글 쓰기 </span>
                     </a>
                 </div>
             </div>

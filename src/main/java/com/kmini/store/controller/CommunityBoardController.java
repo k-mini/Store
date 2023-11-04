@@ -2,7 +2,7 @@ package com.kmini.store.controller;
 
 import com.kmini.store.config.auth.PrincipalDetail;
 import com.kmini.store.dto.CommonRespDto;
-import com.kmini.store.dto.request.ItemBoardDto.UploadDto;
+import com.kmini.store.dto.request.BoardDto.FormSaveDto;
 import com.kmini.store.service.ItemBoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,9 +40,9 @@ public class CommunityBoardController {
 
     // 게시물 저장
 //    @PostMapping("/form")
-    public ResponseEntity<?> upload(@ModelAttribute UploadDto uploadDto,
+    public ResponseEntity<?> upload(@ModelAttribute FormSaveDto formSaveDto,
                                     @AuthenticationPrincipal PrincipalDetail principal) throws IOException {
-        log.info("uploadDto = {}", uploadDto);
+        log.info("uploadDto = {}", formSaveDto);
 //        itemBoardService.upload(itemBoardUploadDto);
         return ResponseEntity.ok(new CommonRespDto<Void>(1, "성공", null));
     }

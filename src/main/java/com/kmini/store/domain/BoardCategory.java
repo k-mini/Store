@@ -1,6 +1,6 @@
 package com.kmini.store.domain;
 
-import com.kmini.store.domain.type.BoardType;
+import com.kmini.store.domain.type.CategoryType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,25 +13,17 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class BoardCategory {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "CATEGORY_ID")
+    @Column(name = "BOARD_CATEGORY_ID")
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    private BoardType boardType;
+    @ManyToOne
+    private Board board;
 
     @ManyToOne
-    private BoardCategory parentCategory;
+    private Category category;
 
-    public BoardCategory(BoardType boardType) {
-        this.boardType = boardType;
-    }
-
-    public BoardCategory(BoardType boardType, BoardCategory parentCategory) {
-        this.boardType = boardType;
-        this.parentCategory = parentCategory;
-    }
-
-    public static void valueOf(String categoryName) {
-
+    public BoardCategory(Board board, Category category) {
+        this.board = board;
+        this.category = category;
     }
 }

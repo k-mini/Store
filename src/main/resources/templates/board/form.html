@@ -48,12 +48,13 @@
                         </a>
                     </div>
 
-                    <form th:action enctype="multipart/form-data" method="post">
+                    <form th:action th:object="${formSaveDto}" enctype="multipart/form-data" method="post">
                         <div class="mb-6">
                             <div class="flex items-center md:justify-start">
                                 <label for="message" class="mx-2 my-1 text-2xl font-bold text-dark">제목</label>
                             </div>
                             <input
+                                    th:field="*{title}"
                                     name="title"
                                     type="text"
                                     placeholder="제목을 입력해 주세요"
@@ -66,6 +67,7 @@
                                 <label for="message" class="mx-2 my-1 text-2xl font-bold text-dark">사진</label>
                             </div>
                             <input
+                                    th:field="*{file}"
                                     name="file"
                                     type="file"
                                     class="w-full cursor-pointer rounded-lg border-[1.5px] border-stroke dark:border-dark-3 font-medium text-body-color dark:text-dark-6 outline-none transition file:mr-5 file:border-collapse file:cursor-pointer file:border-0 file:border-r file:border-solid file:border-stroke dark:file:border-dark-3 file:bg-[#F5F7FD] dark:file:bg-dark-2 file:py-3 file:px-5 file:text-body-color dark:file:text-dark-6 file:hover:bg-primary file:hover:bg-opacity-10 focus:border-primary active:border-primary disabled:cursor-default disabled:bg-[#F5F7FD]"
@@ -77,6 +79,7 @@
                                 <label for="message" class="mx-2 my-1 text-2xl font-bold text-dark">내용</label>
                             </div>
                             <textarea
+                                    th:field="*{content}"
                                     name="content"
                                     id="message" rows="15"
                                     class="bordder-[#E9EDF4] w-full rounded-md border bg-[#FCFDFE] py-3 px-5 text-base text-body-color placeholder-[#ACB6BE] outline-none transition focus:border-primary focus-visible:shadow-none"

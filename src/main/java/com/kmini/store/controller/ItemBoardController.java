@@ -2,7 +2,7 @@ package com.kmini.store.controller;
 
 import com.kmini.store.config.auth.PrincipalDetail;
 import com.kmini.store.config.util.CustomPageUtils;
-import com.kmini.store.dto.request.ItemBoardDto.UploadDto;
+import com.kmini.store.dto.request.BoardDto.FormSaveDto;
 import com.kmini.store.dto.response.ItemBoardDto.ItemBoardRespAllDto;
 import com.kmini.store.dto.response.ItemBoardDto.ItemBoardRespDetailDto;
 import com.kmini.store.service.ItemBoardService;
@@ -21,7 +21,7 @@ import java.io.IOException;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @Controller
-@RequestMapping("/boards/trade/{miniCategory}")
+//@RequestMapping("/boards/trade/{miniCategory}")
 @Slf4j
 @RequiredArgsConstructor
 public class ItemBoardController {
@@ -29,10 +29,11 @@ public class ItemBoardController {
     private final ItemBoardService itemBoardService;
 
     // 게시물 조회
-    @GetMapping()
+//    @GetMapping()
     public String load(
             @PageableDefault(sort = "createdDate", direction = DESC) Pageable pageable,
                            Model model) {
+        log.info("ItemBoardController ");
         Page<ItemBoardRespAllDto> results = itemBoardService.load(pageable);
         for (ItemBoardRespAllDto result : results.getContent()) {
             log.debug("result = {}", result);
@@ -55,10 +56,10 @@ public class ItemBoardController {
     // 게시물 저장
     @PostMapping("/form")
     public String upload(
-            @ModelAttribute UploadDto uploadDto,
+            @ModelAttribute FormSaveDto formSaveDto,
                                     @AuthenticationPrincipal PrincipalDetail principal) throws IOException {
-        log.info("uploadDto = {}", uploadDto);
-        itemBoardService.upload(uploadDto, principal);
+        log.info("uploadDto = {}", formSaveDto);
+        itemBoardService.save(formSaveDto, principal);
         return "redirect:/boards/trade";
     }
 }

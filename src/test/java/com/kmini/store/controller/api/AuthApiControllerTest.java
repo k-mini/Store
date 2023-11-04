@@ -1,7 +1,8 @@
 package com.kmini.store.controller.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kmini.store.dto.request.SignupDto;
+import com.kmini.store.dto.request.UserDto;
+import com.kmini.store.dto.request.UserDto.SignupDto;
 import com.kmini.store.repository.UserRepository;
 import com.kmini.store.service.AuthService;
 import lombok.extern.slf4j.Slf4j;
@@ -14,8 +15,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Sql("classpath:/tableInit.sql")
 @SpringBootTest

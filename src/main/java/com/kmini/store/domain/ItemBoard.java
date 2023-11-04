@@ -13,8 +13,8 @@ import javax.persistence.Entity;
 @Getter @Setter
 public class ItemBoard extends Board{
 
-    public ItemBoard(User user, BoardCategory category, String content, String itemName) {
-        super(user, category, content);
+    public ItemBoard(User user, String content, String itemName) {
+        super(user, content);
         this.itemName = itemName;
     }
     private String itemName;

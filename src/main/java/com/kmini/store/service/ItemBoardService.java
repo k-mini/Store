@@ -2,18 +2,15 @@ package com.kmini.store.service;
 
 import com.kmini.store.config.auth.PrincipalDetail;
 import com.kmini.store.config.file.FileUploader;
-import com.kmini.store.domain.BoardCategory;
-import com.kmini.store.domain.Comment;
-import com.kmini.store.domain.ItemBoard;
-import com.kmini.store.domain.User;
-import com.kmini.store.domain.type.BoardType;
-import com.kmini.store.dto.request.ItemBoardDto.UpdateDto;
-import com.kmini.store.dto.request.ItemBoardDto.UploadDto;
+import com.kmini.store.domain.*;
+import com.kmini.store.domain.type.CategoryType;
+import com.kmini.store.dto.request.BoardDto.FormSaveDto;
 import com.kmini.store.dto.response.ItemBoardDto.ItemBoardRespAllDto;
 import com.kmini.store.dto.response.ItemBoardDto.ItemBoardRespDetailDto;
 import com.kmini.store.ex.CustomBoardNotFoundException;
 import com.kmini.store.ex.CustomCategoryNotFoundException;
 import com.kmini.store.repository.BoardCategoryRepository;
+import com.kmini.store.repository.CategoryRepository;
 import com.kmini.store.repository.ItemBoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -30,6 +27,7 @@ import java.util.List;
 public class ItemBoardService {
 
     private final ItemBoardRepository itemBoardRepository;
+    private final CategoryRepository categoryRepository;
     private final BoardCategoryRepository boardCategoryRepository;
     private final FileUploader fileUploader;
 
@@ -59,30 +57,38 @@ public class ItemBoardService {
 
     // 게시물 저장
     @Transactional
-    public void upload(UploadDto uploadDto, PrincipalDetail principalDetail) throws IOException {
+    public void save(FormSaveDto formSaveDto, PrincipalDetail principalDetail) throws IOException {
         
         // 파일 시스템에 저장하고 랜덤 파일명 반환
-        MultipartFile file = uploadDto.getFile();
-        String randomName = null;
+        MultipartFile file = formSaveDto.getFile();
+        String uri = null;
         if (file != null) {
-            fileUploader.storeFile(file);
+            uri = fileUploader.storeFile(file);
         }
 
         // 카테고리 조회
-        BoardCategory category = boardCategoryRepository.findByBoardType(BoardType.TRADE)
-                .orElseThrow(()->new CustomCategoryNotFoundException("카테고리가 존재하지 않습니다."));
+        Category category = categoryRepository.findByCategoryType(formSaveDto.getCategory())
+                .orElseThrow(()->new CustomCategoryNotFoundException("상위 카테고리가 존재하지 않습니다."));
+        Category subCategory = categoryRepository.findByCategoryType(formSaveDto.getSubCategory())
+                .orElseThrow(()->new CustomCategoryNotFoundException("하위 카테고리가 존재하지 않습니다."));
         // 유저 조회
         User user = principalDetail.getUser();
 
-        // 엔티티로 변환
-        ItemBoard itemBoard = uploadDto.toEntity(randomName);
-        itemBoard.setCategory(category);
-        itemBoard.setUser(user);
+        // 게시물 저장
+        ItemBoard board = formSaveDto.toEntity(uri);
+        board.setUser(user);
+        itemBoardRepository.save(board);
 
-        itemBoardRepository.save(itemBoard);
+        // 상위 카테고리 정보 저장
+        BoardCategory boardCategory = new BoardCategory(board, category);
+        boardCategoryRepository.save(boardCategory);
+
+        // 하위 카테고리 정보 저장
+        BoardCategory boardSubCategory = new BoardCategory(board, subCategory);
+        boardCategoryRepository.save(boardSubCategory);
     }
 
-    // 게시물 수정
+    /*// 게시물 수정
     @Transactional
     public void update(UpdateDto updateDto) {
 
@@ -107,5 +113,5 @@ public class ItemBoardService {
         
         // 게시물 삭제
         itemBoardRepository.delete(itemBoard);
-    } 
+    } */
 }
