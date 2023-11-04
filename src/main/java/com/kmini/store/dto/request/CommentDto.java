@@ -1,11 +1,10 @@
-package com.kmini.store.dto;
+package com.kmini.store.dto.request;
 
 import com.kmini.store.domain.Comment;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 

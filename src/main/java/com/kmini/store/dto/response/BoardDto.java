@@ -1,8 +1,7 @@
-package com.kmini.store.dto;
+package com.kmini.store.dto.response;
 
 import com.kmini.store.config.util.CustomTimeUtils;
 import com.kmini.store.domain.Board;
-import com.kmini.store.domain.ItemBoard;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +9,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @Builder
-public class BoardRespDto {
+public class BoardDto {
     // 게시물 ID
     private Long id;
     // 작성자 이름
@@ -24,9 +23,9 @@ public class BoardRespDto {
     // 작성 시간
     private String createdDate;
 
-    public static BoardRespDto toDto(Board board) {
+    public static BoardDto toDto(Board board) {
         String createdDate = CustomTimeUtils.convertTime(board.getCreatedDate());
-        return BoardRespDto.builder()
+        return BoardDto.builder()
                 .id(board.getId())
                 .username(board.getUser().getUsername())
                 .title(board.getTitle())

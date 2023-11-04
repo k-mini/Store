@@ -38,6 +38,9 @@ public abstract class Board extends BaseTime {
     private String content;
     private int views;
 
+    @Column(insertable = false, updatable = false)
+    private String dtype;
+
     public Board(User user, BoardCategory category, String content) {
         this.user = user;
         this.category = category;

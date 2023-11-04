@@ -7,10 +7,10 @@ import com.kmini.store.domain.Comment;
 import com.kmini.store.domain.ItemBoard;
 import com.kmini.store.domain.User;
 import com.kmini.store.domain.type.BoardType;
-import com.kmini.store.dto.ItemBoardRespDto.ItemBoardRespAllDto;
-import com.kmini.store.dto.ItemBoardRespDto.ItemBoardRespDetailDto;
-import com.kmini.store.dto.ItemBoardUpdateDto;
-import com.kmini.store.dto.ItemBoardUploadDto;
+import com.kmini.store.dto.request.ItemBoardDto.UpdateDto;
+import com.kmini.store.dto.request.ItemBoardDto.UploadDto;
+import com.kmini.store.dto.response.ItemBoardDto.ItemBoardRespAllDto;
+import com.kmini.store.dto.response.ItemBoardDto.ItemBoardRespDetailDto;
 import com.kmini.store.ex.CustomBoardNotFoundException;
 import com.kmini.store.ex.CustomCategoryNotFoundException;
 import com.kmini.store.repository.BoardCategoryRepository;
@@ -59,10 +59,10 @@ public class ItemBoardService {
 
     // 게시물 저장
     @Transactional
-    public void upload(ItemBoardUploadDto itemBoardUploadDto, PrincipalDetail principalDetail) throws IOException {
+    public void upload(UploadDto uploadDto, PrincipalDetail principalDetail) throws IOException {
         
         // 파일 시스템에 저장하고 랜덤 파일명 반환
-        MultipartFile file = itemBoardUploadDto.getFile();
+        MultipartFile file = uploadDto.getFile();
         String randomName = null;
         if (file != null) {
             fileUploader.storeFile(file);
@@ -75,7 +75,7 @@ public class ItemBoardService {
         User user = principalDetail.getUser();
 
         // 엔티티로 변환
-        ItemBoard itemBoard = itemBoardUploadDto.toEntity(randomName);
+        ItemBoard itemBoard = uploadDto.toEntity(randomName);
         itemBoard.setCategory(category);
         itemBoard.setUser(user);
 
@@ -84,16 +84,16 @@ public class ItemBoardService {
 
     // 게시물 수정
     @Transactional
-    public void update(ItemBoardUpdateDto itemBoardUpdateDto) {
+    public void update(UpdateDto updateDto) {
 
-        ItemBoard itemBoard = itemBoardRepository.findById(itemBoardUpdateDto.getBoardId())
+        ItemBoard itemBoard = itemBoardRepository.findById(updateDto.getBoardId())
                 .orElseThrow(()-> new CustomBoardNotFoundException("게시물을 찾을 수 없습니다."));
-        BoardCategory category = boardCategoryRepository.findById(itemBoardUpdateDto.getCategoryId())
+        BoardCategory category = boardCategoryRepository.findById(updateDto.getCategoryId())
                 .orElseThrow(()->new CustomCategoryNotFoundException("카테고리가 존재하지 않습니다."));
 
-        itemBoard.setContent(itemBoardUpdateDto.getContent());
-        itemBoard.setItemName(itemBoardUpdateDto.getItemName());
-        itemBoard.setThumbnail(itemBoardUpdateDto.getThumbnail());
+        itemBoard.setContent(updateDto.getContent());
+        itemBoard.setItemName(updateDto.getItemName());
+        itemBoard.setThumbnail(updateDto.getThumbnail());
         itemBoard.setCategory(category);
     }
     

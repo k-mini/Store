@@ -3,7 +3,7 @@ package com.kmini.store.service;
 import com.kmini.store.domain.User;
 import com.kmini.store.domain.type.UserRole;
 import com.kmini.store.domain.type.UserStatus;
-import com.kmini.store.dto.UserUpdateDto;
+import com.kmini.store.dto.request.UserDto.UserUpdateDto;
 import com.kmini.store.ex.CustomUserNotFoundException;
 import com.kmini.store.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

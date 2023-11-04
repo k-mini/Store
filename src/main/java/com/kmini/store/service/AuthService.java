@@ -3,7 +3,6 @@ package com.kmini.store.service;
 import com.kmini.store.domain.User;
 import com.kmini.store.domain.type.UserRole;
 import com.kmini.store.domain.type.UserStatus;
-import com.kmini.store.dto.SignupDto;
 import com.kmini.store.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

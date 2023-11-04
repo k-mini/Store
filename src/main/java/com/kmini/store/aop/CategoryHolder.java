@@ -1,4 +1,4 @@
-package com.kmini.store.config.init;
+package com.kmini.store.aop;
 
 import com.kmini.store.domain.type.BoardType;
 import lombok.Getter;
@@ -11,6 +11,5 @@ import org.springframework.util.MultiValueMap;
 @Setter
 @Component
 public class CategoryHolder {
-
     private MultiValueMap<BoardType, BoardType> map = new LinkedMultiValueMap<>();
 }

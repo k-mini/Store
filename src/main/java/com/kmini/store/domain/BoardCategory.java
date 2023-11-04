@@ -30,4 +30,8 @@ public class BoardCategory {
         this.boardType = boardType;
         this.parentCategory = parentCategory;
     }
+
+    public static void valueOf(String categoryName) {
+
+    }
 }

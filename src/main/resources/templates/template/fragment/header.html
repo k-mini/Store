@@ -50,7 +50,8 @@
                                     <a
                                             th:each="miniCategory : ${category.value}"
                                             th:text="|${miniCategory.name} 게시판|"
-                                            th:href="@{/boards/{categoryName}(categoryName=${#strings.toLowerCase(category.key)})}"
+                                            th:href="@{/boards/{categoryName}/{miniCategory}(categoryName=${#strings.toLowerCase(category.key)},
+                                             miniCategory=${#strings.toLowerCase(miniCategory)})}"
                                             class="block rounded py-[10px] px-4 text-sm text-body-color hover:text-primary"
                                     >
                                         [[${miniCategory.name}]]

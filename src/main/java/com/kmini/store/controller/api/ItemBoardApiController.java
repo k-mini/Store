@@ -1,8 +1,8 @@
 package com.kmini.store.controller.api;
 
 
-import com.kmini.store.dto.ItemBoardRespDto.ItemBoardRespAllDto;
-import com.kmini.store.dto.RespDto;
+import com.kmini.store.dto.response.ItemBoardDto.ItemBoardRespAllDto;
+import com.kmini.store.dto.CommonRespDto;
 import com.kmini.store.service.ItemBoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +29,6 @@ public class ItemBoardApiController {
     public ResponseEntity<?> load(
             @PageableDefault(sort = "createdDate", direction = DESC) Pageable pageable) {
         Page<ItemBoardRespAllDto> content = itemBoardService.load(pageable);
-        return ResponseEntity.ok(new RespDto<Page<ItemBoardRespAllDto>>(1,"success", content));
+        return ResponseEntity.ok(new CommonRespDto<Page<ItemBoardRespAllDto>>(1,"success", content));
     }
 }

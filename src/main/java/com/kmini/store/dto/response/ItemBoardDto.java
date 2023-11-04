@@ -1,9 +1,9 @@
-package com.kmini.store.dto;
+package com.kmini.store.dto.response;
 
 import com.kmini.store.config.util.CustomTimeUtils;
 import com.kmini.store.domain.Comment;
 import com.kmini.store.domain.ItemBoard;
-import com.kmini.store.dto.CommentDto.ItemBoardCommentDto;
+import com.kmini.store.dto.request.CommentDto.ItemBoardCommentDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +11,7 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemBoardRespDto {
+public class ItemBoardDto {
 
 
     // 거래 게시글 목록 Dto

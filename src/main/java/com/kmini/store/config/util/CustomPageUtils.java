@@ -18,8 +18,12 @@ public class CustomPageUtils {
         // 시작 페이지
         int startPage = endPage - gap + 1;
 
-        // 마지막 페이지 조정
+        // 페이지 총 개수
         int totalPages = page.getTotalPages();
+        // 페이지가 하나도 없더라도 1로 조정
+        totalPages = totalPages == 0 ? 1 : totalPages;
+
+        // 마지막 페이지 조정
         if (totalPages < endPage) {
             endPage = totalPages;
         }

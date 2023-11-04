@@ -1,7 +1,7 @@
 package com.kmini.store.controller;
 
 import com.kmini.store.domain.User;
-import com.kmini.store.dto.SignupDto;
+import com.kmini.store.dto.request.UserDto.SignupDto;
 import com.kmini.store.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +32,7 @@ public class AuthController {
         log.info("signUpDto : {}", signUpDto);
         User user = signUpDto.toEntity();
         userService.save(user);
-        return "/auth/signin";
+        return "redirect:/auth/signin";
     }
 
     @GetMapping("/auth/signin")

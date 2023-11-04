@@ -2,9 +2,9 @@ package com.kmini.store.controller;
 
 import com.kmini.store.config.auth.PrincipalDetail;
 import com.kmini.store.config.util.CustomPageUtils;
-import com.kmini.store.dto.ItemBoardRespDto.ItemBoardRespAllDto;
-import com.kmini.store.dto.ItemBoardRespDto.ItemBoardRespDetailDto;
-import com.kmini.store.dto.ItemBoardUploadDto;
+import com.kmini.store.dto.request.ItemBoardDto.UploadDto;
+import com.kmini.store.dto.response.ItemBoardDto.ItemBoardRespAllDto;
+import com.kmini.store.dto.response.ItemBoardDto.ItemBoardRespDetailDto;
 import com.kmini.store.service.ItemBoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ import java.io.IOException;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @Controller
-@RequestMapping("/boards/trade")
+@RequestMapping("/boards/trade/{miniCategory}")
 @Slf4j
 @RequiredArgsConstructor
 public class ItemBoardController {
@@ -29,7 +29,7 @@ public class ItemBoardController {
     private final ItemBoardService itemBoardService;
 
     // 게시물 조회
-//    @GetMapping
+    @GetMapping()
     public String load(
             @PageableDefault(sort = "createdDate", direction = DESC) Pageable pageable,
                            Model model) {
@@ -45,7 +45,7 @@ public class ItemBoardController {
     }
 
     // 게시물 자세히 조회
-//    @GetMapping("/{boardId}")
+    @GetMapping("/{boardId}")
     public String detail(@PathVariable("boardId") Long boardId, Model model) {
         ItemBoardRespDetailDto result = itemBoardService.detail(boardId);
         model.addAttribute("result",result);
@@ -55,10 +55,10 @@ public class ItemBoardController {
     // 게시물 저장
     @PostMapping("/form")
     public String upload(
-            @ModelAttribute ItemBoardUploadDto itemBoardUploadDto,
+            @ModelAttribute UploadDto uploadDto,
                                     @AuthenticationPrincipal PrincipalDetail principal) throws IOException {
-        log.info("itemBoardUploadDto = {}", itemBoardUploadDto);
-        itemBoardService.upload(itemBoardUploadDto, principal);
+        log.info("uploadDto = {}", uploadDto);
+        itemBoardService.upload(uploadDto, principal);
         return "redirect:/boards/trade";
     }
 }
