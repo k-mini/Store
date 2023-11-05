@@ -1,15 +1,12 @@
 package com.kmini.store.repository;
 
 import com.kmini.store.domain.type.CategoryType;
-import lombok.RequiredArgsConstructor;
+import com.kmini.store.repository.board.BoardRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.persistence.EntityManager;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class BoardRepositoryImplTest {

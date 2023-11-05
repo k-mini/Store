@@ -1,7 +1,14 @@
 package com.kmini.store.config.util;
 
+import com.kmini.store.domain.QBoard;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.ui.Model;
 
 @Slf4j
@@ -42,5 +49,24 @@ public class CustomPageUtils {
         model.addAttribute("endPage",endPage);
         model.addAttribute("prev",prev);
         model.addAttribute("next",next);
+    }
+
+    public static OrderSpecifier<?>[] getOrderSpecifiers(Pageable pageable, Path<?> path) {
+        return pageable.getSort()
+                .stream()
+                .map(order -> getOrderSpecifier(order, path))
+                .toArray(OrderSpecifier[] :: new);
+    }
+
+    private static OrderSpecifier<?> getOrderSpecifier(Sort.Order order, Path<?> path) {
+        PathBuilder<?> pathBuilder = new PathBuilder<>(path.getType(), path.getMetadata());
+
+        return new OrderSpecifier(checkOrder(order.getDirection()), pathBuilder.get(order.getProperty()));
+    }
+
+
+
+    private static Order checkOrder(Sort.Direction direction) {
+        return direction.isAscending() ? Order.ASC : Order.DESC;
     }
 }

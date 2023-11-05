@@ -24,7 +24,7 @@ public class ItemBoardDto {
         private String username;
         // 제목
         private String title;
-        // 제목아래 내용 살짝..
+        // 내용
         private String content;
         // 게시물 썸네일
         private String thumbnail;

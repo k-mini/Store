@@ -21,7 +21,7 @@ import java.io.IOException;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @Controller
-//@RequestMapping("/boards/trade/{miniCategory}")
+@RequestMapping("/board/trade/{subCategory}")
 @Slf4j
 @RequiredArgsConstructor
 public class ItemBoardController {
@@ -47,7 +47,9 @@ public class ItemBoardController {
 
     // 게시물 자세히 조회
     @GetMapping("/{boardId}")
-    public String detail(@PathVariable("boardId") Long boardId, Model model) {
+    public String detail(
+            @PathVariable("subCategory") String subCategory,
+            @PathVariable("boardId") Long boardId, Model model) {
         ItemBoardRespDetailDto result = itemBoardService.detail(boardId);
         model.addAttribute("result",result);
         return "board/trade-detail";

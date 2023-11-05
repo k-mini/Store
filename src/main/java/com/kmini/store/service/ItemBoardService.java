@@ -3,7 +3,6 @@ package com.kmini.store.service;
 import com.kmini.store.config.auth.PrincipalDetail;
 import com.kmini.store.config.file.FileUploader;
 import com.kmini.store.domain.*;
-import com.kmini.store.domain.type.CategoryType;
 import com.kmini.store.dto.request.BoardDto.FormSaveDto;
 import com.kmini.store.dto.response.ItemBoardDto.ItemBoardRespAllDto;
 import com.kmini.store.dto.response.ItemBoardDto.ItemBoardRespDetailDto;
@@ -11,7 +10,7 @@ import com.kmini.store.ex.CustomBoardNotFoundException;
 import com.kmini.store.ex.CustomCategoryNotFoundException;
 import com.kmini.store.repository.BoardCategoryRepository;
 import com.kmini.store.repository.CategoryRepository;
-import com.kmini.store.repository.ItemBoardRepository;
+import com.kmini.store.repository.board.ItemBoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -41,18 +41,20 @@ public class ItemBoardService {
     // 게시물 상세 조회
     @Transactional
     public ItemBoardRespDetailDto detail(Long id) {
-        ItemBoard itemBoard = itemBoardRepository.findById(id)
-                .orElseThrow(() -> new CustomBoardNotFoundException("게시물을 찾을 수 없습니다."));
+
+        // 게시물 조회
+        ItemBoard board = itemBoardRepository.findCustomById(id)
+                .orElseThrow(()-> new CustomBoardNotFoundException("게시물을 찾을 수 없습니다."));
 
         // 댓글 조회
-        List<Comment> comments = itemBoard.getComments();
+        List<Comment> comments = board.getComments();
 
         // 현재 조회수 
-        int views = itemBoard.getViews();
+        int views = board.getViews();
         // 조회수 증가 => 동시성 문제
-        itemBoard.setViews(views + 1);
+        board.setViews(views + 1);
         
-        return ItemBoardRespDetailDto.toDto(itemBoard, comments);
+        return ItemBoardRespDetailDto.toDto(board, comments);
     }
 
     // 게시물 저장

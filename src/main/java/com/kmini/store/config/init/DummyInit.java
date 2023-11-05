@@ -39,6 +39,8 @@ public class DummyInit implements ApplicationRunner {
         log.info("DevInit 실행...");
         User user = new User("kmini", "1234", "test@gmail.com", UserRole.USER, UserStatus.SIGNUP, null);
         userService.save(user);
+        User admin = new User("admin","admin", "admin", UserRole.ADMIN, UserStatus.SIGNUP, null);
+        userService.save(admin);
 
         log.info("카테고리 넣기! ..");
         Category trade = new Category(TRADE);

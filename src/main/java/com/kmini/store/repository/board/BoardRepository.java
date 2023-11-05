@@ -1,4 +1,4 @@
-package com.kmini.store.repository;
+package com.kmini.store.repository.board;
 
 import com.kmini.store.domain.Board;
 import org.springframework.data.domain.Page;

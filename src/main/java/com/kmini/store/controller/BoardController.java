@@ -3,13 +3,18 @@ package com.kmini.store.controller;
 import com.kmini.store.config.auth.PrincipalDetail;
 import com.kmini.store.config.util.CustomPageUtils;
 import com.kmini.store.dto.request.BoardDto.FormSaveDto;
+import com.kmini.store.dto.request.SearchDto;
+import com.kmini.store.dto.request.SearchDto.SearchBoardListDto;
 import com.kmini.store.dto.response.BoardDto;
 import com.kmini.store.service.BoardService;
 import com.kmini.store.service.ItemBoardService;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.OrderSpecifier;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -18,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static com.kmini.store.domain.type.CategoryType.COMMUNITY;
 import static com.kmini.store.domain.type.CategoryType.TRADE;
@@ -44,23 +50,6 @@ public class BoardController {
     }
 
     // 카테고리별 게시물 조회
-    @GetMapping
-    public String load(
-            @PathVariable("category") String categoryName,
-            @PathVariable("subCategory") String subCategoryName,
-            @PageableDefault(sort = "createdDate", direction = DESC) Pageable pageable,
-            Model model) {
-        log.info("category = {}, subCategory = {}", categoryName, subCategoryName);
-        Page<BoardDto> results = boardService.load(pageable, categoryName, subCategoryName);
-        for (BoardDto result : results.getContent()) {
-            log.debug("result = {}", result);
-        }
-
-        CustomPageUtils.configure(results,5, model);
-        model.addAttribute("results", results);
-        return "board/boardlist";
-    }
-
     @PostMapping("/form")
     public String save(
             @ModelAttribute FormSaveDto formSaveDto,
@@ -82,14 +71,30 @@ public class BoardController {
         return "redirect:/boards/{category}/{subCategory}";
     }
 
-//     게시물 상세 조회
-    @GetMapping("/{boardId}")
-    public String detail(
-            @PathVariable("categoryName") String categoryName,
-            @PathVariable("boardId") Long boardId, Model model) {
-//        ItemBoardRespDetailDto result = boardService.detail(boardId);
-//        model.addAttribute("result",result);
-        return "board/trade-detail";
+    @GetMapping
+    public String load(
+            @PathVariable("category") String categoryName,
+            @PathVariable("subCategory") String subCategoryName,
+            @PageableDefault(sort = "createdDate", direction = DESC) Pageable pageable,
+            @ModelAttribute SearchBoardListDto searchBoardListDto,
+            Model model) {
+        log.info("category = {}, subCategory = {}", categoryName, subCategoryName);
+        Sort sort = pageable.getSort();
+        log.debug("Sort = {}", sort);
+        if (log.isInfoEnabled()) {
+            for (Sort.Order order : sort) {
+                log.info("Order = {}", order);
+            }
+        }
+
+        Page<BoardDto> results = boardService.load(pageable, categoryName, subCategoryName, searchBoardListDto);
+        for (BoardDto result : results.getContent()) {
+            log.debug("result = {}", result);
+        }
+
+        CustomPageUtils.configure(results,5, model);
+        model.addAttribute("results", results);
+        return "board/boardlist";
     }
 }
 

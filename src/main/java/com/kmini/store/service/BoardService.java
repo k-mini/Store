@@ -5,10 +5,11 @@ import com.kmini.store.config.file.FileUploader;
 import com.kmini.store.domain.*;
 import com.kmini.store.domain.type.CategoryType;
 import com.kmini.store.dto.request.BoardDto.FormSaveDto;
+import com.kmini.store.dto.request.SearchDto.SearchBoardListDto;
 import com.kmini.store.dto.response.BoardDto;
 import com.kmini.store.dto.search.BoardSearchCond;
 import com.kmini.store.repository.BoardCategoryRepository;
-import com.kmini.store.repository.BoardRepository;
+import com.kmini.store.repository.board.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,14 +29,15 @@ public class BoardService {
 
     // 게시물 조회 ( 디폴트 : 최신 시간 순으로)
     @Transactional(readOnly = true)
-    public Page<BoardDto> load(Pageable pageable, String categoryName, String subCategoryName) {
+    public Page<BoardDto> load(Pageable pageable, String categoryName, String subCategoryName, SearchBoardListDto searchBoardListDto) {
 
+        // 검색 조건 만들기
         CategoryType categoryType = CategoryType.valueOf(categoryName.toUpperCase());
         CategoryType subCategoryType = CategoryType.valueOf(subCategoryName.toUpperCase());
+        BoardSearchCond boardSearchCond = new BoardSearchCond(categoryType, subCategoryType, searchBoardListDto);
+
 
 //        Page<Board> rawResult = boardRepository.findBydtype(pageable, categoryType.getDtype());
-
-        BoardSearchCond boardSearchCond = new BoardSearchCond(categoryType, subCategoryType);
         Page<Board> rawResult = boardRepository.findByCategories(boardSearchCond, pageable);
 
         return rawResult.map(BoardDto::toDto);
