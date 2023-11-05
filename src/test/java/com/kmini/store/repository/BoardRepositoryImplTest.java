@@ -19,7 +19,7 @@ class BoardRepositoryImplTest {
     @Test
     void findByCategoriesTest(){
 
-        boardRepository.findByCategories(null,null);
+        boardRepository.findBoards(null,null);
     }
 
     @Test

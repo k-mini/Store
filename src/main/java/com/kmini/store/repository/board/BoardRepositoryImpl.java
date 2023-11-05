@@ -5,18 +5,20 @@ import com.kmini.store.domain.*;
 import com.kmini.store.domain.type.CategoryType;
 import com.kmini.store.dto.search.BoardSearchCond;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-
-import java.util.List;
+import org.springframework.data.support.PageableExecutionUtils;
+import org.springframework.util.StringUtils;
 
 import static com.kmini.store.domain.QBoard.board;
 import static com.kmini.store.domain.QBoardCategory.boardCategory;
 import static com.kmini.store.domain.QCategory.category;
+import static com.kmini.store.domain.QUser.user;
 
 @RequiredArgsConstructor
 public class BoardRepositoryImpl implements BoardRepositoryCustom{
@@ -25,44 +27,57 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom{
 
     // 게시판 페이징
     @Override
-    public Page<Board> findByCategories(BoardSearchCond cond, Pageable pageable) {
+    public Page<Board> findBoards(BoardSearchCond cond, Pageable pageable) {
 
-        CategoryType categoryType = cond.getSubCategoryName();
+        CategoryType subCategoryType = cond.getSubCategoryName();
         // order 지시자 만들기
         OrderSpecifier<?>[] orderSpecifiers = CustomPageUtils.getOrderSpecifiers(pageable, board);
-        // 검색 조건 만들기
-        
 
-        List<Board> content = queryFactory
+        JPAQuery<Board> query = queryFactory
                 .selectFrom(board)
                 .where(
                         board.in(
                                 JPAExpressions.select(boardCategory.board)
                                         .from(boardCategory)
                                         .where(boardCategory.category.eq(
-                                                JPAExpressions.selectFrom(category)
-                                                                .where(category.categoryType.eq(categoryType))
-                                            )
+                                                        JPAExpressions.selectFrom(category)
+                                                                .where(category.categoryType.eq(subCategoryType))
+                                                )
                                         )
-
-                        )
+                        ),
+                        titleLike(cond.getTitle()),
+                        contentLike(cond.getContent())
                 )
+                .join(board.user, user).fetchJoin()
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .orderBy(orderSpecifiers)
-                .fetch();
+                .orderBy(orderSpecifiers);
 
-        int size = queryFactory
-                .select(boardCategory.count())
-                .from(boardCategory)
-                .where(boardCategory.category
-                        .eq(
-                                JPAExpressions.selectFrom(category)
-                                        .where(category.categoryType.eq(categoryType))
-                        )
-                ).fetchOne().intValue();
+        JPAQuery<Long> countQuery = queryFactory
+                .select(board.count())
+                .from(board)
+                .where(
+                        board.in(
+                                JPAExpressions.select(boardCategory.board)
+                                        .from(boardCategory)
+                                        .where(boardCategory.category.eq(
+                                                        JPAExpressions.selectFrom(category)
+                                                                .where(category.categoryType.eq(subCategoryType))
+                                                )
+                                        )
+                        ),
+                        titleLike(cond.getTitle()),
+                        contentLike(cond.getContent())
+                );
 
-//        return null;
-        return new PageImpl<>(content,pageable,size);
+        return PageableExecutionUtils.getPage(query.fetch(),pageable,countQuery::fetchOne);
+    }
+
+    private BooleanExpression titleLike(String title) {
+        return StringUtils.hasText(title) ? board.title.like("%" + title + "%") : null;
+    }
+
+    private BooleanExpression contentLike(String content) {
+        return StringUtils.hasText(content) ? board.content.like("%" + content + "%") : null;
     }
 }

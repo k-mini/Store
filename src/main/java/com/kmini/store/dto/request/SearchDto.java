@@ -7,9 +7,13 @@ public class SearchDto {
 
     @Data
     @AllArgsConstructor
-    public static class SearchBoardListDto {
-        private String searchType;
-        private String searchWord;
+    public static class SearchBoardDto {
+        // 타입
+        private String sType;
+        // 값
+        private String s;
+        // 정렬
+        private String order;
     }
 
 }

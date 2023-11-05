@@ -3,13 +3,10 @@ package com.kmini.store.controller;
 import com.kmini.store.config.auth.PrincipalDetail;
 import com.kmini.store.config.util.CustomPageUtils;
 import com.kmini.store.dto.request.BoardDto.FormSaveDto;
-import com.kmini.store.dto.request.SearchDto;
-import com.kmini.store.dto.request.SearchDto.SearchBoardListDto;
+import com.kmini.store.dto.request.SearchDto.SearchBoardDto;
 import com.kmini.store.dto.response.BoardDto;
 import com.kmini.store.service.BoardService;
 import com.kmini.store.service.ItemBoardService;
-import com.querydsl.core.types.Expression;
-import com.querydsl.core.types.OrderSpecifier;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -23,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Map;
 
 import static com.kmini.store.domain.type.CategoryType.COMMUNITY;
 import static com.kmini.store.domain.type.CategoryType.TRADE;
@@ -76,7 +73,7 @@ public class BoardController {
             @PathVariable("category") String categoryName,
             @PathVariable("subCategory") String subCategoryName,
             @PageableDefault(sort = "createdDate", direction = DESC) Pageable pageable,
-            @ModelAttribute SearchBoardListDto searchBoardListDto,
+            @ModelAttribute SearchBoardDto searchBoardDto,
             Model model) {
         log.info("category = {}, subCategory = {}", categoryName, subCategoryName);
         Sort sort = pageable.getSort();
@@ -86,8 +83,9 @@ public class BoardController {
                 log.info("Order = {}", order);
             }
         }
+        log.info("SearchBoardDto = {}", searchBoardDto);
 
-        Page<BoardDto> results = boardService.load(pageable, categoryName, subCategoryName, searchBoardListDto);
+        Page<BoardDto> results = boardService.load(pageable, categoryName, subCategoryName, searchBoardDto);
         for (BoardDto result : results.getContent()) {
             log.debug("result = {}", result);
         }
