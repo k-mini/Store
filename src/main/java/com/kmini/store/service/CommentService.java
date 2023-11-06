@@ -31,6 +31,7 @@ public class CommentService {
 
         Board board = boardRepository.getReferenceById(boardCommentReqDto.getBoardId());
         String content = boardCommentReqDto.getContent();
+
         // 댓글 엔티티 생성
         Comment comment = new Comment(user, board, null, content);
         // 댓글 저장
@@ -44,6 +45,7 @@ public class CommentService {
         Board board = boardRepository.getReferenceById(boardReplyReqDto.getBoardId());
         Comment topComment = commentRepository.getReferenceById(boardReplyReqDto.getTopCommentId());
         String content = boardReplyReqDto.getContent();
+
         // 대댓글 엔티티 생성
         Comment reply = new Comment(user, board, topComment, content);
         // 대댓글 저장
@@ -53,7 +55,6 @@ public class CommentService {
 
     @Transactional
     public void delete(Long commentId, Long commentUserId) {
-
 //        User commentUser = userRepository.getReferenceById(commentUserId);
         // 댓글 삭제
         int result = commentRepository.deleteByIdAndUser(commentId, commentUserId);

@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -46,8 +47,11 @@ public class ItemBoardService {
         ItemBoard board = itemBoardRepository.findCustomById(id)
                 .orElseThrow(()-> new CustomBoardNotFoundException("게시물을 찾을 수 없습니다."));
 
-        // 댓글 조회
-        List<Comment> comments = board.getComments();
+        // 상위 댓글 조회
+        List<Comment> comments = board.getComments()
+                .stream()
+                .filter(comment -> comment.getTopComment() == null)
+                .collect(Collectors.toList());
 
         // 현재 조회수 
         int views = board.getViews();

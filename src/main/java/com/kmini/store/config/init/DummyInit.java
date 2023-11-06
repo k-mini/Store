@@ -7,8 +7,12 @@ import com.kmini.store.domain.User;
 import com.kmini.store.domain.type.UserRole;
 import com.kmini.store.domain.type.UserStatus;
 import com.kmini.store.dto.request.BoardDto.FormSaveDto;
+import com.kmini.store.dto.request.CommentDto;
+import com.kmini.store.dto.request.CommentDto.BoardCommentReqDto;
+import com.kmini.store.dto.request.CommentDto.BoardReplyReqDto;
 import com.kmini.store.repository.CategoryRepository;
 import com.kmini.store.service.BoardService;
+import com.kmini.store.service.CommentService;
 import com.kmini.store.service.ItemBoardService;
 import com.kmini.store.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +36,7 @@ public class DummyInit implements ApplicationRunner {
     private final UserService userService;
     private final CategoryRepository categoryRepository;
     private final ItemBoardService itemBoardService;
+    private final CommentService commentService;
     private final CategoryHolder categoryHolder;
 
     @Override
@@ -72,6 +77,16 @@ public class DummyInit implements ApplicationRunner {
                             "title" + i, "content" + i, null, "item" + i);
             itemBoardService.save(saveFormDto,principal);
         }
+
+        log.info("상위 댓글 넣기 !!..");
+        commentService.saveComment(new BoardCommentReqDto(156L, "상위 댓글댓글1111"), user);
+        commentService.saveComment(new BoardCommentReqDto(156L, "상위 댓글댓글2222"), user);
+
+        log.info("대댓글 넣기!!");
+        commentService.saveReply(new BoardReplyReqDto(156L,1L,"댓글1의 대댓글1"),user);
+        commentService.saveReply(new BoardReplyReqDto(156L,1L,"댓글1의 대댓글2"),user);
+        commentService.saveReply(new BoardReplyReqDto(156L,2L,"댓글2의 대댓글1"),user);
+        commentService.saveReply(new BoardReplyReqDto(156L,2L,"댓글2의 대댓글2"),user);
 
 //        for (int i = 157; i < 300; i++) {
 //            FormSaveDto saveFormDto =
