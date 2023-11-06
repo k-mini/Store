@@ -139,7 +139,7 @@
                           />
                         </svg>
                       </span>
-                                    [[${result.commentNumber}]]
+                                    [[${result.commentTotalCount}]]
                                 </p>
                                 <p class="flex items-center text-sm font-medium text-white">
                       <span class="mr-3">
@@ -186,23 +186,23 @@
                             </p>
 
                             <!-- 댓글 영역 시작 -->
-                                <div class="max-w-2xl mx-auto px-4">
+                                <div id="comment-box" class="max-w-2xl mx-auto px-4">
                                     <div class="flex justify-between items-center mb-6">
-                                        <h2 class="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">댓글 (20)</h2>
+                                        <h2 id="comment-total" class="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">댓글 ([[${result.commentTotalCount}]])</h2>
                                     </div>
-                                    <form class="mb-6">
+                                    <div class="mb-6">
                                         <div class="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
-                                            <textarea id="comment" rows="6"
+                                            <textarea id="comment-content" rows="6"
                                                       class="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none dark:text-white dark:placeholder-gray-400 dark:bg-gray-800"
                                                       placeholder="Write a comment..." required></textarea>
                                         </div>
-                                        <button type="submit"
+                                        <button id="comment-save" type="button"
                                                 class="mb-5 inline-block rounded bg-primary py-1 px-4 text-center text-xs font-semibold leading-loose text-white">
                                             댓글 작성
                                         </button>
-                                    </form>
+                                    </div>
 
-                                    <div class="p-6 text-base bg-white rounded-lg dark:bg-gray-900">
+                                    <div class="mb-6 text-base bg-white rounded-lg dark:bg-gray-900">
                                         <div class="flex justify-between items-center mb-2">
                                             <div class="flex items-center">
                                                 <p class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white font-semibold">
@@ -226,11 +226,11 @@
                                         <div class="flex items-center py-6">
                                             <button type="button"
                                                     class="flex items-center text-sm text-gray-500 hover:underline dark:text-gray-400 font-medium">
-                                                Reply
+                                                답글
                                             </button>
                                         </div>
 
-                                        <div class="py-8 lg:ml-6 text-base bg-white rounded-lg dark:bg-gray-900">
+                                        <div class="py-4 lg:ml-6 text-base bg-white rounded-lg dark:bg-gray-900">
                                             <div class="flex justify-between items-center mb-2">
                                                 <div class="flex items-center">
                                                     <p class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white font-semibold">
@@ -253,37 +253,40 @@
                                         </div>
                                     </div>
 
-
-                                    <div class="p-6 text-base bg-white rounded-lg dark:bg-gray-900">
+                                    <div th:each="comment : ${result.comments}" th:id=|comment-${comment.id}| class="mb-6 text-base bg-white rounded-lg dark:bg-gray-900">
                                         <div class="flex justify-between items-center mb-2">
                                             <div class="flex items-center">
                                                 <p class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white font-semibold">
-                                                    Michael Gough</p>
+                                                    [[${comment.commentUserName}]]</p>
                                                 <p class="text-sm text-gray-600 dark:text-gray-400">
-                                                    <time pubdate datetime="2022-02-08" title="February 8th, 2022">Feb. 8, 2022</time></p>
+                                                    <time pubdate datetime="2022-02-08" title="February 8th, 2022">
+                                                        [[${comment.createdDate}]]</time></p>
                                             </div>
 
                                             <div class="flex items-center">
-                                                <button class="inline-flex items-center mr-3 text-sm text-gray-900 hover:underline dark:text-white font-semibold">
+                                                <button  id="comment-update" th:commentid="${comment.id}"
+                                                         th:onclick="updateComment(this.getAttribute('commentid'))"
+                                                         th:if="${#authentication.principal.user.id == comment.commentUserId}"
+                                                         class="inline-flex items-center mr-3 text-sm text-gray-900 hover:underline dark:text-white font-semibold">
                                                     수정</button>
-                                                <button class="inline-flex items-center mr-3 text-sm text-gray-900 hover:underline dark:text-white font-semibold">
+                                                <button id="comment-delete"
+                                                        th:onclick="deleteComment([[${comment.id}]])"
+                                                        th:if="${#authentication.principal.user.id == comment.commentUserId}"
+                                                        class="inline-flex items-center mr-3 text-sm text-gray-900 hover:underline dark:text-white font-semibold">
                                                     삭제</button>
                                             </div>
 
                                         </div>
-                                        <p class="text-gray-500 py-4 dark:text-gray-400">Very straight-to-point article. Really worth time reading. Thank you! But tools are just the
-                                            instruments for the UX designers. The knowledge of the design tools are as important as the
-                                            creation of the design strategy.</p>
+                                        <p class="text-gray-500 py-4 dark:text-gray-400">[[${comment.content}]]</p>
 
                                         <div class="flex items-center py-6">
                                             <button type="button"
                                                     class="flex items-center text-sm text-gray-500 hover:underline dark:text-gray-400 font-medium">
-                                                Reply
+                                                답글달기
                                             </button>
                                         </div>
 
                                     </div>
-
 
                                 </div>
                             <!-- 댓글 영역 종료 -->
@@ -467,7 +470,7 @@
                 <span class="mb-10 inline-block h-[2px] w-20 bg-primary"></span>
             </div>
 
-            <!-- 게시물 1개 시작 -->
+            <!-- 관련 게시물 1개 시작 -->
             <div class="w-full px-4 md:w-1/2 lg:w-1/3">
                 <div class="wow fadeInUp group mb-10" data-wow-delay=".1s">
                     <div class="mb-8 overflow-hidden rounded">
@@ -499,7 +502,7 @@
                     </div>
                 </div>
             </div>
-            <!-- 게시물 1개 종료-->
+            <!-- 관련 게시물 1개 종료-->
 
 
         </div>
@@ -523,6 +526,12 @@
 <!-- ====== Back To Top End -->
 
 <!-- ====== All Scripts -->
+<script th:inline="javascript">
+    let boardId = [[${result.Id}]]
+    let userId = [[${#authentication.principal.user.id}]]
+    let username = [[${#authentication.principal.user.username}]]
+</script>
 <script src="/assets/js/main.js"></script>
+<script src="/assets/js/comment.js"></script>
 </body>
 </html>

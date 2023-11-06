@@ -25,7 +25,7 @@ public class SecurityConfig {
         log.info("디버그 : filterChain 빈 등록됨 ");
         http.csrf().disable();
         http.authorizeRequests()
-                .antMatchers( "/api/**","/boards/**").authenticated()
+                .antMatchers( "/api/**","/boards/**","/board/**").authenticated()
                 .anyRequest().permitAll()
                 .and()
                 .formLogin()

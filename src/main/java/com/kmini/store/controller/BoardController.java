@@ -36,7 +36,6 @@ public class BoardController {
     private final ItemBoardService itemBoardService;
 //    private final CommunityBoardService communityBoardService;
 
-    // 게시글 작성
     @GetMapping("/form")
     public String save(
             @PathVariable("category") String category,
@@ -46,7 +45,6 @@ public class BoardController {
         return "board/form";
     }
 
-    // 카테고리별 게시물 조회
     @PostMapping("/form")
     public String save(
             @ModelAttribute FormSaveDto formSaveDto,
@@ -68,6 +66,9 @@ public class BoardController {
         return "redirect:/boards/{category}/{subCategory}";
     }
 
+
+
+    // 카테고리별 게시물 조회
     @GetMapping
     public String load(
             @PathVariable("category") String categoryName,

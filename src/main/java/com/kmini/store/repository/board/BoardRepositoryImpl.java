@@ -1,7 +1,7 @@
 package com.kmini.store.repository.board;
 
 import com.kmini.store.config.util.CustomPageUtils;
-import com.kmini.store.domain.*;
+import com.kmini.store.domain.Board;
 import com.kmini.store.domain.type.CategoryType;
 import com.kmini.store.dto.search.BoardSearchCond;
 import com.querydsl.core.types.OrderSpecifier;

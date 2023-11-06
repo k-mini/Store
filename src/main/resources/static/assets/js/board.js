@@ -6,9 +6,9 @@ let index = {
             this.save();
         });
 
-        $(document).ready(() => {
-            this.load();
-        });
+        // $(document).ready(() => {
+        //     this.load();
+        // });
     },
     save : function() {
         let data = {

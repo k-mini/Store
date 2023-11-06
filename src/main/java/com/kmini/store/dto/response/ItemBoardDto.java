@@ -3,7 +3,7 @@ package com.kmini.store.dto.response;
 import com.kmini.store.config.util.CustomTimeUtils;
 import com.kmini.store.domain.Comment;
 import com.kmini.store.domain.ItemBoard;
-import com.kmini.store.dto.request.CommentDto.ItemBoardCommentDto;
+import com.kmini.store.dto.response.CommentDto.BoardCommentResDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -72,11 +72,11 @@ public class ItemBoardDto {
         // 조회 수
         private int views;
         // 댓글 수
-        private int commentNumber;
+        private int commentTotalCount;
         // 댓글
-        private List<ItemBoardCommentDto> commentDtos = new ArrayList<>();
+        private List<BoardCommentResDto> comments = new ArrayList<>();
 
-        public static ItemBoardRespDetailDto toDto(ItemBoard itemBoard, List<Comment> comment) {
+        public static ItemBoardRespDetailDto toDto(ItemBoard itemBoard, List<Comment> comments) {
             String createdDate = CustomTimeUtils.convertTime(itemBoard.getCreatedDate());
 
             return ItemBoardRespDetailDto.builder()
@@ -89,8 +89,8 @@ public class ItemBoardDto {
                     .content(itemBoard.getContent())
                     .createdDate(createdDate)
                     .views(itemBoard.getViews())
-                    .commentNumber(comment.size())
-                    .commentDtos(ItemBoardCommentDto.toDtos(comment))
+                    .commentTotalCount(comments.size())
+                    .comments(BoardCommentResDto.toDtos(comments))
                     .build();
         }
     }

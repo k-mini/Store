@@ -1,13 +1,15 @@
 package com.kmini.store.domain;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
 @Getter @Setter
-public class Comment {
+@NoArgsConstructor
+public class Comment extends BaseTime{
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "COMMENT_ID")
@@ -23,4 +25,9 @@ public class Comment {
 
     private String content;
 
+    public Comment(User user, Board board, String content) {
+        this.user = user;
+        this.board = board;
+        this.content = content;
+    }
 }

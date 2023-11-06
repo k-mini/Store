@@ -1,6 +1,6 @@
 package com.kmini.store.ex;
 
-public class CustomUserNotFoundException extends RuntimeException {
+public class CustomUserNotFoundException extends CustomException {
 
     public CustomUserNotFoundException(String message) {
         super(message);
