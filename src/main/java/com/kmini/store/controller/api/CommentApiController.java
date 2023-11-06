@@ -3,9 +3,11 @@ package com.kmini.store.controller.api;
 import com.kmini.store.config.auth.PrincipalDetail;
 import com.kmini.store.domain.User;
 import com.kmini.store.dto.CommonRespDto;
-import com.kmini.store.dto.request.CommentDto;
 import com.kmini.store.dto.request.CommentDto.BoardCommentReqDto;
-import com.kmini.store.dto.response.CommentDto.BoardCommentResDto;
+import com.kmini.store.dto.request.CommentDto.BoardReplyReqDto;
+import com.kmini.store.dto.response.CommentDto;
+import com.kmini.store.dto.response.CommentDto.BoardCommentRespDto;
+import com.kmini.store.dto.response.CommentDto.BoardReplyRespDto;
 import com.kmini.store.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,10 +29,22 @@ public class CommentApiController {
             @RequestBody BoardCommentReqDto boardCommentReqDto,
             @AuthenticationPrincipal PrincipalDetail principalDetail) {
         log.info("boardCommentReqDto = {}", boardCommentReqDto);
-        BoardCommentResDto result = commentService.save(boardCommentReqDto, principalDetail.getUser());
+        BoardCommentRespDto result = commentService.saveComment(boardCommentReqDto, principalDetail.getUser());
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(new CommonRespDto<>(1,"성공", result));
+    }
+
+    @PostMapping("{commentId}/reply")
+    public ResponseEntity<?> saveReply(
+            @RequestBody BoardReplyReqDto boardReplyReqDto,
+            @AuthenticationPrincipal PrincipalDetail principalDetail
+    ) {
+        log.info("boardReplyReqDto = {} ", boardReplyReqDto);
+        BoardReplyRespDto result = commentService.saveReply(boardReplyReqDto, principalDetail.getUser());
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(new CommonRespDto<>(1, "성공", result));
     }
 
     @DeleteMapping("/{commentId}")

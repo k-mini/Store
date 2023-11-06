@@ -5,6 +5,8 @@ import com.kmini.store.dto.request.SearchDto.SearchBoardDto;
 import lombok.Data;
 import org.springframework.util.StringUtils;
 
+import static com.kmini.store.domain.type.CategoryType.ALL;
+
 @Data
 public class BoardSearchCond {
 
@@ -24,4 +26,8 @@ public class BoardSearchCond {
         this.content = "content".equals(searchBoardDto.getSType()) ? searchBoardDto.getS() : null ;
     }
 
+    public CategoryType getCategoryType() {
+        return subCategoryName != ALL ? subCategoryName : categoryName;
+    }
 }
+

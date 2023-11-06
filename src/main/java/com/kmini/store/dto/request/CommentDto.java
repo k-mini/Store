@@ -20,4 +20,16 @@ public class CommentDto {
         // 내용
         private String content;
     }
+
+    @Data
+    @AllArgsConstructor @Builder
+    @NoArgsConstructor
+    public static class BoardReplyReqDto {
+        // 게시물 id
+        private Long boardId;
+        // 상위 댓글 id
+        private Long topCommentId;
+        // 답글 내용
+        private String content;
+    }
 }

@@ -29,7 +29,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom{
     @Override
     public Page<Board> findBoards(BoardSearchCond cond, Pageable pageable) {
 
-        CategoryType subCategoryType = cond.getSubCategoryName();
+        CategoryType categoryType = cond.getCategoryType();
         // order 지시자 만들기
         OrderSpecifier<?>[] orderSpecifiers = CustomPageUtils.getOrderSpecifiers(pageable, board);
 
@@ -41,7 +41,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom{
                                         .from(boardCategory)
                                         .where(boardCategory.category.eq(
                                                         JPAExpressions.selectFrom(category)
-                                                                .where(category.categoryType.eq(subCategoryType))
+                                                                .where(category.categoryType.eq(categoryType))
                                                 )
                                         )
                         ),
@@ -62,7 +62,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom{
                                         .from(boardCategory)
                                         .where(boardCategory.category.eq(
                                                         JPAExpressions.selectFrom(category)
-                                                                .where(category.categoryType.eq(subCategoryType))
+                                                                .where(category.categoryType.eq(categoryType))
                                                 )
                                         )
                         ),

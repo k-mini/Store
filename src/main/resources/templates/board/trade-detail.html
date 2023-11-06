@@ -264,12 +264,12 @@
                                             </div>
 
                                             <div class="flex items-center">
-                                                <button  id="comment-update" th:commentid="${comment.id}"
+                                                <button  th:commentid="${comment.id}"
                                                          th:onclick="updateComment(this.getAttribute('commentid'))"
                                                          th:if="${#authentication.principal.user.id == comment.commentUserId}"
                                                          class="inline-flex items-center mr-3 text-sm text-gray-900 hover:underline dark:text-white font-semibold">
                                                     수정</button>
-                                                <button id="comment-delete"
+                                                <button
                                                         th:onclick="deleteComment([[${comment.id}]])"
                                                         th:if="${#authentication.principal.user.id == comment.commentUserId}"
                                                         class="inline-flex items-center mr-3 text-sm text-gray-900 hover:underline dark:text-white font-semibold">
@@ -285,6 +285,34 @@
                                                 답글달기
                                             </button>
                                         </div>
+
+                                        <!-- 대댓글 시작 -->
+                                        <div th:each="reply : ${comment.replies}" th:id="|comment-${reply.replyId}|" class="py-4 lg:ml-6 text-base bg-white rounded-lg dark:bg-gray-900">
+                                            <div class="flex justify-between items-center mb-2">
+                                                <div class="flex items-center">
+                                                    <p class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white font-semibold">
+                                                        [[${reply.replyUserName}]]</p>
+                                                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                                                        <time pubdate datetime="2022-02-08" title="February 8th, 2022">[[${reply.createdDate}]]</time></p>
+                                                </div>
+
+                                                <div class="flex items-center">
+                                                    <button
+                                                            th:onclick="updateComment([[${reply.replyId}]])"
+                                                            th:if="${#authentication.principal.user.id == comment.commentUserId}"
+                                                            class="inline-flex items-center mr-3 text-sm text-gray-900 hover:underline dark:text-white font-semibold">
+                                                        수정</button>
+                                                    <button
+                                                            th:onclick="deleteComment([[${reply.replyId}]])"
+                                                            th:if="${#authentication.principal.user.id == comment.commentUserId}"
+                                                            class="inline-flex items-center mr-3 text-sm text-gray-900 hover:underline dark:text-white font-semibold">
+                                                        삭제</button>
+                                                </div>
+
+                                            </div>
+                                            <p class="text-gray-500 py-4 dark:text-gray-400">[[${reply.content}]].</p>
+                                        </div>
+                                        <!-- 대댓글 종료-->
 
                                     </div>
 

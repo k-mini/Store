@@ -33,7 +33,7 @@ index.init();
 
 function getCommentComp(data) {
     let comp =
-        `<div class="mb-6 text-base bg-white rounded-lg dark:bg-gray-900">
+        `<div id="${data.id}" class="mb-6 text-base bg-white rounded-lg dark:bg-gray-900">
             <div class="flex justify-between items-center mb-2">
                 <div class="flex items-center">
                     <p class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white font-semibold">
@@ -43,10 +43,9 @@ function getCommentComp(data) {
                 </div>
 
                 <div class="flex items-center">
-                    <button
-                    class="inline-flex items-center mr-3 text-sm text-gray-900 hover:underline dark:text-white font-semibold">
+                    <button onclick="updateComment(${data.id})" class="inline-flex items-center mr-3 text-sm text-gray-900 hover:underline dark:text-white font-semibold">
                         수정</button>
-                    <button class="inline-flex items-center mr-3 text-sm text-gray-900 hover:underline dark:text-white font-semibold">
+                    <button onclick="deleteComment(${data.id})" class="inline-flex items-center mr-3 text-sm text-gray-900 hover:underline dark:text-white font-semibold">
                         삭제</button>
                 </div>
             </div>

@@ -3,7 +3,7 @@ package com.kmini.store.dto.response;
 import com.kmini.store.config.util.CustomTimeUtils;
 import com.kmini.store.domain.Comment;
 import com.kmini.store.domain.ItemBoard;
-import com.kmini.store.dto.response.CommentDto.BoardCommentResDto;
+import com.kmini.store.dto.response.CommentDto.BoardCommentRespDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -74,11 +74,9 @@ public class ItemBoardDto {
         // 댓글 수
         private int commentTotalCount;
         // 댓글
-        private List<BoardCommentResDto> comments = new ArrayList<>();
+        private List<BoardCommentRespDto> comments = new ArrayList<>();
 
         public static ItemBoardRespDetailDto toDto(ItemBoard itemBoard, List<Comment> comments) {
-            String createdDate = CustomTimeUtils.convertTime(itemBoard.getCreatedDate());
-
             return ItemBoardRespDetailDto.builder()
                     .id(itemBoard.getId())
                     .email(itemBoard.getUser().getEmail())
@@ -87,10 +85,10 @@ public class ItemBoardDto {
                     .title(itemBoard.getTitle())
                     .boardThumbnail(itemBoard.getThumbnail())
                     .content(itemBoard.getContent())
-                    .createdDate(createdDate)
+                    .createdDate(CustomTimeUtils.convertTime(itemBoard.getCreatedDate()))
                     .views(itemBoard.getViews())
                     .commentTotalCount(comments.size())
-                    .comments(BoardCommentResDto.toDtos(comments))
+                    .comments(BoardCommentRespDto.toDtos(comments))
                     .build();
         }
     }

@@ -5,6 +5,7 @@ import lombok.Getter;
 
 @Getter
 public enum CategoryType {
+    ALL("전체"),
     TRADE("거래"),
     COMMUNITY("커뮤니티"),
     ELECTRONICS("전자기기"),

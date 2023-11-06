@@ -5,6 +5,7 @@ import com.kmini.store.domain.Comment;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,34 +14,68 @@ public class CommentDto {
 
     @Data
     @AllArgsConstructor @Builder
-    public static class BoardCommentResDto {
+    public static class BoardCommentRespDto {
         // comment id
         private Long id;
-        // 게시물 id
-        private Long boardId;
         // 작성자 id
         private Long commentUserId;
         // 작성자 이름
         private String commentUserName;
         // 내용
         private String content;
+        // 답글
+        private List<BoardReplyRespDto> replies;
         // 생성 시간
         private String createdDate;
 
-        public static List<BoardCommentResDto> toDtos(List<Comment> comments) {
+        public static List<BoardCommentRespDto> toDtos(List<Comment> comments) {
             return comments.stream()
-                    .map(BoardCommentResDto::toDto)
+                    .map(BoardCommentRespDto::toDto)
                     .collect(Collectors.toList());
         }
-        public static BoardCommentResDto toDto(Comment comment) {
-            String formattedDate = CustomTimeUtils.convertTime(comment.getCreatedDate());
-            return BoardCommentResDto.builder()
+        public static BoardCommentRespDto toDto(Comment comment) {
+            return BoardCommentRespDto.builder()
                     .id(comment.getId())
-                    .boardId(comment.getBoard().getId())
                     .commentUserId(comment.getUser().getId())
                     .commentUserName(comment.getUser().getUsername())
                     .content(comment.getContent())
-                    .createdDate(formattedDate)
+                    .replies(BoardReplyRespDto.toDtos(comment.getSubComments()))
+                    .createdDate(CustomTimeUtils.convertTime(comment.getCreatedDate()))
+                    .build();
+        }
+    }
+
+    @Data
+    @AllArgsConstructor @Builder
+    @NoArgsConstructor
+    public static class BoardReplyRespDto {
+        // 상위 댓글 id
+        private Long topCommentId;
+        // 답글 id
+        private Long replyId;
+        // 작성자 id
+        private Long replyUserId;
+        // 작성자 이름
+        private String replyUserName;
+        // 답글 내용
+        private String content;
+        // 생성 시간
+        private String createdDate;
+
+        public static List<BoardReplyRespDto> toDtos(List<Comment> comment) {
+            return comment.stream()
+                    .map(BoardReplyRespDto::toDto)
+                    .collect(Collectors.toList());
+        }
+
+        public static BoardReplyRespDto toDto(Comment savedReply) {
+            return BoardReplyRespDto.builder()
+                    .topCommentId(savedReply.getTopComment().getId())
+                    .replyId(savedReply.getId())
+                    .replyUserId(savedReply.getUser().getId())
+                    .replyUserName(savedReply.getUser().getUsername())
+                    .content(savedReply.getContent())
+                    .createdDate(CustomTimeUtils.convertTime(savedReply.getCreatedDate()))
                     .build();
         }
     }
