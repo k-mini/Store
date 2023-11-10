@@ -57,6 +57,8 @@ public class ItemBoardDto {
         private Long id;
         // 작성자 이메일
         private String email;
+        // 작성자 id
+        private Long writerId;
         // 작성자 이름
         private String username;
         // 유저 썸네일
@@ -80,6 +82,7 @@ public class ItemBoardDto {
             return ItemBoardRespDetailDto.builder()
                     .id(itemBoard.getId())
                     .email(itemBoard.getUser().getEmail())
+                    .writerId(itemBoard.getUser().getId())
                     .username(itemBoard.getUser().getUsername())
                     .userThumbnail(itemBoard.getUser().getThumbnail())
                     .title(itemBoard.getTitle())
@@ -87,7 +90,7 @@ public class ItemBoardDto {
                     .content(itemBoard.getContent())
                     .createdDate(CustomTimeUtils.convertTime(itemBoard.getCreatedDate()))
                     .views(itemBoard.getViews())
-                    .commentTotalCount(comments.size())
+                    .commentTotalCount(itemBoard.getComments().size())
                     .comments(BoardCommentRespDto.toDtos(comments))
                     .build();
         }

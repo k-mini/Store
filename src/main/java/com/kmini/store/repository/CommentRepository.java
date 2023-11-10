@@ -8,7 +8,23 @@ import org.springframework.data.repository.query.Param;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    @Modifying(clearAutomatically = true, flushAutomatically = true)
-    @Query("delete from Comment c where c.id = :commentId and c.user.id = :commentUserId")
-    int deleteByIdAndUser(@Param("commentId") Long commentId,@Param("commentUserId") Long commentUserId);
+    @Modifying(flushAutomatically = true, clearAutomatically = true)
+    @Query("delete from Comment c where c.id = :commentId ")
+    int deleteByIdCascade(@Param("commentId") Long commentId);
+
+    @Modifying(flushAutomatically = true)
+    @Query("delete from Comment c where c.topComment.id = :commentId")
+    int deleteSubComments(@Param("commentId") Long commentId);
+
+    @Modifying(flushAutomatically = true)
+    @Query("delete from Comment c where c.id = :commentId")
+    int deleteCommentById(@Param("commentId") Long commentId);
+
+    @Modifying(flushAutomatically = true)
+    @Query("delete from Comment c where c.board.id = :boardId and c.topComment = null ")
+    void deleteTopCommentsByBoardId(@Param("boardId") Long boardId);
+
+    @Modifying(flushAutomatically = true)
+    @Query("delete from Comment c where c.board.id = :boardId and c.topComment != null ")
+    void deleteSubCommentsByBoardId(@Param("boardId") Long boardId);
 }

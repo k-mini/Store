@@ -1,5 +1,6 @@
 package com.kmini.store.service;
 
+import com.kmini.store.config.auth.PrincipalDetail;
 import com.kmini.store.domain.User;
 import com.kmini.store.domain.type.UserRole;
 import com.kmini.store.domain.type.UserStatus;
@@ -7,10 +8,12 @@ import com.kmini.store.dto.request.UserDto.UserUpdateDto;
 import com.kmini.store.ex.CustomUserNotFoundException;
 import com.kmini.store.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +27,7 @@ public class UserService {
     public void save(User user) {
         user.setRole(UserRole.USER);
         user.setUserStatus(UserStatus.SIGNUP);
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        user.setPassword(encryptionPassword(user.getPassword()));
         userRepository.save(user);
     }
 
@@ -33,18 +36,13 @@ public class UserService {
     public UserUpdateDto update(Long id, UserUpdateDto userUpdateDto) {
 
         User user = userRepository.findById(id).orElseThrow(() -> new CustomUserNotFoundException("유저가 발견되지 않았습니다."));
-        String username = userUpdateDto.getUsername();
-        if (StringUtils.hasText(username)) {
-            user.setUsername(username);
-        }
-        String password=  userUpdateDto.getPassword();
-        if (StringUtils.hasText(password)) {
-            user.setPassword(password);
-        }
-        String thumbnail = userUpdateDto.getThumbnail();
-        if (StringUtils.hasText(thumbnail)) {
-            user.setThumbnail(thumbnail);
-        }
+        user.setUsername(userUpdateDto.getUsername());
+        user.setPassword(encryptionPassword(userUpdateDto.getPassword()));
+        user.setThumbnail(userUpdateDto.getThumbnail());
+
+        PrincipalDetail principal = new PrincipalDetail(user);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
         return UserUpdateDto.toDto(user);
     }
 
@@ -59,5 +57,9 @@ public class UserService {
     public void delete(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new CustomUserNotFoundException("유저를 찾을 수 없습니다."));
         userRepository.delete(user);
+    }
+
+    private String encryptionPassword(String password) {
+        return bCryptPasswordEncoder.encode(password);
     }
 }

@@ -20,6 +20,7 @@ public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="USER_ID")
     private Long id;
+
     private String username;
 
     private String password;

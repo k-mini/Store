@@ -25,7 +25,7 @@ public class SecurityConfig {
         log.info("디버그 : filterChain 빈 등록됨 ");
         http.csrf().disable();
         http.authorizeRequests()
-                .antMatchers( "/api/**","/boards/**","/board/**").authenticated()
+                .antMatchers( "/api/**","/boards/**","/board/**","/auth/my-page").authenticated()
                 .anyRequest().permitAll()
                 .and()
                 .formLogin()
@@ -33,6 +33,7 @@ public class SecurityConfig {
                 .loginPage("/auth/signin")
                 .loginProcessingUrl("/auth/signin")
                 .defaultSuccessUrl("/")
+                .failureUrl("/auth/signin")
                 .and()
                 .logout().logoutSuccessUrl("/");
         http.headers().frameOptions().disable();

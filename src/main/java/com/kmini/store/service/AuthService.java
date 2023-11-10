@@ -21,6 +21,6 @@ public class AuthService {
         user.setUserStatus(UserStatus.SIGNUP);
         user.setRole(UserRole.USER);
         userRepository.save(user);
-        log.info("user = {}", user);
+        log.debug("user = {}", user);
     }
 }

@@ -10,13 +10,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.ui.Model;
 
+import java.util.*;
+
 @Slf4j
 public class CustomPageUtils {
 
+    private static final Set<String> orders = new HashSet<>(Arrays.asList("views","createdDate"));
 
     // gap: 구간
     public static void configure(Page<?> page, int gap, Model model) {
-
         int pageNum = page.getNumber() + 1;
 
         // 현재 페이지 기준 마지막 페이지
@@ -39,10 +41,10 @@ public class CustomPageUtils {
         // 다음 섹션으로 이동 가능한지
         boolean next = endPage < totalPages;
 
-        log.info("startPage={}",startPage);
-        log.info("endPage={}",endPage);
-        log.info("prev={}",prev);
-        log.info("next={}",next);
+        log.debug("startPage={}",startPage);
+        log.debug("endPage={}",endPage);
+        log.debug("prev={}",prev);
+        log.debug("next={}",next);
 
         model.addAttribute("startPage",startPage);
         model.addAttribute("endPage",endPage);
@@ -67,5 +69,9 @@ public class CustomPageUtils {
 
     private static Order checkOrder(Sort.Direction direction) {
         return direction.isAscending() ? Order.ASC : Order.DESC;
+    }
+
+    public static boolean isValid(String order) {
+        return orders.contains(order);
     }
 }

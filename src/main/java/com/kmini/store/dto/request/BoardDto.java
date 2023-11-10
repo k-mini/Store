@@ -8,8 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.constraints.Email;
-
 public class BoardDto {
 
     /**
@@ -33,11 +31,10 @@ public class BoardDto {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class FormSaveDto {
+    public static class ItemBoardFormSaveDto {
 
-        private CategoryType category;
-        private CategoryType subCategory;
-        @Email
+        private String category;
+        private String subCategory;
         private String title;
         private String content;
         private MultipartFile file;
@@ -52,12 +49,8 @@ public class BoardDto {
                     .build();
         }
 
-        public void setCategory(String categoryName) {
-            this.category = CategoryType.valueOf(categoryName);
-        }
-
-        public void setSubCategory(String subCategoryName) {
-            this.subCategory = CategoryType.valueOf(subCategoryName);
+        public CategoryType getSubCategoryType() {
+            return CategoryType.valueOf(this.getSubCategory().toUpperCase());
         }
     }
 }

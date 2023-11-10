@@ -28,7 +28,7 @@
 <!-- ====== Navbar Section End -->
 
 <!-- ====== 게시판 상세정보 배너 Start -->
-<div th:replace="~{template/fragment/banner :: detail-banner}"></div>
+<div th:replace="~{template/fragment/banner :: banner (null)}"></div>
 <!-- ====== 게시판 상세정보 배너 End -->
 
 <!-- ====== Blog Details Section Start -->
@@ -44,9 +44,11 @@
                 >
                     <!-- 작성자가 올린 그림 -->
                     <img
-                            src="/assets/images/blog/blog-details-01.jpg"
+                            th:src="${ result.boardThumbnail != null } ?
+                            '/images/' + ${result.boardThumbnail} : '/assets/images/blog/blog-details-01.jpg'"
                             alt="image"
                             class="h-full w-full object-cover object-center"
+                            onerror="this.onerror=null; this.src='/assets/images/blog/blog-details-01.jpg'"
                     />
                     <div
                             class="absolute top-0 left-0 z-10 flex h-full w-full items-end bg-gradient-to-t from-dark-700 to-transparent"
@@ -168,166 +170,148 @@
                     <!-- 글 본문 시작 -->
                     <div class="w-full px-4 lg:w-8/12">
                         <div>
-                            <h2     th:text="${result.title}"
-                                    class="wow fadeInUp mb-6 text-[26px] font-bold leading-snug text-dark sm:text-3xl sm:leading-snug md:text-4xl md:leading-snug"
-                                    data-wow-delay=".1s
+                            <h2 th:text="${result.title}"
+                                class="wow fadeInUp mb-6 text-[26px] font-bold leading-snug text-dark sm:text-3xl sm:leading-snug md:text-4xl md:leading-snug"
+                                data-wow-delay=".1s
                     "
                             >
                                 제목
                             </h2>
+
+                            <img th:if="${result.boardThumbnail != null}"
+                                 th:src="'/images/' + ${result.boardThumbnail}"
+                                 alt="image"
+                                 class="h-full w-1/2 object-cover object-center"
+                            />
+
                             <p
                                     th:text="${result.content}"
                                     class="wow fadeInUp mb-8 text-base leading-relaxed text-body-color"
                                     data-wow-delay=".1s"
                             >
-                                내용내용내용.내용내용내용.내용내용내용.내용내용내용.내용내용내용.내용내용내용.
-                                내용내용내용.내용내용내용.내용내용내용.내용내용내용.내용내용내용.내용내용내용.
-                                내용내용내용.내용내용내용.내용내용내용.내용내용내용.내용내용내용.내용내용내용.
+                                내용
                             </p>
 
                             <!-- 댓글 영역 시작 -->
-                                <div id="comment-box" class="max-w-2xl mx-auto px-4">
-                                    <div class="flex justify-between items-center mb-6">
-                                        <h2 id="comment-total" class="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">댓글 ([[${result.commentTotalCount}]])</h2>
+                            <div id="comment-box" class="max-w-2xl mx-auto px-4">
+                                <div class="flex justify-between items-center mb-6">
+                                    <h2 id="comment-total"
+                                        class="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">
+                                        댓글 ([[${result.commentTotalCount}]])</h2>
+                                    <div>
+                                        <button id="board-delete"
+                                                th:if="${result.writerId == #authentication.principal.user.id}"
+                                                type="button"
+                                                class="mb-5 inline-block rounded bg-primary py-1 px-4 text-center text-xs font-semibold leading-loose text-white">
+                                                게시물 삭제
+                                        </button>
+                                        <button type="button"
+                                                class="mb-5 inline-block rounded bg-primary py-1 px-4 text-center text-xs font-semibold leading-loose text-white">
+                                            <a href="javascript:window.history.back();">
+                                                목록
+                                            </a>
+                                        </button>
                                     </div>
-                                    <div class="mb-6">
-                                        <div class="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+                                </div>
+                                <div class="mb-6">
+                                    <div class="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
                                             <textarea id="comment-content" rows="6"
                                                       class="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none dark:text-white dark:placeholder-gray-400 dark:bg-gray-800"
                                                       placeholder="Write a comment..."></textarea>
+                                    </div>
+                                    <button id="comment-save" type="button"
+                                            class="mb-5 inline-block rounded bg-primary py-1 px-4 text-center text-xs font-semibold leading-loose text-white">
+                                        댓글 작성
+                                    </button>
+                                </div>
+
+                                <div th:each="comment : ${result.comments}" th:id=|comment-${comment.id}|
+                                     class="mb-6 text-base bg-white rounded-lg dark:bg-gray-900">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <div class="flex items-center">
+                                            <p class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white font-semibold">
+                                                [[${comment.commentUserName}]]</p>
+                                            <p class="text-sm text-gray-600 dark:text-gray-400">
+                                                <time pubdate datetime="2022-02-08" title="February 8th, 2022">
+                                                    [[${comment.createdDate}]]
+                                                </time>
+                                            </p>
                                         </div>
-                                        <button id="comment-save" type="button"
-                                                class="mb-5 inline-block rounded bg-primary py-1 px-4 text-center text-xs font-semibold leading-loose text-white">
-                                            댓글 작성
+
+                                        <div class="flex items-center">
+                                            <button th:commentid="${comment.id}"
+                                                    th:onclick="updateComment(this.getAttribute('commentid'))"
+                                                    th:if="${#authentication.principal.user.id == comment.commentUserId}"
+                                                    class="inline-flex items-center mr-3 text-sm text-gray-900 hover:underline dark:text-white font-semibold">
+                                                수정
+                                            </button>
+                                            <button
+                                                    th:onclick="deleteComment([[${comment.id}]])"
+                                                    th:if="${#authentication.principal.user.id == comment.commentUserId}"
+                                                    class="inline-flex items-center mr-3 text-sm text-gray-900 hover:underline dark:text-white font-semibold">
+                                                삭제
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <p class="text-gray-500 py-4 dark:text-gray-400">[[${comment.content}]]</p>
+
+                                    <div class="flex items-center py-4">
+                                        <button th:onclick="replyToggle([[${comment.id}]])" type="button"
+                                                class="flex items-center text-sm text-gray-500 hover:underline dark:text-gray-400 font-medium">
+                                            답글 달기
                                         </button>
                                     </div>
 
-<!--                                    <div class="mb-6 text-base bg-white rounded-lg dark:bg-gray-900">-->
-<!--                                        <div class="flex justify-between items-center mb-2">-->
-<!--                                            <div class="flex items-center">-->
-<!--                                                <p class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white font-semibold">-->
-<!--                                                    Michael Gough</p>-->
-<!--                                                <p class="text-sm text-gray-600 dark:text-gray-400">-->
-<!--                                                    <time pubdate datetime="2022-02-08" title="February 8th, 2022">Feb. 8, 2022</time></p>-->
-<!--                                            </div>-->
-
-<!--                                            <div class="flex items-center">-->
-<!--                                                <button class="inline-flex items-center mr-3 text-sm text-gray-900 hover:underline dark:text-white font-semibold">-->
-<!--                                                    수정</button>-->
-<!--                                                <button class="inline-flex items-center mr-3 text-sm text-gray-900 hover:underline dark:text-white font-semibold">-->
-<!--                                                    삭제</button>-->
-<!--                                            </div>-->
-
-<!--                                        </div>-->
-<!--                                        <p class="text-gray-500 py-4 dark:text-gray-400">Very straight-to-point article. Really worth time reading. Thank you! But tools are just the-->
-<!--                                            instruments for the UX designers. The knowledge of the design tools are as important as the-->
-<!--                                            creation of the design strategy.</p>-->
-
-<!--                                        <div class="flex items-center py-6">-->
-<!--                                            <button type="button"-->
-<!--                                                    class="flex items-center text-sm text-gray-500 hover:underline dark:text-gray-400 font-medium">-->
-<!--                                                답글-->
-<!--                                            </button>-->
-<!--                                        </div>-->
-
-<!--                                        <div class="py-4 lg:ml-6 text-base bg-white rounded-lg dark:bg-gray-900">-->
-<!--                                            <div class="flex justify-between items-center mb-2">-->
-<!--                                                <div class="flex items-center">-->
-<!--                                                    <p class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white font-semibold">-->
-<!--                                                        Michael Gough</p>-->
-<!--                                                    <p class="text-sm text-gray-600 dark:text-gray-400">-->
-<!--                                                        <time pubdate datetime="2022-02-08" title="February 8th, 2022">Feb. 8, 2022</time></p>-->
-<!--                                                </div>-->
-
-<!--                                                <div class="flex items-center">-->
-<!--                                                    <button class="inline-flex items-center mr-3 text-sm text-gray-900 hover:underline dark:text-white font-semibold">-->
-<!--                                                        수정</button>-->
-<!--                                                    <button class="inline-flex items-center mr-3 text-sm text-gray-900 hover:underline dark:text-white font-semibold">-->
-<!--                                                        삭제</button>-->
-<!--                                                </div>-->
-
-<!--                                            </div>-->
-<!--                                            <p class="text-gray-500 py-4 dark:text-gray-400">답글내용 straight-to-point article. Really worth time reading. Thank you! But tools are just the-->
-<!--                                                instruments for the UX designers. The knowledge of the design tools are as important as the-->
-<!--                                                creation of the design strategy.</p>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-
-                                    <div th:each="comment : ${result.comments}" th:id=|comment-${comment.id}| class="mb-6 text-base bg-white rounded-lg dark:bg-gray-900">
+                                    <!-- 대댓글 시작 -->
+                                    <div th:each="reply : ${comment.replies}" th:id="|comment-${reply.replyId}|"
+                                         class="py-4 lg:ml-6 text-base bg-white rounded-lg dark:bg-gray-900">
                                         <div class="flex justify-between items-center mb-2">
                                             <div class="flex items-center">
                                                 <p class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white font-semibold">
-                                                    [[${comment.commentUserName}]]</p>
+                                                    [[${reply.replyUserName}]]</p>
                                                 <p class="text-sm text-gray-600 dark:text-gray-400">
                                                     <time pubdate datetime="2022-02-08" title="February 8th, 2022">
-                                                        [[${comment.createdDate}]]</time></p>
+                                                        [[${reply.createdDate}]]
+                                                    </time>
+                                                </p>
                                             </div>
 
                                             <div class="flex items-center">
-                                                <button  th:commentid="${comment.id}"
-                                                         th:onclick="updateComment(this.getAttribute('commentid'))"
-                                                         th:if="${#authentication.principal.user.id == comment.commentUserId}"
-                                                         class="inline-flex items-center mr-3 text-sm text-gray-900 hover:underline dark:text-white font-semibold">
-                                                    수정</button>
                                                 <button
-                                                        th:onclick="deleteComment([[${comment.id}]])"
+                                                        th:onclick="updateComment([[${reply.replyId}]])"
                                                         th:if="${#authentication.principal.user.id == comment.commentUserId}"
                                                         class="inline-flex items-center mr-3 text-sm text-gray-900 hover:underline dark:text-white font-semibold">
-                                                    삭제</button>
+                                                    수정
+                                                </button>
+                                                <button
+                                                        th:onclick="deleteComment([[${reply.replyId}]])"
+                                                        th:if="${#authentication.principal.user.id == comment.commentUserId}"
+                                                        class="inline-flex items-center mr-3 text-sm text-gray-900 hover:underline dark:text-white font-semibold">
+                                                    삭제
+                                                </button>
                                             </div>
+
                                         </div>
+                                        <p class="text-gray-500 py-4 dark:text-gray-400">[[${reply.content}]]</p>
+                                    </div>
+                                    <!-- 대댓글 종료-->
 
-                                        <p class="text-gray-500 py-4 dark:text-gray-400">[[${comment.content}]]</p>
-
-                                        <div class="flex items-center py-4">
-                                            <button th:onclick="replyToggle([[${comment.id}]])" type="button"
-                                                    class="flex items-center text-sm text-gray-500 hover:underline dark:text-gray-400 font-medium">
-                                                답글 달기
-                                            </button>
-                                        </div>
-
-                                        <!-- 대댓글 시작 -->
-                                        <div th:each="reply : ${comment.replies}" th:id="|comment-${reply.replyId}|" class="py-4 lg:ml-6 text-base bg-white rounded-lg dark:bg-gray-900">
-                                            <div class="flex justify-between items-center mb-2">
-                                                <div class="flex items-center">
-                                                    <p class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white font-semibold">
-                                                        [[${reply.replyUserName}]]</p>
-                                                    <p class="text-sm text-gray-600 dark:text-gray-400">
-                                                        <time pubdate datetime="2022-02-08" title="February 8th, 2022">[[${reply.createdDate}]]</time></p>
-                                                </div>
-
-                                                <div class="flex items-center">
-                                                    <button
-                                                            th:onclick="updateComment([[${reply.replyId}]])"
-                                                            th:if="${#authentication.principal.user.id == comment.commentUserId}"
-                                                            class="inline-flex items-center mr-3 text-sm text-gray-900 hover:underline dark:text-white font-semibold">
-                                                        수정</button>
-                                                    <button
-                                                            th:onclick="deleteComment([[${reply.replyId}]])"
-                                                            th:if="${#authentication.principal.user.id == comment.commentUserId}"
-                                                            class="inline-flex items-center mr-3 text-sm text-gray-900 hover:underline dark:text-white font-semibold">
-                                                        삭제</button>
-                                                </div>
-
-                                            </div>
-                                            <p class="text-gray-500 py-4 dark:text-gray-400">[[${reply.content}]]</p>
-                                        </div>
-                                        <!-- 대댓글 종료-->
-
-                                        <div th:id="|reply-bar-${comment.id}|" class="mb-6 lg:ml-6" style="display: none;">
-                                            <div class="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+                                    <div th:id="|reply-bar-${comment.id}|" class="mb-6 lg:ml-6" style="display: none;">
+                                        <div class="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
                                             <textarea th:id="|reply-content-${comment.id}|" rows="3"
                                                       class="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none dark:text-white dark:placeholder-gray-400 dark:bg-gray-800"
                                                       placeholder="답글 적기..."></textarea>
-                                            </div>
-                                            <button th:onclick="saveReply([[${result.id}]], [[${comment.id}]])" type="button"
-                                                    class="mb-5 inline-block rounded bg-primary py-1 px-4 text-center text-xs font-semibold leading-loose text-white">
-                                                작성
-                                            </button>
                                         </div>
+                                        <button th:onclick="saveReply([[${result.id}]], [[${comment.id}]])"
+                                                type="button"
+                                                class="mb-5 inline-block rounded bg-primary py-1 px-4 text-center text-xs font-semibold leading-loose text-white">
+                                            작성
+                                        </button>
                                     </div>
-
                                 </div>
+
+                            </div>
                             <!-- 댓글 영역 종료 -->
 
                             <h3
@@ -569,8 +553,12 @@
     let boardId = [[${result.Id}]]
     let userId = [[${#authentication.principal.user.id}]]
     let username = [[${#authentication.principal.user.username}]]
+    let commentTotalCount = [[${result.commentTotalCount}]]
+    let category = 'trade'
+    let subCategory = [[${subCategory}]]
 </script>
 <script src="/assets/js/main.js"></script>
 <script src="/assets/js/comment.js"></script>
+<script src="/assets/js/board.js"></script>
 </body>
 </html>

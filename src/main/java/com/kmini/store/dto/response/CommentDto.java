@@ -68,14 +68,14 @@ public class CommentDto {
                     .collect(Collectors.toList());
         }
 
-        public static BoardReplyRespDto toDto(Comment savedReply) {
+        public static BoardReplyRespDto toDto(Comment reply) {
             return BoardReplyRespDto.builder()
-                    .topCommentId(savedReply.getTopComment().getId())
-                    .replyId(savedReply.getId())
-                    .replyUserId(savedReply.getUser().getId())
-                    .replyUserName(savedReply.getUser().getUsername())
-                    .content(savedReply.getContent())
-                    .createdDate(CustomTimeUtils.convertTime(savedReply.getCreatedDate()))
+                    .topCommentId(reply.getTopComment().getId())
+                    .replyId(reply.getId())
+                    .replyUserId(reply.getUser().getId())
+                    .replyUserName(reply.getUser().getUsername())
+                    .content(reply.getContent())
+                    .createdDate(CustomTimeUtils.convertTime(reply.getCreatedDate()))
                     .build();
         }
     }

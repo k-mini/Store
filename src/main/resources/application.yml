@@ -20,6 +20,7 @@ spring:
 logging:
   level:
     org.hibernate.SQL: debug
+    com.kmini.store: debug
 #    org.hibernate.type.descriptor.sql: trace
 #    org.hibernate.type: trace
 

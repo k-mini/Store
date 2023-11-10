@@ -23,6 +23,7 @@ let index = {
             console.log(res);
             $("#comment-box").append(getCommentComp(res.data));
             $("#comment-content").val('');
+            plusTotalComment();
         }).fail((err) => {
             JSON.stringify(err);
         })
@@ -43,6 +44,7 @@ function deleteComment(comment_id) {
     }).done(res =>{
         console.log(res);
         $(`#comment-${comment_id}`).remove();
+        downTotalComment(res.data);
     }).fail((err) => {
         JSON.stringify(err);
     })
@@ -50,12 +52,7 @@ function deleteComment(comment_id) {
 
 function replyToggle(commentId) {
     let selector = $(`#reply-bar-${commentId}`);
-    if (selector.is(':visible')) {
-        selector.hide();
-    } else {
-        selector.show();
-    }
-    // return selector.is(':visible') ? selector.hide() : selector.show();
+    return selector.is(':visible') ? selector.hide() : selector.show();
 }
 
 function saveReply(boardId, topCommentId) {
@@ -76,9 +73,20 @@ function saveReply(boardId, topCommentId) {
         console.log(res);
         $(`#reply-bar-${topCommentId}`).before(getReplyComp(res.data));
         $(`#reply-content-${topCommentId}`).val('');
+        plusTotalComment();
     }).fail((err) => {
         JSON.stringify(err);
     })
+}
+
+function plusTotalComment() {
+    commentTotalCount += 1;
+    $("#comment-total").text(`댓글 (${commentTotalCount})`);
+}
+
+function downTotalComment(cnt) {
+    commentTotalCount -= cnt;
+    $("#comment-total").text(`댓글 (${commentTotalCount})`);
 }
 
 function getCommentComp(data) {

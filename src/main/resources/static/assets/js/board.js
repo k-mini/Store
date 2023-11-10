@@ -1,19 +1,23 @@
 
-let index = {
+let board_index = {
 
     init : function() {
-        $("#board-save").on("click", ()=>{
-            this.save();
+        $("#board-delete").on("click", ()=>{
+            this.delete(category, subCategory);
         });
-
-        // $(document).ready(() => {
-        //     this.load();
-        // });
     },
-    save : function() {
-        let data = {
 
-        }
+    delete : function(category, subCategory) {
+
+        $.ajax({
+            type : "DELETE",
+            url : `/api/board/${category}/${subCategory}/${boardId}`
+        }).done(res =>{
+            console.log(res.data);
+            location.href=`/boards/${category}/${subCategory}`;
+        }).fail((err) => {
+            JSON.stringify(err);
+        })
     },
 
     load: function () {
@@ -33,6 +37,8 @@ let index = {
         })
     },
 }
+
+board_index.init();
 
 function getBoardComponent(board) {
     let item =

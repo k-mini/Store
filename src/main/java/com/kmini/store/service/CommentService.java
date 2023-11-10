@@ -9,6 +9,7 @@ import com.kmini.store.dto.request.CommentDto.BoardReplyReqDto;
 import com.kmini.store.dto.response.CommentDto.BoardCommentRespDto;
 import com.kmini.store.dto.response.CommentDto.BoardReplyRespDto;
 import com.kmini.store.ex.CustomBoardNotFoundException;
+import com.kmini.store.ex.CustomCommentNotFoundException;
 import com.kmini.store.repository.CommentRepository;
 import com.kmini.store.repository.UserRepository;
 import com.kmini.store.repository.board.BoardRepository;
@@ -54,12 +55,18 @@ public class CommentService {
     }
 
     @Transactional
-    public void delete(Long commentId, Long commentUserId) {
-//        User commentUser = userRepository.getReferenceById(commentUserId);
-        // 댓글 삭제
-        int result = commentRepository.deleteByIdAndUser(commentId, commentUserId);
+    public int delete(Long commentId, User commentUser) {
+
+        // 자식 댓글 삭제
+        int result = commentRepository.deleteSubComments(commentId);
+
+        // 부모 댓글 삭제
+        result += commentRepository.deleteCommentById(commentId);
+
+        log.debug("result = {}", result);
         if (result == 0) {
             throw new IllegalArgumentException("삭제 실패!");
         }
+        return result;
     }
 }

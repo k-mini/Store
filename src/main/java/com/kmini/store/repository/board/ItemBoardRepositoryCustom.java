@@ -6,5 +6,5 @@ import java.util.Optional;
 
 public interface ItemBoardRepositoryCustom {
 
-    Optional<ItemBoard> findCustomById(Long id);
+    Optional<ItemBoard> findByIdWithFetchJoin(Long id);
 }

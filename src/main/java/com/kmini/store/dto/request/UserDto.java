@@ -37,6 +37,8 @@ public class UserDto {
     @Builder
     public static class UserUpdateDto {
 
+        private String email;
+
         private String username;
 
         private String password;
@@ -45,6 +47,7 @@ public class UserDto {
 
         public static UserUpdateDto toDto(User user) {
             return UserUpdateDto.builder()
+                    .email(user.getEmail())
                     .username(user.getUsername())
                     .password(user.getPassword())
                     .thumbnail(user.getThumbnail())

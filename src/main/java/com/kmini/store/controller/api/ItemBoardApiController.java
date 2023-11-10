@@ -1,34 +1,31 @@
 package com.kmini.store.controller.api;
 
 
-import com.kmini.store.dto.response.ItemBoardDto.ItemBoardRespAllDto;
-import com.kmini.store.dto.CommonRespDto;
 import com.kmini.store.service.ItemBoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import static org.springframework.data.domain.Sort.Direction.DESC;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @RestController
-@RequestMapping("/api/boards/trade")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 @Slf4j
 public class ItemBoardApiController {
 
     private final ItemBoardService itemBoardService;
 
-    // 최신 시간 순으로 조회
-    @GetMapping
-    public ResponseEntity<?> load(
-            @PageableDefault(sort = "createdDate", direction = DESC) Pageable pageable) {
-        Page<ItemBoardRespAllDto> content = itemBoardService.load(pageable);
-        return ResponseEntity.ok(new CommonRespDto<Page<ItemBoardRespAllDto>>(1,"success", content));
+    @DeleteMapping("/board/{category}/{subCategory}/{boardId}")
+    public String delete(@PathVariable("category") String category,
+                       @PathVariable("subCategory") String subCategory,@PathVariable("boardId") Long boardId,
+                       RedirectAttributes redirectAttributes) {
+        log.debug("category = {} subCategory = {} boardId = {}", category, subCategory, boardId);
+        itemBoardService.delete(boardId);
+
+        redirectAttributes.addAttribute("subCategory", subCategory);
+        return "redirect:/boards/trade/{subCategory}";
     }
 }

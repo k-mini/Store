@@ -24,14 +24,13 @@ public class BoardDto {
     private String createdDate;
 
     public static BoardDto toDto(Board board) {
-        String createdDate = CustomTimeUtils.convertTime(board.getCreatedDate());
         return BoardDto.builder()
                 .id(board.getId())
                 .username(board.getUser().getUsername())
                 .title(board.getTitle())
                 .content(getMinContent(10, board))
                 .thumbnail(board.getThumbnail())
-                .createdDate(createdDate)
+                .createdDate(CustomTimeUtils.convertTime(board.getCreatedDate()))
                 .build();
     }
 

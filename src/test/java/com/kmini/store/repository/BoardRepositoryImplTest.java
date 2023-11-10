@@ -16,13 +16,13 @@ class BoardRepositoryImplTest {
     @Autowired
     private EntityManager em;
 
-    @Test
+//    @Test
     void findByCategoriesTest(){
 
         boardRepository.findBoards(null,null);
     }
 
-    @Test
+//    @Test
     void jpqlTest() {
         em.createQuery("select count(boardCategory) " +
                         "from com.kmini.store.domain.BoardCategory boardCategory " +

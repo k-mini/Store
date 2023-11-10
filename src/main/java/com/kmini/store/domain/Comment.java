@@ -3,6 +3,8 @@ package com.kmini.store.domain;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -26,10 +28,11 @@ public class Comment extends BaseTime{
     private Board board;
 
     @ManyToOne(fetch = FetchType.LAZY)
+//    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "TOP_COMMENT_ID", foreignKey = @ForeignKey(name = "SubToTop"))
     private Comment topComment;
 
-    @OneToMany(mappedBy = "topComment")
+    @OneToMany(mappedBy = "topComment", cascade = CascadeType.REMOVE)
     private List<Comment> subComments = new ArrayList<>();
 
     private String content;

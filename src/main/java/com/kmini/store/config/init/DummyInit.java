@@ -6,12 +6,11 @@ import com.kmini.store.domain.Category;
 import com.kmini.store.domain.User;
 import com.kmini.store.domain.type.UserRole;
 import com.kmini.store.domain.type.UserStatus;
-import com.kmini.store.dto.request.BoardDto.FormSaveDto;
-import com.kmini.store.dto.request.CommentDto;
+import com.kmini.store.dto.request.BoardDto.ItemBoardFormSaveDto;
 import com.kmini.store.dto.request.CommentDto.BoardCommentReqDto;
 import com.kmini.store.dto.request.CommentDto.BoardReplyReqDto;
 import com.kmini.store.repository.CategoryRepository;
-import com.kmini.store.service.BoardService;
+import com.kmini.store.repository.UserRepository;
 import com.kmini.store.service.CommentService;
 import com.kmini.store.service.ItemBoardService;
 import com.kmini.store.service.UserService;
@@ -23,29 +22,32 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import static com.kmini.store.domain.type.CategoryType.*;
 
 @Component
-@Profile({"default","dev","local"})
+@Profile({"default", "dev", "local"})
 @Slf4j
 @RequiredArgsConstructor
 public class DummyInit implements ApplicationRunner {
 
     private final UserService userService;
+    private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final ItemBoardService itemBoardService;
     private final CommentService commentService;
     private final CategoryHolder categoryHolder;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
         log.info("DevInit 실행...");
         User user = new User("kmini", "1234", "test@gmail.com", UserRole.USER, UserStatus.SIGNUP, null);
         userService.save(user);
-        User admin = new User("admin","admin", "admin", UserRole.ADMIN, UserStatus.SIGNUP, null);
-        userService.save(admin);
+        User admin = new User("admin", passwordEncoder.encode("admin"), "admin@gmail.com", UserRole.ADMIN, UserStatus.SIGNUP, null);
+        userRepository.save(admin);
 
         log.info("카테고리 넣기! ..");
         Category trade = new Category(TRADE);
@@ -54,10 +56,10 @@ public class DummyInit implements ApplicationRunner {
         categoryRepository.save(community);
 
         log.info("소카테고리 넣기! ..");
-        categoryRepository.save(new Category(ELECTRONICS,trade));
-        categoryRepository.save(new Category(FOODS,trade));
-        categoryRepository.save(new Category(FREE,community));
-        categoryRepository.save(new Category(QNA,community));
+        categoryRepository.save(new Category(ELECTRONICS, trade));
+        categoryRepository.save(new Category(FOODS, trade));
+        categoryRepository.save(new Category(FREE, community));
+        categoryRepository.save(new Category(QNA, community));
 
         log.info("서버에 카테고리 정보 저장..");
         categoryHolder.getMap().add(TRADE, ELECTRONICS);
@@ -72,10 +74,9 @@ public class DummyInit implements ApplicationRunner {
 
         log.info("샘플 게시물 넣기! ..");
         for (int i = 1; i < 157; i++) {
-            FormSaveDto saveFormDto =
-                    new FormSaveDto(TRADE, ELECTRONICS,
-                            "title" + i, "content" + i, null, "item" + i);
-            itemBoardService.save(saveFormDto,principal);
+            ItemBoardFormSaveDto saveFormDto =
+                    new ItemBoardFormSaveDto("trade", "electronics", "title" + i, "content" + i, null, "item" + i);
+            itemBoardService.save(saveFormDto, principal);
         }
 
         log.info("상위 댓글 넣기 !!..");
@@ -83,10 +84,10 @@ public class DummyInit implements ApplicationRunner {
         commentService.saveComment(new BoardCommentReqDto(156L, "상위 댓글댓글2222"), user);
 
         log.info("대댓글 넣기!!");
-        commentService.saveReply(new BoardReplyReqDto(156L,1L,"댓글1의 대댓글1"),user);
-        commentService.saveReply(new BoardReplyReqDto(156L,1L,"댓글1의 대댓글2"),user);
-        commentService.saveReply(new BoardReplyReqDto(156L,2L,"댓글2의 대댓글1"),user);
-        commentService.saveReply(new BoardReplyReqDto(156L,2L,"댓글2의 대댓글2"),user);
+        commentService.saveReply(new BoardReplyReqDto(156L, 1L, "댓글1의 대댓글1"), user);
+        commentService.saveReply(new BoardReplyReqDto(156L, 1L, "댓글1의 대댓글2"), user);
+        commentService.saveReply(new BoardReplyReqDto(156L, 2L, "댓글2의 대댓글1"), user);
+        commentService.saveReply(new BoardReplyReqDto(156L, 2L, "댓글2의 대댓글2"), user);
 
 //        for (int i = 157; i < 300; i++) {
 //            FormSaveDto saveFormDto =

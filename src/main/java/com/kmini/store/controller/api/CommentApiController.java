@@ -35,6 +35,18 @@ public class CommentApiController {
                 .body(new CommonRespDto<>(1,"성공", result));
     }
 
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<?> deleteComment(
+            @PathVariable Long commentId, @AuthenticationPrincipal PrincipalDetail principalDetail
+    ) {
+        log.info("commentId = {}", commentId);
+        User user = principalDetail.getUser();
+        int result = commentService.delete(commentId, user);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new CommonRespDto<>(1, "성공", result));
+    }
+
     @PostMapping("{commentId}/reply")
     public ResponseEntity<?> saveReply(
             @RequestBody BoardReplyReqDto boardReplyReqDto,
@@ -45,17 +57,5 @@ public class CommentApiController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(new CommonRespDto<>(1, "성공", result));
-    }
-
-    @DeleteMapping("/{commentId}")
-    public ResponseEntity<?> deleteComment(
-            @PathVariable Long commentId, @AuthenticationPrincipal PrincipalDetail principalDetail
-    ) {
-        log.info("commentId = {}", commentId);
-        User user = principalDetail.getUser();
-        commentService.delete(commentId, user.getId());
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(new CommonRespDto<>(1, "성공", null));
     }
 }
