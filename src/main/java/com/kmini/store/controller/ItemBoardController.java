@@ -29,6 +29,7 @@ public class ItemBoardController {
             @PathVariable("boardId") Long boardId, Model model) {
         ItemBoardRespDetailDto result = itemBoardService.detail(boardId);
         model.addAttribute("result", result);
+        log.debug("result = {}", result);
         return "board/trade-detail";
     }
 

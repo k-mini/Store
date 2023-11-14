@@ -1,12 +1,11 @@
 package com.kmini.store.controller;
 
-import com.kmini.store.config.auth.PrincipalDetail;
+import com.kmini.store.aop.CategoryHolder;
 import com.kmini.store.config.util.CustomPageUtils;
 import com.kmini.store.dto.request.BoardDto.ItemBoardFormSaveDto;
 import com.kmini.store.dto.request.SearchDto.SearchBoardDto;
 import com.kmini.store.dto.response.BoardDto;
 import com.kmini.store.service.BoardService;
-import com.kmini.store.service.ItemBoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -14,17 +13,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.IOException;
-
-import static com.kmini.store.domain.type.CategoryType.COMMUNITY;
-import static com.kmini.store.domain.type.CategoryType.TRADE;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @Controller
@@ -38,7 +31,6 @@ public class BoardController {
     @GetMapping("/form")
     public String save(
             @ModelAttribute ItemBoardFormSaveDto itemBoardFormSaveDto, Model model) {
-        // PathVariable 자동 modelAttribute 저장.
 //        model.addAttribute("formSaveDto", new FormSaveDto());
         return "board/form";
     }
@@ -81,11 +73,12 @@ public class BoardController {
             }
         }
         log.debug("SearchBoardDto = {}", searchBoardDto);
+
         String order = searchBoardDto.getOrder();
         if (StringUtils.hasText(order) && CustomPageUtils.isValid(order)) {
-            pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(DESC, order, "createdDate") );
+            pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(DESC, order, "createdDate"));
         } else {
-            pageable = PageRequest.of(pageable.getPageNumber(),pageable.getPageSize(), Sort.by(DESC, "createdDate"));
+            pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(DESC, "createdDate"));
         }
 
         Page<BoardDto> results = boardService.load(pageable, categoryName, subCategoryName, searchBoardDto);
@@ -93,9 +86,11 @@ public class BoardController {
             log.debug("result = {}", result);
         }
 
-        CustomPageUtils.configure(results,5, model);
+        CustomPageUtils.configure(results, 5, model);
+        model.addAttribute("sType", searchBoardDto.getSType());
+        model.addAttribute("s", searchBoardDto.getS());
         model.addAttribute("results", results);
-        return "board/boardlist";
+        return "board/boardList";
     }
 }
 

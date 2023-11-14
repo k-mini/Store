@@ -6,12 +6,15 @@ import com.kmini.store.domain.Category;
 import com.kmini.store.domain.User;
 import com.kmini.store.domain.type.UserRole;
 import com.kmini.store.domain.type.UserStatus;
+import com.kmini.store.dto.request.BoardDto;
+import com.kmini.store.dto.request.BoardDto.CommunityBoardFormSaveDto;
 import com.kmini.store.dto.request.BoardDto.ItemBoardFormSaveDto;
 import com.kmini.store.dto.request.CommentDto.BoardCommentReqDto;
 import com.kmini.store.dto.request.CommentDto.BoardReplyReqDto;
 import com.kmini.store.repository.CategoryRepository;
 import com.kmini.store.repository.UserRepository;
 import com.kmini.store.service.CommentService;
+import com.kmini.store.service.CommunityBoardService;
 import com.kmini.store.service.ItemBoardService;
 import com.kmini.store.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +40,7 @@ public class DummyInit implements ApplicationRunner {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final ItemBoardService itemBoardService;
+    private final CommunityBoardService communityBoardService;
     private final CommentService commentService;
     private final CategoryHolder categoryHolder;
     private final BCryptPasswordEncoder passwordEncoder;
@@ -69,14 +73,20 @@ public class DummyInit implements ApplicationRunner {
 
         log.info("인증 정보 넣기");
         PrincipalDetail principal = new PrincipalDetail(user);
-        Authentication authentication = new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+//        UsernamePasswordAuthenticationToken authenticated = UsernamePasswordAuthenticationToken.authenticated(principal, null, principal.getAuthorities());
+//        SecurityContextHolder.getContext().setAuthentication(authenticated);
 
-        log.info("샘플 게시물 넣기! ..");
+        log.info("거래 게시판 샘플 게시물 넣기! ..");
         for (int i = 1; i < 157; i++) {
             ItemBoardFormSaveDto saveFormDto =
-                    new ItemBoardFormSaveDto("trade", "electronics", "title" + i, "content" + i, null, "item" + i);
+                    new ItemBoardFormSaveDto( "electronics", "title" + i, "content" + i, null, "item" + i);
             itemBoardService.save(saveFormDto, principal);
+        }
+        log.debug("커뮤니티 게사판 샘플 데이터 넣기! ...");
+        for (int i = 1; i < 93; i++) {
+            CommunityBoardFormSaveDto saveFormDto =
+                    new CommunityBoardFormSaveDto( "free", "comtitle" + i, "comcontent" + i, null);
+            communityBoardService.save(saveFormDto, principal);
         }
 
         log.info("상위 댓글 넣기 !!..");

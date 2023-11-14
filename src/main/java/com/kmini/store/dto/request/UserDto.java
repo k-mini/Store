@@ -6,18 +6,26 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.*;
+
 public class UserDto {
 
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class SignupDto {
-
+    public static class SignUpDto {
+        
+        @NotBlank(message ="이름은 반드시 입력해야 합니다.")
         private String username;
 
+        @NotBlank(message = "이메일을 입력해 주세요.")
+        @Email(message = "이메일 형식으로 입력해 주세요.")
+        private String email;
+
+        @NotBlank(message= "패스워드는 반드시 입력해야 합니다.")
         private String password;
 
-        private String email;
+        private String passwordCheck;
 
         private String thumbnail;
 
@@ -37,17 +45,18 @@ public class UserDto {
     @Builder
     public static class UserUpdateDto {
 
-        private String email;
-
+        @NotBlank(message ="이름은 반드시 입력해야 합니다.")
         private String username;
 
+        @NotBlank(message= "패스워드는 반드시 입력해야 합니다.")
         private String password;
+
+        private String passwordCheck;
 
         private String thumbnail;
 
         public static UserUpdateDto toDto(User user) {
             return UserUpdateDto.builder()
-                    .email(user.getEmail())
                     .username(user.getUsername())
                     .password(user.getPassword())
                     .thumbnail(user.getThumbnail())

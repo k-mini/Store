@@ -1,50 +1,57 @@
 package com.kmini.store.controller;
 
 import com.kmini.store.config.auth.PrincipalDetail;
-import com.kmini.store.dto.CommonRespDto;
+import com.kmini.store.dto.request.BoardDto.CommunityBoardFormSaveDto;
 import com.kmini.store.dto.request.BoardDto.ItemBoardFormSaveDto;
-import com.kmini.store.service.ItemBoardService;
+import com.kmini.store.dto.response.CommunityBoardDto.CommunityBoardRespDetailDto;
+import com.kmini.store.service.CommunityBoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 
 @Controller
-@RequestMapping("/boards/community")
+@RequestMapping("/board/community/{subCategory}")
 @Slf4j
 @RequiredArgsConstructor
 public class CommunityBoardController {
 
-    private final ItemBoardService itemBoardService;
+    private final CommunityBoardService communityBoardService;
 
-    // 커뮤니티 게시판 클릭
-    @GetMapping
-    public String category() {
-        return "board/community";
+    // 게시물 자세히 조회
+    @GetMapping("/{boardId}")
+    public String detail(
+            @PathVariable("subCategory") String subCategory,
+            @PathVariable("boardId") Long boardId, Model model) {
+        CommunityBoardRespDetailDto result = communityBoardService.detail(boardId);
+        model.addAttribute("result", result);
+        log.debug("result = {}", result);
+        return "board/community-detail";
     }
 
-    // 특정 커뮤니티 게시글 클릭
-//    @GetMapping("/{boardId}")
-    public String board(@PathVariable("boardId") int boardId, Model model) {
-
-        return "board/trade-detail";
+    @GetMapping("/form")
+    public String form(
+            @ModelAttribute ItemBoardFormSaveDto itemBoardFormSaveDto, Model model) {
+        return "board/form";
     }
 
     // 게시물 저장
-//    @PostMapping("/form")
-    public ResponseEntity<?> upload(@ModelAttribute ItemBoardFormSaveDto itemBoardFormSaveDto,
-                                    @AuthenticationPrincipal PrincipalDetail principal) throws IOException {
-        log.info("uploadDto = {}", itemBoardFormSaveDto);
-//        itemBoardService.upload(itemBoardUploadDto);
-        return ResponseEntity.ok(new CommonRespDto<Void>(1, "성공", null));
+    @PostMapping("/form")
+    public String save(
+            @ModelAttribute CommunityBoardFormSaveDto communityBoardFormSaveDto,
+            @AuthenticationPrincipal PrincipalDetail principalDetail,
+            RedirectAttributes redirectAttributes) throws IOException {
+        log.debug("communityBoardFormSaveDto = {}", communityBoardFormSaveDto);
+        communityBoardService.save(communityBoardFormSaveDto, principalDetail);
+
+        redirectAttributes.addAttribute("category", "community");
+        redirectAttributes.addAttribute("subCategory", communityBoardFormSaveDto.getSubCategory());
+        return "redirect:/boards/{category}/{subCategory}";
     }
 
 }

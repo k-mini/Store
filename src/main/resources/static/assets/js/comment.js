@@ -2,7 +2,7 @@
 let index = {
 
     init : function() {
-        $("#comment-save").on("click", ()=>{
+        $("#comment-save").off('click').on("click", ()=>{
             this.save();
         });
     },

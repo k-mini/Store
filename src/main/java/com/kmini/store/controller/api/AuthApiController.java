@@ -1,7 +1,7 @@
 package com.kmini.store.controller.api;
 
 import com.kmini.store.dto.CommonRespDto;
-import com.kmini.store.dto.request.UserDto.SignupDto;
+import com.kmini.store.dto.request.UserDto.SignUpDto;
 import com.kmini.store.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ public class AuthApiController {
 
     // 회원가입 (API 방식)
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@RequestBody SignupDto signupDto) {
+    public ResponseEntity<?> signup(@RequestBody SignUpDto signupDto) {
         log.info("signupDto = {}", signupDto);
         authService.signup(signupDto.toEntity());
         return ResponseEntity

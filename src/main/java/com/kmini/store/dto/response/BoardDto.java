@@ -20,6 +20,10 @@ public class BoardDto {
     private String content;
     // 게시물 썸네일
     private String thumbnail;
+    // 조회 수
+    private int views;
+    // 댓글 수
+    private int commentsSize;
     // 작성 시간
     private String createdDate;
 
@@ -30,6 +34,8 @@ public class BoardDto {
                 .title(board.getTitle())
                 .content(getMinContent(10, board))
                 .thumbnail(board.getThumbnail())
+                .views(board.getViews())
+                .commentsSize(board.getComments().size())
                 .createdDate(CustomTimeUtils.convertTime(board.getCreatedDate()))
                 .build();
     }

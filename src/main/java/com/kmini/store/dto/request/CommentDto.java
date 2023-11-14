@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,6 +19,7 @@ public class CommentDto {
         // 게시물 id
         private Long boardId;
         // 내용
+        @NotEmpty(message = "댓글을 입력해 주세요.")
         private String content;
     }
 

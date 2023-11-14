@@ -5,6 +5,7 @@ import com.kmini.store.config.file.FileUploader;
 import com.kmini.store.domain.*;
 import com.kmini.store.domain.type.CategoryType;
 import com.kmini.store.dto.request.BoardDto;
+import com.kmini.store.dto.request.BoardDto.ItemBoardFormSaveDto;
 import com.kmini.store.dto.request.BoardDto.UpdateDto;
 import com.kmini.store.dto.response.ItemBoardDto.ItemBoardRespDetailDto;
 import com.kmini.store.ex.CustomBoardNotFoundException;
@@ -56,7 +57,7 @@ public class ItemBoardService {
 
     // 게시물 저장
     @Transactional
-    public void save(BoardDto.ItemBoardFormSaveDto itemBoardFormSaveDto, PrincipalDetail principalDetail) throws IOException {
+    public void save(ItemBoardFormSaveDto itemBoardFormSaveDto, PrincipalDetail principalDetail) throws IOException {
         
         // 파일 시스템에 저장하고 랜덤 파일명 반환
         MultipartFile file = itemBoardFormSaveDto.getFile();
@@ -64,20 +65,17 @@ public class ItemBoardService {
         if (file != null) {
             uri = fileUploader.storeFile(file);
         }
-        CategoryType categoryType = CategoryType.TRADE;
-        CategoryType subCategoryType = itemBoardFormSaveDto.getSubCategoryType();
 
         // 카테고리 조회
-        Category category = categoryRepository.findByCategoryType(categoryType)
+        Category category = categoryRepository.findByCategoryType(CategoryType.TRADE)
                 .orElseThrow(()->new CustomCategoryNotFoundException("상위 카테고리가 존재하지 않습니다."));
-        Category subCategory = categoryRepository.findByCategoryType(subCategoryType)
+        Category subCategory = categoryRepository.findByCategoryType(itemBoardFormSaveDto.getSubCategoryType())
                 .orElseThrow(()->new CustomCategoryNotFoundException("하위 카테고리가 존재하지 않습니다."));
-        // 유저 조회
-        User user = principalDetail.getUser();
 
         // 게시물 저장
-        ItemBoard board = itemBoardFormSaveDto.toEntity(uri);
-        board.setUser(user);
+        ItemBoard board = itemBoardFormSaveDto.toEntity();
+        board.setUser(principalDetail.getUser());
+        board.setThumbnail(uri);
         itemBoardRepository.save(board);
 
         // 상위 카테고리 정보 저장

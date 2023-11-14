@@ -44,38 +44,58 @@
                             <img src="/assets/images/logo/logo.svg" alt="logo"/>
                         </a>
                     </div>
-                    <form action="/auth/signup" method="POST">
-                        <div class="mb-6">
+                    <form action="/auth/signup" th:object="${signUpDto}" method="POST">
+
+                        <div class="mb-4">
                             <input
-                                    name="email"
+                                    th:field="*{email}"
                                     type="email"
                                     placeholder="이메일을 입력해 주세요"
                                     class="bordder-[#E9EDF4] w-full rounded-md border bg-[#FCFDFE] py-3 px-5 text-base text-body-color placeholder-[#ACB6BE] outline-none transition focus:border-primary focus-visible:shadow-none"
                             />
+                            <div class="py-2 field-error flex items-center justify-start" >
+                                <p th:errors="*{email}">
+                                </p>
+                            </div>
                         </div>
-                        <div class="mb-6">
+
+
+                        <div class="mb-4">
                             <input
-                                    name="username"
+                                    th:field="*{username}"
                                     type="text"
                                     placeholder="이름을 입력해 주세요"
                                     class="bordder-[#E9EDF4] w-full rounded-md border bg-[#FCFDFE] py-3 px-5 text-base text-body-color placeholder-[#ACB6BE] outline-none transition focus:border-primary focus-visible:shadow-none"
                             />
+                            <div class="py-2 field-error flex items-center justify-start" >
+                                <p th:errors="*{username}">
+                                </p>
+                            </div>
                         </div>
-                        <div class="mb-6">
+
+                        <div class="mb-4">
                             <input
-                                    name="password"
+                                    th:field="*{password}"
                                     type="password"
                                     placeholder="영문자 숫자 포함 최소 8~20자"
                                     class="bordder-[#E9EDF4] w-full rounded-md border bg-[#FCFDFE] py-3 px-5 text-base text-body-color placeholder-[#ACB6BE] outline-none transition focus:border-primary focus-visible:shadow-none"
                             />
+                            <div class="py-2 field-error flex items-center justify-start" >
+                                <p th:errors="*{password}">
+                                </p>
+                            </div>
                         </div>
+
                         <div class="mb-6">
                             <input
+                                    th:field="*{passwordCheck}"
                                     type="password"
                                     placeholder="비밀번호를 확인해 주세요"
                                     class="bordder-[#E9EDF4] w-full rounded-md border bg-[#FCFDFE] py-3 px-5 text-base text-body-color placeholder-[#ACB6BE] outline-none transition focus:border-primary focus-visible:shadow-none"
                             />
                         </div>
+
+
                         <div class="mb-10">
                             <input
                                     type="submit"

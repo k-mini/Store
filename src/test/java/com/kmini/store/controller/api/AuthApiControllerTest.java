@@ -1,8 +1,7 @@
 package com.kmini.store.controller.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kmini.store.dto.request.UserDto;
-import com.kmini.store.dto.request.UserDto.SignupDto;
+import com.kmini.store.dto.request.UserDto.SignUpDto;
 import com.kmini.store.repository.UserRepository;
 import com.kmini.store.service.AuthService;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +37,7 @@ class AuthApiControllerTest {
 //    @Test
     void signup() throws Exception {
         // given
-        SignupDto signupDto = new SignupDto("kmini", "1234", "kmini@gmail.com", null);
+        SignUpDto signupDto = new SignUpDto("kmini", "1234", "kmini@gmail.com", null);
         String requestBody = om.writeValueAsString(signupDto);
         log.info("requestBody = {}", requestBody);
 

@@ -71,7 +71,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom{
                         contentLike(cond.getContent())
                 );
 
-        return PageableExecutionUtils.getPage(query.fetch(),pageable,countQuery::fetchOne);
+        return PageableExecutionUtils.getPage(query.fetch(), pageable, countQuery::fetchOne);
     }
 
     private BooleanExpression titleLike(String title) {
