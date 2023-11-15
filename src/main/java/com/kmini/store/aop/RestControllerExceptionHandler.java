@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class RestControllerExceptionHandler {
 
-    @ExceptionHandler(CustomException.class)
-    public ResponseEntity<?> apiException(CustomException e) {
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> apiException(Exception e) {
         return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new CommonRespDto<>(-1,e.getMessage(),null));
     }
 }

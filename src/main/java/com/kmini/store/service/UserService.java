@@ -4,7 +4,8 @@ import com.kmini.store.config.auth.PrincipalDetail;
 import com.kmini.store.domain.User;
 import com.kmini.store.domain.type.UserRole;
 import com.kmini.store.domain.type.UserStatus;
-import com.kmini.store.dto.request.UserDto.UserUpdateDto;
+import com.kmini.store.dto.request.UserDto;
+import com.kmini.store.dto.request.UserDto.UserUpdateReqDto;
 import com.kmini.store.ex.CustomUserNotFoundException;
 import com.kmini.store.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,17 +34,17 @@ public class UserService {
 
     // 회원 수정
     @Transactional
-    public UserUpdateDto update(Long id, UserUpdateDto userUpdateDto) {
+    public UserUpdateReqDto update(Long id, UserUpdateReqDto userUpdateReqDto) {
 
         User user = userRepository.findById(id).orElseThrow(() -> new CustomUserNotFoundException("유저가 발견되지 않았습니다."));
-        user.setUsername(userUpdateDto.getUsername());
-        user.setPassword(encryptionPassword(userUpdateDto.getPassword()));
-        user.setThumbnail(userUpdateDto.getThumbnail());
+        user.setUsername(userUpdateReqDto.getUsername());
+        user.setPassword(encryptionPassword(userUpdateReqDto.getPassword()));
+        user.setThumbnail(userUpdateReqDto.getThumbnail());
 
         PrincipalDetail principal = new PrincipalDetail(user);
-        Authentication authentication = new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
+        UsernamePasswordAuthenticationToken authentication = UsernamePasswordAuthenticationToken.authenticated(principal, null, principal.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return UserUpdateDto.toDto(user);
+        return UserUpdateReqDto.toDto(user);
     }
 
     // 회원 탈퇴

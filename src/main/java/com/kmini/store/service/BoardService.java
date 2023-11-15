@@ -1,7 +1,8 @@
 package com.kmini.store.service;
 
-import com.kmini.store.config.file.FileUploader;
+import com.kmini.store.config.file.SystemFileManager;
 import com.kmini.store.domain.Board;
+import com.kmini.store.domain.Comment;
 import com.kmini.store.domain.type.CategoryType;
 import com.kmini.store.dto.request.SearchDto.SearchBoardDto;
 import com.kmini.store.dto.response.BoardDto;
@@ -14,13 +15,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class BoardService {
 
     private final BoardRepository boardRepository;
     private final BoardCategoryRepository boardCategoryRepository;
-    private final FileUploader fileUploader;
+    private final SystemFileManager systemFileManager;
 
     // 게시물 조회 ( 디폴트 : 최신 시간 순으로)
     @Transactional(readOnly = true)
@@ -32,7 +35,6 @@ public class BoardService {
         BoardSearchCond boardSearchCond = new BoardSearchCond(categoryType, subCategoryType, searchBoardDto);
 
         Page<Board> rawResult = boardRepository.findBoards(boardSearchCond, pageable);
-
         return rawResult.map(BoardDto::toDto);
     }
 }

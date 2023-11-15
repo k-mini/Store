@@ -4,12 +4,11 @@ import com.kmini.store.domain.Board;
 import com.kmini.store.domain.Comment;
 import com.kmini.store.domain.User;
 import com.kmini.store.dto.request.CommentDto;
-import com.kmini.store.dto.request.CommentDto.BoardCommentReqDto;
-import com.kmini.store.dto.request.CommentDto.BoardReplyReqDto;
+import com.kmini.store.dto.request.CommentDto.BoardCommentSaveDto;
+import com.kmini.store.dto.request.CommentDto.BoardCommentUpdateDto;
+import com.kmini.store.dto.request.CommentDto.BoardReplySaveDto;
 import com.kmini.store.dto.response.CommentDto.BoardCommentRespDto;
 import com.kmini.store.dto.response.CommentDto.BoardReplyRespDto;
-import com.kmini.store.ex.CustomBoardNotFoundException;
-import com.kmini.store.ex.CustomCommentNotFoundException;
 import com.kmini.store.repository.CommentRepository;
 import com.kmini.store.repository.UserRepository;
 import com.kmini.store.repository.board.BoardRepository;
@@ -28,10 +27,10 @@ public class CommentService {
     private final UserRepository userRepository;
 
     @Transactional
-    public BoardCommentRespDto saveComment(BoardCommentReqDto boardCommentReqDto, User user) {
+    public BoardCommentRespDto saveComment(BoardCommentSaveDto boardCommentSaveDto, User user) {
 
-        Board board = boardRepository.getReferenceById(boardCommentReqDto.getBoardId());
-        String content = boardCommentReqDto.getContent();
+        Board board = boardRepository.getReferenceById(boardCommentSaveDto.getBoardId());
+        String content = boardCommentSaveDto.getContent();
 
         // 댓글 엔티티 생성
         Comment comment = new Comment(user, board, null, content);
@@ -41,17 +40,25 @@ public class CommentService {
     }
 
     @Transactional
-    public BoardReplyRespDto saveReply(BoardReplyReqDto boardReplyReqDto, User user) {
+    public BoardReplyRespDto saveReply(BoardReplySaveDto boardReplySaveDto, User user) {
 
-        Board board = boardRepository.getReferenceById(boardReplyReqDto.getBoardId());
-        Comment topComment = commentRepository.getReferenceById(boardReplyReqDto.getTopCommentId());
-        String content = boardReplyReqDto.getContent();
+        Board board = boardRepository.getReferenceById(boardReplySaveDto.getBoardId());
+        Comment topComment = commentRepository.getReferenceById(boardReplySaveDto.getTopCommentId());
+        String content = boardReplySaveDto.getContent();
 
         // 대댓글 엔티티 생성
         Comment reply = new Comment(user, board, topComment, content);
         // 대댓글 저장
         Comment savedReply = commentRepository.save(reply);
         return BoardReplyRespDto.toDto(savedReply);
+    }
+    @Transactional
+    public void update(BoardCommentUpdateDto boardCommentUpdateDto) {
+
+        Comment comment = commentRepository.findById(boardCommentUpdateDto.getCommentId())
+                .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
+
+        comment.setContent(boardCommentUpdateDto.getContent());
     }
 
     @Transactional

@@ -26,8 +26,8 @@ public class User {
     private String password;
 
     // 변경 불가
-
     private String email;
+
     @Enumerated(EnumType.STRING)
     private UserRole role;
 

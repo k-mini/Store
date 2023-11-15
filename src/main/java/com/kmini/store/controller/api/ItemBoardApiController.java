@@ -1,14 +1,16 @@
 package com.kmini.store.controller.api;
 
 
+import com.kmini.store.dto.request.ItemBoardDto;
+import com.kmini.store.dto.request.ItemBoardDto.ItemBoardUpdateFormDto;
 import com.kmini.store.service.ItemBoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @RestController
@@ -29,5 +31,17 @@ public class ItemBoardApiController {
 
         redirectAttributes.addAttribute("subCategory", subCategory);
         return "redirect:/boards/trade/{subCategory}";
+    }
+
+    @PatchMapping("/{boardId}")
+    public String update(@Validated ItemBoardUpdateFormDto itemBoardUpdateFormDto, BindingResult bindingResult, Model model) {
+        log.debug("itemBoardUpdateFormDto = {}", itemBoardUpdateFormDto);
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("itemBoardUpdateFormDto", itemBoardUpdateFormDto);
+        }
+
+        itemBoardService.update(itemBoardUpdateFormDto);
+        return "board/updateform";
     }
 }

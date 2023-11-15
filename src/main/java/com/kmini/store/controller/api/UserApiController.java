@@ -2,7 +2,7 @@ package com.kmini.store.controller.api;
 
 
 import com.kmini.store.dto.CommonRespDto;
-import com.kmini.store.dto.request.UserDto.UserUpdateDto;
+import com.kmini.store.dto.request.UserDto.UserUpdateReqDto;
 import com.kmini.store.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,8 +18,8 @@ public class UserApiController {
     private final UserService userService;
     // 회원 수정
     @PatchMapping("/{id}")
-    public ResponseEntity<UserUpdateDto> update(@PathVariable Long id, @RequestBody UserUpdateDto userUpdateDto) {
-        UserUpdateDto updateDto = userService.update(id, userUpdateDto);
+    public ResponseEntity<UserUpdateReqDto> update(@PathVariable Long id, @RequestBody UserUpdateReqDto userUpdateReqDto) {
+        UserUpdateReqDto updateDto = userService.update(id, userUpdateReqDto);
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(updateDto);

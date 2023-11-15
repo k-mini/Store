@@ -2,6 +2,7 @@ package com.kmini.store.controller;
 
 import com.kmini.store.config.auth.PrincipalDetail;
 import com.kmini.store.dto.request.BoardDto.ItemBoardFormSaveDto;
+import com.kmini.store.dto.request.ItemBoardDto.ItemBoardUpdateFormDto;
 import com.kmini.store.dto.response.ItemBoardDto.ItemBoardRespDetailDto;
 import com.kmini.store.service.ItemBoardService;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -32,12 +35,24 @@ public class ItemBoardController {
         log.debug("result = {}", result);
         return "board/trade-detail";
     }
+    
+    // 게시물 수정
+    @GetMapping("/{boardId}/form")
+    public String update(@PathVariable Long boardId,
+            @PathVariable String subCategory,Model model) {
 
+        ItemBoardUpdateFormDto result = itemBoardService.getUpdateForm(boardId);
+        model.addAttribute("itemBoardUpdateFormDto", result);
+        log.debug("result = {}", result);
+        return "board/updateform";
+    }
+    
+    // 게시물 생성
     @GetMapping("/form")
     public String save(
             @ModelAttribute ItemBoardFormSaveDto itemBoardFormSaveDto, Model model) {
         // PathVariable 자동 modelAttribute 저장.
-//        model.addAttribute("formSaveDto", new FormSaveDto());
+        model.addAttribute("itemBoardFormSaveDto", new ItemBoardFormSaveDto());
         return "board/form";
     }
 

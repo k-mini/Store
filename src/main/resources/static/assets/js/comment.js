@@ -23,7 +23,7 @@ let index = {
             console.log(res);
             $("#comment-box").append(getCommentComp(res.data));
             $("#comment-content").val('');
-            plusTotalComment();
+            plusTotalCounts();
         }).fail((err) => {
             JSON.stringify(err);
         })
@@ -32,8 +32,27 @@ let index = {
 
 index.init();
 
-function updateComment(comment_id) {
-    alert("update 실행");
+function updateComment(boardId, commentId) {
+
+    let data = {
+        boardId : boardId,
+        commentId : commentId,
+        content : $(`#update-content-${commentId}`).val()
+    }
+    $.ajax({
+        type : "PATCH",
+        url : "/api/comment/" + commentId,
+        contentType : "application/json; charset=utf-8",
+        data : JSON.stringify(data),
+        dataType : "json"
+    }).done(res =>{
+        console.log(res);
+        $(`#update-content-${commentId}`).val('');
+        $(`#content-${commentId}`).text(data.content);
+        updateToggle(commentId);
+    }).fail((err) => {
+        console.log(err);
+    })
 }
 
 function deleteComment(comment_id) {
@@ -44,14 +63,18 @@ function deleteComment(comment_id) {
     }).done(res =>{
         console.log(res);
         $(`#comment-${comment_id}`).remove();
-        downTotalComment(res.data);
+        downTotalCounts(res.data);
     }).fail((err) => {
-        JSON.stringify(err);
+        console.log(err);
     })
 }
 
 function replyToggle(commentId) {
     let selector = $(`#reply-bar-${commentId}`);
+    return selector.is(':visible') ? selector.hide() : selector.show();
+}
+function updateToggle(commentId) {
+    let selector = $(`#update-bar-${commentId}`);
     return selector.is(':visible') ? selector.hide() : selector.show();
 }
 
@@ -73,18 +96,18 @@ function saveReply(boardId, topCommentId) {
         console.log(res);
         $(`#reply-bar-${topCommentId}`).before(getReplyComp(res.data));
         $(`#reply-content-${topCommentId}`).val('');
-        plusTotalComment();
+        plusTotalCounts();
     }).fail((err) => {
-        JSON.stringify(err);
+        console.log(err);
     })
 }
 
-function plusTotalComment() {
+function plusTotalCounts() {
     commentTotalCount += 1;
     $("#comment-total").text(`댓글 (${commentTotalCount})`);
 }
 
-function downTotalComment(cnt) {
+function downTotalCounts(cnt) {
     commentTotalCount -= cnt;
     $("#comment-total").text(`댓글 (${commentTotalCount})`);
 }

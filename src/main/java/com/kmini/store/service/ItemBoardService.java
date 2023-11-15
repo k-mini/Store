@@ -1,12 +1,12 @@
 package com.kmini.store.service;
 
 import com.kmini.store.config.auth.PrincipalDetail;
-import com.kmini.store.config.file.FileUploader;
+import com.kmini.store.config.file.ResourceManager;
+import com.kmini.store.config.file.SystemFileManager;
 import com.kmini.store.domain.*;
 import com.kmini.store.domain.type.CategoryType;
-import com.kmini.store.dto.request.BoardDto;
 import com.kmini.store.dto.request.BoardDto.ItemBoardFormSaveDto;
-import com.kmini.store.dto.request.BoardDto.UpdateDto;
+import com.kmini.store.dto.request.ItemBoardDto.ItemBoardUpdateFormDto;
 import com.kmini.store.dto.response.ItemBoardDto.ItemBoardRespDetailDto;
 import com.kmini.store.ex.CustomBoardNotFoundException;
 import com.kmini.store.ex.CustomCategoryNotFoundException;
@@ -18,6 +18,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsFileUploadSupport;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -31,7 +33,7 @@ public class ItemBoardService {
     private final CommentRepository commentRepository;
     private final CategoryRepository categoryRepository;
     private final BoardCategoryRepository boardCategoryRepository;
-    private final FileUploader fileUploader;
+    private final ResourceManager resourceManager;
 
     // 게시물 상세 조회
     @Transactional
@@ -63,7 +65,7 @@ public class ItemBoardService {
         MultipartFile file = itemBoardFormSaveDto.getFile();
         String uri = null;
         if (file != null) {
-            uri = fileUploader.storeFile(file);
+            uri = resourceManager.storeFile(file);
         }
 
         // 카테고리 조회
@@ -89,16 +91,28 @@ public class ItemBoardService {
 
     // 게시물 수정
     @Transactional
-    public void update(UpdateDto updateDto) {
+    public void update(ItemBoardUpdateFormDto itemBoardUpdateFormDto) {
 
-        ItemBoard itemBoard = itemBoardRepository.getReferenceById(updateDto.getBoardId());
-//                .orElseThrow(()-> new CustomBoardNotFoundException("게시물을 찾을 수 없습니다."));
-        BoardCategory category = boardCategoryRepository.getReferenceById(updateDto.getCategoryId());
-//                .orElseThrow(()->new CustomCategoryNotFoundException("카테고리가 존재하지 않습니다."));
+        ItemBoard itemBoard = itemBoardRepository.getReferenceById(itemBoardUpdateFormDto.getBoardId());
 
-        itemBoard.setContent(updateDto.getContent());
-        itemBoard.setItemName(updateDto.getItemName());
-        itemBoard.setThumbnail(updateDto.getThumbnail());
+        MultipartFile submittedFile = itemBoardUpdateFormDto.getFile();
+        if (!submittedFile.isEmpty()) {
+            resourceManager.deleteFile(itemBoard.getThumbnail());
+            String updatedUri = resourceManager.storeFile(submittedFile);
+            itemBoard.setThumbnail(updatedUri);
+        }
+
+        itemBoard.setContent(itemBoardUpdateFormDto.getContent());
+        itemBoard.setItemName(itemBoardUpdateFormDto.getItemName());
+    }
+
+    // 게시물 수정 폼 로딩
+    @Transactional
+    public ItemBoardUpdateFormDto getUpdateForm(Long boardId) {
+        ItemBoard itemBoard = itemBoardRepository.findByIdWithFetchJoin(boardId)
+                .orElseThrow(() -> new CustomBoardNotFoundException("게시물을 찾을 수 없습니다."));
+
+        return ItemBoardUpdateFormDto.toDto(itemBoard);
     }
 
     // 게시물 삭제

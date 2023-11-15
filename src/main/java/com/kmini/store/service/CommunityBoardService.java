@@ -1,11 +1,10 @@
 package com.kmini.store.service;
 
 import com.kmini.store.config.auth.PrincipalDetail;
-import com.kmini.store.config.file.FileUploader;
+import com.kmini.store.config.file.SystemFileManager;
 import com.kmini.store.domain.*;
 import com.kmini.store.domain.type.CategoryType;
 import com.kmini.store.dto.request.BoardDto.CommunityBoardFormSaveDto;
-import com.kmini.store.dto.response.CommunityBoardDto;
 import com.kmini.store.dto.response.CommunityBoardDto.CommunityBoardRespDetailDto;
 import com.kmini.store.ex.CustomBoardNotFoundException;
 import com.kmini.store.ex.CustomCategoryNotFoundException;
@@ -30,7 +29,7 @@ public class CommunityBoardService {
     private final BoardCategoryRepository boardCategoryRepository;
     private final CommentRepository commentRepository;
     private final CategoryRepository categoryRepository;
-    private final FileUploader fileUploader;
+    private final SystemFileManager systemFileManager;
 
     @Transactional
     public void save(CommunityBoardFormSaveDto communityBoardFormSaveDto, PrincipalDetail principalDetail) throws IOException {
@@ -39,7 +38,7 @@ public class CommunityBoardService {
         MultipartFile file = communityBoardFormSaveDto.getFile();
         String uri = null;
         if (file != null) {
-            uri = fileUploader.storeFile(file);
+            uri = systemFileManager.storeFile(file);
         }
 
         // 카테고리 조회

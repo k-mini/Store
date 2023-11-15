@@ -199,6 +199,13 @@
                                         class="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">
                                         댓글 ([[${result.commentTotalCount}]])</h2>
                                     <div>
+                                        <a id="board-update"
+                                                th:href="@{/board/trade/{subCategory}/{id}/form(subCategory=${subCategory},id=${result.id})}"
+                                                th:if="${result.writerId == #authentication.principal.user.id}"
+                                                type="button"
+                                                class="mb-5 inline-block rounded bg-primary py-1 px-4 text-center text-xs font-semibold leading-loose text-white">
+                                            게시물 수정
+                                        </a>
                                         <button id="board-delete"
                                                 th:if="${result.writerId == #authentication.principal.user.id}"
                                                 type="button"
@@ -240,7 +247,7 @@
 
                                         <div class="flex items-center">
                                             <button th:commentid="${comment.id}"
-                                                    th:onclick="updateComment(this.getAttribute('commentid'))"
+                                                    th:onclick="updateToggle(this.getAttribute('commentid'))"
                                                     th:if="${#authentication.principal.user.id == comment.commentUserId}"
                                                     class="inline-flex items-center mr-3 text-sm text-gray-900 hover:underline dark:text-white font-semibold">
                                                 수정
@@ -254,7 +261,7 @@
                                         </div>
                                     </div>
 
-                                    <p class="text-gray-500 py-4 dark:text-gray-400">[[${comment.content}]]</p>
+                                    <p th:id="|content-${comment.id}|" class="text-gray-500 py-4 dark:text-gray-400">[[${comment.content}]]</p>
 
                                     <div class="flex items-center py-4">
                                         <button th:onclick="replyToggle([[${comment.id}]])" type="button"
@@ -262,6 +269,20 @@
                                             답글 달기
                                         </button>
                                     </div>
+                                    <!-- 수정 댓글 바 시작 -->
+                                    <div th:id="|update-bar-${comment.id}|" class="mb-6 lg:ml-6" style="display: none;">
+                                        <div class="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+                                            <textarea th:id="|update-content-${comment.id}|" rows="3"
+                                                      class="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none dark:text-white dark:placeholder-gray-400 dark:bg-gray-800"
+                                                      placeholder="수정 내용.."></textarea>
+                                        </div>
+                                        <button th:onclick="updateComment([[${result.id}]], [[${comment.id}]])"
+                                                type="button"
+                                                class="mb-5 inline-block rounded bg-primary py-1 px-4 text-center text-xs font-semibold leading-loose text-white">
+                                            작성
+                                        </button>
+                                    </div>
+                                    <!-- 수정 댓글 바 종료 -->
 
                                     <!-- 대댓글 시작 -->
                                     <div th:each="reply : ${comment.replies}" th:id="|comment-${reply.replyId}|"
@@ -279,7 +300,7 @@
 
                                             <div class="flex items-center">
                                                 <button
-                                                        th:onclick="updateComment([[${reply.replyId}]])"
+                                                        th:onclick="updateToggle([[${reply.replyId}]])"
                                                         th:if="${#authentication.principal.user.id == comment.commentUserId}"
                                                         class="inline-flex items-center mr-3 text-sm text-gray-900 hover:underline dark:text-white font-semibold">
                                                     수정
@@ -291,12 +312,26 @@
                                                     삭제
                                                 </button>
                                             </div>
-
                                         </div>
-                                        <p class="text-gray-500 py-4 dark:text-gray-400">[[${reply.content}]]</p>
+                                        <p th:id="|content-${comment.id}|" class="text-gray-500 py-4 dark:text-gray-400">[[${reply.content}]]</p>
+                                        <!-- 대댓글 수정 바 -->
+                                        <div th:id="|update-bar-${reply.replyId}|" class="mb-6 lg:ml-6" style="display: none;">
+                                            <div class="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+                                            <textarea th:id="|update-content-${reply.replyId}|" rows="3"
+                                                      class="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none dark:text-white dark:placeholder-gray-400 dark:bg-gray-800"
+                                                      placeholder="수정 내용.."></textarea>
+                                            </div>
+                                            <button th:onclick="updateComment([[${result.id}]], [[${reply.replyId}]])"
+                                                    type="button"
+                                                    class="mb-5 inline-block rounded bg-primary py-1 px-4 text-center text-xs font-semibold leading-loose text-white">
+                                                작성
+                                            </button>
+                                        </div>
+                                        <!-- 대댓글 수정 바 종료 -->
                                     </div>
                                     <!-- 대댓글 종료-->
 
+                                    <!-- 대댓글 작성 바 시작 -->
                                     <div th:id="|reply-bar-${comment.id}|" class="mb-6 lg:ml-6" style="display: none;">
                                         <div class="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
                                             <textarea th:id="|reply-content-${comment.id}|" rows="3"
@@ -309,6 +344,7 @@
                                             작성
                                         </button>
                                     </div>
+                                    <!-- 대댓글 작성 바 종료 -->
                                 </div>
 
                             </div>

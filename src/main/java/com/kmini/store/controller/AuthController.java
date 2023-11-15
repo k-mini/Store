@@ -3,7 +3,7 @@ package com.kmini.store.controller;
 import com.kmini.store.config.auth.PrincipalDetail;
 import com.kmini.store.domain.User;
 import com.kmini.store.dto.request.UserDto.SignUpDto;
-import com.kmini.store.dto.request.UserDto.UserUpdateDto;
+import com.kmini.store.dto.request.UserDto.UserUpdateReqDto;
 import com.kmini.store.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -62,17 +62,26 @@ public class AuthController {
     public String myPage(@AuthenticationPrincipal PrincipalDetail principal, Model model) {
         User user = principal.getUser();
         log.debug("user = {}", user);
-        model.addAttribute("userUpdateDto", UserUpdateDto.toDto(user));
-        return "auth/myPage";
+        model.addAttribute("userUpdateReqDto", UserUpdateReqDto.toDto(user));
+        return "/auth/mypage";
     }
 
     @PostMapping("/auth/my-page")
-    public String update(UserUpdateDto userUpdateDto, @AuthenticationPrincipal PrincipalDetail principal) {
+    public String update(@Validated UserUpdateReqDto userUpdateReqDto, BindingResult bindingResult,
+                         @AuthenticationPrincipal PrincipalDetail principal) {
         User user = principal.getUser();
-        log.debug("userUpdateDto = {}", userUpdateDto);
-        log.debug("user = {}", user);
+        log.debug("userUpdateReqDto = {}", userUpdateReqDto);
 
-        userService.update(user.getId(), userUpdateDto);
+        if (!userUpdateReqDto.getPassword().equals(userUpdateReqDto.getPasswordCheck())) {
+            bindingResult.addError(new FieldError("userUpdateReqDto", "password","패스워드가 일치하지 않습니다."));
+        }
+
+        if (bindingResult.hasErrors()) {
+            log.debug("errors = {}", bindingResult);
+            return "/auth/mypage";
+        }
+
+        userService.update(user.getId(), userUpdateReqDto);
 
         return "redirect:/";
     }

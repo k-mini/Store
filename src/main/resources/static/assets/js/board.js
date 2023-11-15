@@ -5,6 +5,9 @@ let board_index = {
         $("#board-delete").on("click", ()=>{
             this.delete(category, subCategory);
         });
+        $("#form-update").on("click", () =>{
+            this.update(category, subCategory);
+        });
     },
 
     delete : function(category, subCategory) {
@@ -25,7 +28,7 @@ let board_index = {
         
         $.ajax({
             type : "GET",
-            url : "/api/boards/trade"
+            url : `/api/boards/${category}`
         }).done(res =>{
             console.log(res.data);
             res.data.forEach((board)=>{
@@ -34,6 +37,31 @@ let board_index = {
             });
         }).fail((err) => {
             JSON.stringify(err);
+        })
+    },
+
+    update : function(category, subCategory) {
+
+        let data = {
+            boardId : boardId,
+            title : $("#title").val(),
+            file : $("#file").val(),
+            content : $("#content").val()
+        }
+        let form = $("#itemBoardUpdateFormDto")[0];
+        let formData = new FormData(form);
+        console.log(data);
+        $.ajax({
+            type : "PATCH",
+            url : `/api/board/${category}/${subCategory}/${boardId}`,
+            data : formData,
+            contentType : false,
+            processData : false
+        }).done(res =>{
+            console.log(res.data);
+            location.href=`/boards/${category}/${subCategory}`;
+        }).fail((err) => {
+            console.log(err);
         })
     },
 }
@@ -75,5 +103,3 @@ function getBoardComponent(board) {
             </div>`;
     return item;
 }
-
-index.init();

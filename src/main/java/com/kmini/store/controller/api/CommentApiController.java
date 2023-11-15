@@ -3,9 +3,9 @@ package com.kmini.store.controller.api;
 import com.kmini.store.config.auth.PrincipalDetail;
 import com.kmini.store.domain.User;
 import com.kmini.store.dto.CommonRespDto;
-import com.kmini.store.dto.request.CommentDto.BoardCommentReqDto;
-import com.kmini.store.dto.request.CommentDto.BoardReplyReqDto;
-import com.kmini.store.dto.response.CommentDto;
+import com.kmini.store.dto.request.CommentDto.BoardCommentSaveDto;
+import com.kmini.store.dto.request.CommentDto.BoardCommentUpdateDto;
+import com.kmini.store.dto.request.CommentDto.BoardReplySaveDto;
 import com.kmini.store.dto.response.CommentDto.BoardCommentRespDto;
 import com.kmini.store.dto.response.CommentDto.BoardReplyRespDto;
 import com.kmini.store.service.CommentService;
@@ -26,13 +26,22 @@ public class CommentApiController {
 
     @PostMapping
     public ResponseEntity<?> saveComment(
-            @RequestBody BoardCommentReqDto boardCommentReqDto,
+            @RequestBody BoardCommentSaveDto boardCommentSaveDto,
             @AuthenticationPrincipal PrincipalDetail principalDetail) {
-        log.info("boardCommentReqDto = {}", boardCommentReqDto);
-        BoardCommentRespDto result = commentService.saveComment(boardCommentReqDto, principalDetail.getUser());
+        log.info("boardCommentReqDto = {}", boardCommentSaveDto);
+        BoardCommentRespDto result = commentService.saveComment(boardCommentSaveDto, principalDetail.getUser());
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(new CommonRespDto<>(1,"성공", result));
+                .body(new CommonRespDto<>(1, "성공", result));
+    }
+
+    @PatchMapping("/{commentId}")
+    public ResponseEntity<?> updateComment(@RequestBody BoardCommentUpdateDto boardCommentUpdateDto) {
+        log.debug("boardCommentUpdateDto = {}", boardCommentUpdateDto);
+        commentService.update(boardCommentUpdateDto);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new CommonRespDto<>(1,"성공", null));
     }
 
     @DeleteMapping("/{commentId}")
@@ -49,11 +58,11 @@ public class CommentApiController {
 
     @PostMapping("{commentId}/reply")
     public ResponseEntity<?> saveReply(
-            @RequestBody BoardReplyReqDto boardReplyReqDto,
+            @RequestBody BoardReplySaveDto boardReplySaveDto,
             @AuthenticationPrincipal PrincipalDetail principalDetail
     ) {
-        log.info("boardReplyReqDto = {} ", boardReplyReqDto);
-        BoardReplyRespDto result = commentService.saveReply(boardReplyReqDto, principalDetail.getUser());
+        log.info("boardReplyReqDto = {} ", boardReplySaveDto);
+        BoardReplyRespDto result = commentService.saveReply(boardReplySaveDto, principalDetail.getUser());
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(new CommonRespDto<>(1, "성공", result));

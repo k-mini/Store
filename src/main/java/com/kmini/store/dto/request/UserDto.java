@@ -43,7 +43,10 @@ public class UserDto {
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    public static class UserUpdateDto {
+    public static class UserUpdateReqDto {
+
+        @Email(message = "이메일 형식으로 입력해 주세요.")
+        private String email;
 
         @NotBlank(message ="이름은 반드시 입력해야 합니다.")
         private String username;
@@ -55,8 +58,9 @@ public class UserDto {
 
         private String thumbnail;
 
-        public static UserUpdateDto toDto(User user) {
-            return UserUpdateDto.builder()
+        public static UserUpdateReqDto toDto(User user) {
+            return UserUpdateReqDto.builder()
+                    .email(user.getEmail())
                     .username(user.getUsername())
                     .password(user.getPassword())
                     .thumbnail(user.getThumbnail())

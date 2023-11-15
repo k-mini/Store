@@ -23,12 +23,13 @@
 - Java 11
 - SpringBoot 2.7.17
 - Spring Data JPA
+- Spring Security
 - QueryDsl
 
 ### 데이터베이스
 
 - h2 (로컬 환경)
-- Mysql (aws 환경)
+- Mysql (리눅스 환경)
 
 ### build tool
 

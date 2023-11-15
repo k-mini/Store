@@ -37,7 +37,7 @@ class AuthApiControllerTest {
 //    @Test
     void signup() throws Exception {
         // given
-        SignUpDto signupDto = new SignUpDto("kmini", "1234", "kmini@gmail.com", null);
+        SignUpDto signupDto = new SignUpDto("kmini", "kmini@gmail.com","1234","1234" , null);
         String requestBody = om.writeValueAsString(signupDto);
         log.info("requestBody = {}", requestBody);
 
