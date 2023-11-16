@@ -48,8 +48,7 @@ public class AuthController {
             return "auth/signup";
         }
 
-        User user = signUpDto.toEntity();
-        userService.save(user);
+        userService.save(signUpDto);
         return "redirect:/auth/signin";
     }
 

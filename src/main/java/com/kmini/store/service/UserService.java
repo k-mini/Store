@@ -1,10 +1,12 @@
 package com.kmini.store.service;
 
 import com.kmini.store.config.auth.PrincipalDetail;
+import com.kmini.store.config.file.ResourceManager;
 import com.kmini.store.domain.User;
 import com.kmini.store.domain.type.UserRole;
 import com.kmini.store.domain.type.UserStatus;
 import com.kmini.store.dto.request.UserDto;
+import com.kmini.store.dto.request.UserDto.SignUpDto;
 import com.kmini.store.dto.request.UserDto.UserUpdateReqDto;
 import com.kmini.store.ex.CustomUserNotFoundException;
 import com.kmini.store.repository.UserRepository;
@@ -20,12 +22,14 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserService {
 
+    private final ResourceManager resourceManager;
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     // 회원가입
     @Transactional
-    public void save(User user) {
+    public void save(SignUpDto signUpDto) {
+        User user = signUpDto.toEntity(resourceManager);
         user.setRole(UserRole.USER);
         user.setUserStatus(UserStatus.SIGNUP);
         user.setPassword(encryptionPassword(user.getPassword()));

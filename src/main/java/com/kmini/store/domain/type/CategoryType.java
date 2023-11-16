@@ -1,6 +1,5 @@
 package com.kmini.store.domain.type;
 
-import com.kmini.store.ex.CustomCategoryNotFoundDtypeException;
 import lombok.Getter;
 
 @Getter
@@ -24,6 +23,18 @@ public enum CategoryType {
         return this.name().toLowerCase();
     }
 
+    public static CategoryType getType(String name) {
+        return checkType(name);
+    }
 
+    public static CategoryType checkType(String name) {
+        CategoryType category;
+        try {
+            category = CategoryType.valueOf(name.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("카테고리를 찾을 수 없습니다.",e);
+        }
+        return category;
+    }
 
 }

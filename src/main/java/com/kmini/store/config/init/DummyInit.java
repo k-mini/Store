@@ -44,8 +44,8 @@ public class DummyInit implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         log.info("DevInit 실행...");
-        User user = new User("kmini", "1234", "test@gmail.com", UserRole.USER, UserStatus.SIGNUP, null);
-        userService.save(user);
+        User user = new User("kmini", passwordEncoder.encode("1234"), "test@gmail.com", UserRole.USER, UserStatus.SIGNUP, null);
+        userRepository.save(user);
         User admin = new User("admin", passwordEncoder.encode("admin"), "admin@gmail.com", UserRole.ADMIN, UserStatus.SIGNUP, null);
         userRepository.save(admin);
 

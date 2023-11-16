@@ -1,6 +1,7 @@
 package com.kmini.store.controller;
 
 import com.kmini.store.config.auth.PrincipalDetail;
+import com.kmini.store.domain.type.CategoryType;
 import com.kmini.store.dto.request.BoardDto.ItemBoardFormSaveDto;
 import com.kmini.store.dto.request.ItemBoardDto.ItemBoardUpdateFormDto;
 import com.kmini.store.dto.response.ItemBoardDto.ItemBoardRespDetailDto;
@@ -30,6 +31,7 @@ public class ItemBoardController {
     public String detail(
             @PathVariable("subCategory") String subCategory,
             @PathVariable("boardId") Long boardId, Model model) {
+        CategoryType.checkType(subCategory);
         ItemBoardRespDetailDto result = itemBoardService.detail(boardId);
         model.addAttribute("result", result);
         log.debug("result = {}", result);

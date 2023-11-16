@@ -2,6 +2,7 @@ package com.kmini.store.controller.api;
 
 
 import com.kmini.store.dto.CommonRespDto;
+import com.kmini.store.dto.request.UserDto;
 import com.kmini.store.dto.request.UserDto.UserUpdateReqDto;
 import com.kmini.store.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,16 @@ import org.springframework.web.bind.annotation.*;
 public class UserApiController {
 
     private final UserService userService;
+
+    // 회원가입 (API 방식)
+    @PostMapping("/signup")
+    public ResponseEntity<?> signup(@RequestBody UserDto.SignUpDto signupDto) {
+        userService.save(signupDto);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(new CommonRespDto<>(1,"성공",null));
+    }
+
     // 회원 수정
     @PatchMapping("/{id}")
     public ResponseEntity<UserUpdateReqDto> update(@PathVariable Long id, @RequestBody UserUpdateReqDto userUpdateReqDto) {

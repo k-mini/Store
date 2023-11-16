@@ -28,34 +28,6 @@ public class BoardController {
 
     private final BoardService boardService;
 
-    @GetMapping("/form")
-    public String save(
-            @ModelAttribute ItemBoardFormSaveDto itemBoardFormSaveDto, Model model) {
-//        model.addAttribute("formSaveDto", new FormSaveDto());
-        return "board/form";
-    }
-
-//    @PostMapping("/form")
-//    public String save(
-//            @ModelAttribute ItemBoardFormSaveDto itemBoardFormSaveDto,
-//            @AuthenticationPrincipal PrincipalDetail principal, RedirectAttributes redirectAttributes) throws IOException {
-//        log.debug("formSaveDto = {}", itemBoardFormSaveDto);
-//        String categoryName = itemBoardFormSaveDto.getCategory();
-//        String subCategoryName = itemBoardFormSaveDto.getSubCategory();
-//
-//        if (categoryName.equals(TRADE.getNameWithLowerCase())) {
-//            itemBoardFormSaveDto.setCategory(categoryName);
-//            itemBoardFormSaveDto.setSubCategory(subCategoryName);
-//            itemBoardService.save(itemBoardFormSaveDto, principal);
-//        } else if (categoryName.equals(COMMUNITY.getNameWithLowerCase())) {
-//
-//        }
-//
-//        redirectAttributes.addAttribute("category", categoryName);
-//        redirectAttributes.addAttribute("subCategory", subCategoryName);
-//        return "redirect:/boards/{category}/{subCategory}";
-//    }
-
     // 카테고리별 게시물 조회
     @GetMapping
     public String load(

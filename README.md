@@ -21,9 +21,9 @@
 ### 백엔드
 
 - Java 11
-- SpringBoot 2.7.17
-- Spring Data JPA
-- Spring Security
+- SpringBoot 2.7
+- Spring Data JPA 
+- Spring Security 5.7
 - QueryDsl
 
 ### 데이터베이스
@@ -116,11 +116,9 @@
 
 
 
-
-
 ## ER 다이어그램
 
-
+<img src="./docs/erd/erd-image.png">
 
 
 ## 아키텍처

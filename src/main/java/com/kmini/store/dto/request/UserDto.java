@@ -1,13 +1,13 @@
 package com.kmini.store.dto.request;
 
+import com.kmini.store.config.file.ResourceManager;
 import com.kmini.store.domain.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.*;
 
+@RequiredArgsConstructor
 public class UserDto {
 
     @Data
@@ -27,14 +27,14 @@ public class UserDto {
 
         private String passwordCheck;
 
-        private String thumbnail;
+        private MultipartFile file;
 
-        public User toEntity() {
+        public User toEntity(ResourceManager resourceManager) {
             return User.builder()
                     .username(username)
                     .password(password)
                     .email(email)
-                    .thumbnail(thumbnail)
+                    .thumbnail(resourceManager.storeFile(file))
                     .build();
         }
     }

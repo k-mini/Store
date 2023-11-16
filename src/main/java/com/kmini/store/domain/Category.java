@@ -17,14 +17,14 @@ public class Category {
     private CategoryType categoryType;
 
     @ManyToOne
-    private Category parent;
+    private Category superCategory;
 
     public Category(CategoryType categoryType) {
         this.categoryType = categoryType;
     }
 
-    public Category(CategoryType categoryType, Category parent) {
+    public Category(CategoryType categoryType, Category superCategory) {
         this.categoryType = categoryType;
-        this.parent = parent;
+        this.superCategory = superCategory;
     }
 }

@@ -31,7 +31,6 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @Slf4j
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     @Bean
@@ -73,6 +72,7 @@ public class SecurityConfig {
         http.sessionManagement()
                         .maximumSessions(1);
 
+        // h2 테스트 환경
         http.headers().frameOptions().disable();
 
         return http.build();
