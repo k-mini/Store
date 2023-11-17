@@ -21,7 +21,7 @@ public class BoardDto {
     // 게시물 썸네일
     private String thumbnail;
     // 조회 수
-    private int views;
+    private Long views;
     // 댓글 수
     private int commentsSize;
     // 작성 시간

@@ -46,6 +46,8 @@ public class DummyInit implements ApplicationRunner {
         log.info("DevInit 실행...");
         User user = new User("kmini", passwordEncoder.encode("1234"), "test@gmail.com", UserRole.USER, UserStatus.SIGNUP, null);
         userRepository.save(user);
+        User user2 = new User("kmini2", passwordEncoder.encode("1234"), "test2@gmail.com", UserRole.USER, UserStatus.SIGNUP, null);
+        userRepository.save(user2);
         User admin = new User("admin", passwordEncoder.encode("admin"), "admin@gmail.com", UserRole.ADMIN, UserStatus.SIGNUP, null);
         userRepository.save(admin);
 

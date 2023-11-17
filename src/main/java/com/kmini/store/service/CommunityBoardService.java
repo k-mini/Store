@@ -75,7 +75,7 @@ public class CommunityBoardService {
                 .collect(Collectors.toList());
 
         // 현재 조회수
-        int views = board.getViews();
+        Long views = board.getViews();
         // 조회수 증가 => 동시성 문제
         board.setViews(views + 1);
 

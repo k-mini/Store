@@ -8,6 +8,9 @@ let board_index = {
         $("#form-update").on("click", () =>{
             this.update(category, subCategory);
         });
+        $("#board-trade").on("click", () =>{
+           this.trade();
+        });
     },
 
     delete : function(category, subCategory) {
@@ -19,7 +22,7 @@ let board_index = {
             console.log(res.data);
             location.href=`/boards/${category}/${subCategory}`;
         }).fail((err) => {
-            JSON.stringify(err);
+            console.log(err);
         })
     },
 
@@ -36,7 +39,7 @@ let board_index = {
                 $("#boardList").append(component);
             });
         }).fail((err) => {
-            JSON.stringify(err);
+            console.log(err);
         })
     },
 
@@ -64,6 +67,29 @@ let board_index = {
             console.log(err);
         })
     },
+
+    trade : function() {
+
+        let data = {
+            boardId : boardId,
+            buyerId : userId
+        };
+
+        $.ajax({
+            type : "POST",
+            url : `/api/trade/${boardId}`,
+            data : data
+        }).done(res =>{
+            console.log(res.data);
+            alert("거래 신청 완료되었습니다.")
+            location.href=`/boards/${category}/${subCategory}`;
+        }).fail((err) => {
+            alert("거래 신청이 실패했습니다. 다시 요청해 주세요.")
+            console.log(err);
+        })
+    },
+
+
 }
 
 board_index.init();

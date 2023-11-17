@@ -39,7 +39,7 @@ public class CommunityBoardDto {
         // 작성 시간
         private String createdDate;
         // 조회 수
-        private int views;
+        private Long views;
         // 댓글 수
         private int commentTotalCount;
         // 댓글

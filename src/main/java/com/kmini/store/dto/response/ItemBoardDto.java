@@ -14,7 +14,6 @@ import java.util.List;
 
 public class ItemBoardDto {
 
-
     // 거래 게시글 목록 Dto
     @Data
     @AllArgsConstructor @Builder
@@ -73,11 +72,13 @@ public class ItemBoardDto {
         // 작성 시간
         private String createdDate;
         // 조회 수
-        private int views;
+        private Long views;
         // 댓글 수
         private int commentTotalCount;
         // 댓글
         private List<BoardCommentRespDto> comments = new ArrayList<>();
+        // 거래 상태
+        private String tradeStatus;
 
         public static ItemBoardRespDetailDto toDto(ItemBoard itemBoard, List<Comment> comments) {
             return ItemBoardRespDetailDto.builder()

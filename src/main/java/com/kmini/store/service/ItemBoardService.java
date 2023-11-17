@@ -2,7 +2,6 @@ package com.kmini.store.service;
 
 import com.kmini.store.config.auth.PrincipalDetail;
 import com.kmini.store.config.file.ResourceManager;
-import com.kmini.store.config.file.SystemFileManager;
 import com.kmini.store.domain.*;
 import com.kmini.store.domain.type.CategoryType;
 import com.kmini.store.dto.request.BoardDto.ItemBoardFormSaveDto;
@@ -18,8 +17,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsFileUploadSupport;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -40,8 +37,9 @@ public class ItemBoardService {
     public ItemBoardRespDetailDto detail(Long id) {
 
         // 게시물 조회
-        ItemBoard board = itemBoardRepository.findByIdWithFetchJoin(id)
-                .orElseThrow(()-> new CustomBoardNotFoundException("게시물을 찾을 수 없습니다."));
+        ItemBoard board = itemBoardRepository.findByIdWithUserAndComments(id)
+                .orElseThrow(()-> new IllegalArgumentException("게시물을 찾을 수 없습니다."));
+        itemBoardRepository.findDetailById(id);
 
         // 상위 댓글 조회
         List<Comment> comments = board.getComments()
@@ -50,7 +48,7 @@ public class ItemBoardService {
                 .collect(Collectors.toList());
 
         // 현재 조회수 
-        int views = board.getViews();
+        Long views = board.getViews();
         // 조회수 증가 => 동시성 문제
         board.setViews(views + 1);
         
@@ -70,9 +68,9 @@ public class ItemBoardService {
 
         // 카테고리 조회
         Category category = categoryRepository.findByCategoryType(CategoryType.TRADE)
-                .orElseThrow(()->new CustomCategoryNotFoundException("상위 카테고리가 존재하지 않습니다."));
+                .orElseThrow(()->new IllegalArgumentException("상위 카테고리가 존재하지 않습니다."));
         Category subCategory = categoryRepository.findByCategoryType(itemBoardFormSaveDto.getSubCategoryType())
-                .orElseThrow(()->new CustomCategoryNotFoundException("하위 카테고리가 존재하지 않습니다."));
+                .orElseThrow(()->new IllegalArgumentException("하위 카테고리가 존재하지 않습니다."));
 
         // 게시물 저장
         ItemBoard board = itemBoardFormSaveDto.toEntity();
@@ -109,8 +107,8 @@ public class ItemBoardService {
     // 게시물 수정 폼 로딩
     @Transactional
     public ItemBoardUpdateFormDto getUpdateForm(Long boardId) {
-        ItemBoard itemBoard = itemBoardRepository.findByIdWithFetchJoin(boardId)
-                .orElseThrow(() -> new CustomBoardNotFoundException("게시물을 찾을 수 없습니다."));
+        ItemBoard itemBoard = itemBoardRepository.findByIdWithUserAndComments(boardId)
+                .orElseThrow(() -> new IllegalArgumentException("게시물을 찾을 수 없습니다."));
 
         return ItemBoardUpdateFormDto.toDto(itemBoard);
     }
@@ -118,8 +116,8 @@ public class ItemBoardService {
     // 게시물 삭제
     @Transactional
     public void delete(Long boardId) {
-        ItemBoard itemBoard = itemBoardRepository.findByIdWithFetchJoin(boardId)
-                .orElseThrow(() -> new CustomBoardNotFoundException("게시물을 찾을 수 없습니다."));
+        ItemBoard itemBoard = itemBoardRepository.findByIdWithUserAndComments(boardId)
+                .orElseThrow(() -> new IllegalArgumentException("게시물을 찾을 수 없습니다."));
         User user = itemBoard.getUser();
         // 자식 댓글 삭제 진행
         commentRepository.deleteSubCommentsByBoardId(boardId);

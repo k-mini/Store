@@ -199,6 +199,12 @@
                                         class="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">
                                         댓글 ([[${result.commentTotalCount}]])</h2>
                                     <div>
+                                        <button id="board-trade"
+                                                th:if="${result.writerId != #authentication.principal.user.id}"
+                                                type="button"
+                                                class="mb-5 inline-block rounded bg-primary py-1 px-4 text-center text-xs font-semibold leading-loose text-white">
+                                            거래 신청
+                                        </button>
                                         <a id="board-update"
                                                 th:href="@{/board/trade/{subCategory}/{id}/form(subCategory=${subCategory},id=${result.id})}"
                                                 th:if="${result.writerId == #authentication.principal.user.id}"
