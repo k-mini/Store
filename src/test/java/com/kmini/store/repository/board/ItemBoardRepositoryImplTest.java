@@ -25,7 +25,8 @@ class ItemBoardRepositoryImplTest {
     @Test
     void findDetailById() {
 
-        ItemBoardRespDetailDto result = itemBoardRepository.findDetailById(1L).get();
+        ItemBoardRespDetailDto result = itemBoardRepository.findDetailById(1L)
+                .orElseThrow(() -> new IllegalStateException("결과가 없습니다."));
         System.out.println("result = " + result);
     }
 

@@ -49,15 +49,15 @@ public class ItemBoardRepositoryImpl implements ItemBoardRepositoryCustom{
                         itemBoard.title,
                         itemBoard.thumbnail.as("boardThumbnail"),
                         itemBoard.content,
-//                        Expressions.stringTemplate(
-//                                "formatdatetime({0},{1})",itemBoard.createdDate, "yyyy. MM. dd HH:mm"),
+                        Expressions.stringTemplate(
+                                "formatdatetime({0},{1})",itemBoard.createdDate, "yyyy. MM. dd HH:mm"),
                         ExpressionUtils.as(JPAExpressions.select(comment.count())
                                         .from(comment)
                                         .where(comment.board.id.eq(itemBoard.id)),"views"),
                         ExpressionUtils.as(JPAExpressions.select(trade.tradeStatus.stringValue())
-                                .from(trade)
-                                .limit(1)
-                                .orderBy(trade.createdDate.desc()), "tradeStatus")
+                                        .from(trade)
+                                        .limit(1)
+                                        .orderBy(trade.createdDate.desc()),"tradeStatus")
                 ))
                 .from(itemBoard)
 //                .leftJoin(itemBoard.comments).fetchJoin()
@@ -65,7 +65,10 @@ public class ItemBoardRepositoryImpl implements ItemBoardRepositoryCustom{
                 .where(itemBoard.id.eq(id))
                 .join(itemBoard.user)
                 .fetchOne();
-
+        queryFactory.select(Expressions.stringTemplate("cast({0} as character varying)",trade.id))
+                .from(trade)
+                .limit(1)
+                .fetchOne();
         return Optional.ofNullable(itemBoardRespDetailDto);
     }
 
