@@ -32,7 +32,7 @@ public abstract class Board extends BaseTime {
     private String thumbnail;
     private String title;
     private String content;
-    private Long views;
+    private long views;
 
     @Column(insertable = false, updatable = false)
     private String dtype;

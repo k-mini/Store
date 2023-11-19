@@ -39,7 +39,6 @@ public class ItemBoardService {
         // 게시물 조회
         ItemBoard board = itemBoardRepository.findByIdWithUserAndComments(id)
                 .orElseThrow(()-> new IllegalArgumentException("게시물을 찾을 수 없습니다."));
-        itemBoardRepository.findDetailById(id);
 
         // 상위 댓글 조회
         List<Comment> comments = board.getComments()
@@ -48,7 +47,7 @@ public class ItemBoardService {
                 .collect(Collectors.toList());
 
         // 현재 조회수 
-        Long views = board.getViews();
+        long views = board.getViews();
         // 조회수 증가 => 동시성 문제
         board.setViews(views + 1);
         

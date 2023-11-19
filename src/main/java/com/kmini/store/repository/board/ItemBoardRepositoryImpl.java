@@ -30,7 +30,7 @@ public class ItemBoardRepositoryImpl implements ItemBoardRepositoryCustom{
         ItemBoard board = queryFactory
                 .selectFrom(itemBoard)
                 .leftJoin(itemBoard.comments).fetchJoin()
-                .join(itemBoard.user, user).fetchJoin()
+                .join(itemBoard.user).fetchJoin()
                 .where(itemBoard.id.eq(id))
                 .fetchOne();
         return Optional.ofNullable(board);
@@ -52,8 +52,8 @@ public class ItemBoardRepositoryImpl implements ItemBoardRepositoryCustom{
                         Expressions.stringTemplate(
                                 "formatdatetime({0},{1})",itemBoard.createdDate, "yyyy. MM. dd HH:mm"),
                         ExpressionUtils.as(JPAExpressions.select(comment.count())
-                                        .from(comment)
-                                        .where(comment.board.id.eq(itemBoard.id)),"views"),
+                                                         .from(comment)
+                                                         .where(comment.board.id.eq(itemBoard.id)),"views"),
                         ExpressionUtils.as(JPAExpressions.select(trade.tradeStatus.stringValue())
                                         .from(trade)
                                         .limit(1)
@@ -62,8 +62,8 @@ public class ItemBoardRepositoryImpl implements ItemBoardRepositoryCustom{
                 .from(itemBoard)
 //                .leftJoin(itemBoard.comments).fetchJoin()
 //                .join(itemBoard.user, user).fetchJoin()
-                .where(itemBoard.id.eq(id))
                 .join(itemBoard.user)
+                .where(itemBoard.id.eq(id))
                 .fetchOne();
         queryFactory.select(Expressions.stringTemplate("cast({0} as character varying)",trade.id))
                 .from(trade)
