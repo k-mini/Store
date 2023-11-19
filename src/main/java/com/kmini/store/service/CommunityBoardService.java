@@ -6,8 +6,6 @@ import com.kmini.store.domain.*;
 import com.kmini.store.domain.type.CategoryType;
 import com.kmini.store.dto.request.BoardDto.CommunityBoardFormSaveDto;
 import com.kmini.store.dto.response.CommunityBoardDto.CommunityBoardRespDetailDto;
-import com.kmini.store.ex.CustomBoardNotFoundException;
-import com.kmini.store.ex.CustomCategoryNotFoundException;
 import com.kmini.store.repository.BoardCategoryRepository;
 import com.kmini.store.repository.CategoryRepository;
 import com.kmini.store.repository.CommentRepository;
@@ -43,9 +41,9 @@ public class CommunityBoardService {
 
         // 카테고리 조회
         Category category = categoryRepository.findByCategoryType(CategoryType.COMMUNITY)
-                .orElseThrow(()->new CustomCategoryNotFoundException("상위 카테고리가 존재하지 않습니다."));
+                .orElseThrow(()->new IllegalArgumentException("상위 카테고리가 존재하지 않습니다."));
         Category subCategory = categoryRepository.findByCategoryType(communityBoardFormSaveDto.getSubCategoryType())
-                .orElseThrow(()->new CustomCategoryNotFoundException("하위 카테고리가 존재하지 않습니다."));
+                .orElseThrow(()->new IllegalArgumentException("하위 카테고리가 존재하지 않습니다."));
 
         CommunityBoard board = communityBoardFormSaveDto.toEntity();
         board.setThumbnail(uri);
@@ -66,7 +64,7 @@ public class CommunityBoardService {
 
         // 게시물 조회
         CommunityBoard board = communityBoardRepository.findByIdWithFetchJoin(id)
-                .orElseThrow(()-> new CustomBoardNotFoundException("게시물을 찾을 수 없습니다."));
+                .orElseThrow(()-> new IllegalArgumentException("게시물을 찾을 수 없습니다."));
 
         // 상위 댓글 조회
         List<Comment> comments = board.getComments()
@@ -86,7 +84,7 @@ public class CommunityBoardService {
     @Transactional
     public void delete(Long boardId) {
         CommunityBoard communityBoard = communityBoardRepository.findByIdWithFetchJoin(boardId)
-                .orElseThrow(() -> new CustomBoardNotFoundException("게시물을 찾을 수 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("게시물을 찾을 수 없습니다."));
         User user = communityBoard.getUser();
 
         // 자식 댓글 삭제 진행

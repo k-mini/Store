@@ -1,10 +1,13 @@
 package com.kmini.store.controller.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kmini.store.domain.Category;
+import com.kmini.store.domain.type.CategoryType;
 import com.kmini.store.dto.request.UserDto.SignUpDto;
 import com.kmini.store.repository.UserRepository;
 import com.kmini.store.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;

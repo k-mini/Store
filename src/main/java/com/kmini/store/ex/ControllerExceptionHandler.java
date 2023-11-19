@@ -1,4 +1,4 @@
-package com.kmini.store.aop;
+package com.kmini.store.ex;
 
 
 import lombok.extern.slf4j.Slf4j;

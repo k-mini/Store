@@ -7,7 +7,6 @@ import com.kmini.store.dto.response.CommentDto.BoardCommentRespDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,9 +77,9 @@ public class ItemBoardDto {
         // 댓글
         private List<BoardCommentRespDto> comments = new ArrayList<>();
         // 거래 상태
-        private String tradeStatus;
+        private boolean tradePossible;
 
-        public static ItemBoardRespDetailDto toDto(ItemBoard itemBoard, List<Comment> comments) {
+        public static ItemBoardRespDetailDto toDto(ItemBoard itemBoard, List<Comment> comments, boolean tradePossible) {
             return ItemBoardRespDetailDto.builder()
                     .id(itemBoard.getId())
                     .email(itemBoard.getUser().getEmail())
@@ -94,6 +93,7 @@ public class ItemBoardDto {
                     .views(itemBoard.getViews())
                     .commentTotalCount(itemBoard.getComments().size())
                     .comments(BoardCommentRespDto.toDtos(comments))
+                    .tradePossible(tradePossible)
                     .build();
         }
     }

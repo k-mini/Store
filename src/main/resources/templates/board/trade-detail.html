@@ -200,7 +200,7 @@
                                         댓글 ([[${result.commentTotalCount}]])</h2>
                                     <div>
                                         <button id="board-trade"
-                                                th:if="${result.writerId != #authentication.principal.user.id}"
+                                                th:if="${result.writerId != #authentication.principal.user.id && result.tradePossible == true}"
                                                 type="button"
                                                 class="mb-5 inline-block rounded bg-primary py-1 px-4 text-center text-xs font-semibold leading-loose text-white">
                                             거래 신청

@@ -1,10 +1,10 @@
 package com.kmini.store.domain.type;
 
 public enum TradeStatus {
-    WAIT("대기"),
-    DEALING("거래중"),
-    COMPLETE("완료"),
-    CANCEL("취소");
+    WAIT("수락 대기중"),
+    DEALING("거래 진행중"),
+    COMPLETE("거래 완료"),
+    CANCEL("거래 취소");
 
     private String message;
 
