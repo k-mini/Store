@@ -33,7 +33,7 @@ public class ItemBoardController {
         ItemBoardRespDetailDto result = itemBoardService.viewBoard(boardId);
         model.addAttribute("result", result);
         log.debug("result = {}", result);
-        return "board/trade-detail";
+        return "board/tradedetail";
     }
     
     // 게시물 수정

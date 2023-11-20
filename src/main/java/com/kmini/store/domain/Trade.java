@@ -23,8 +23,12 @@ public class Trade extends BaseTime{
     private Board board;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID", foreignKey = @ForeignKey(name = "TradeToUsers"))
+    @JoinColumn(name = "BUYER_ID", foreignKey = @ForeignKey(name = "TradeToBuyer"))
     private User buyer;
+
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "SELLER_ID", foreignKey = @ForeignKey(name = "TradeToSeller"))
+//    private User seller;
 
     @Enumerated(EnumType.STRING)
     private TradeStatus tradeStatus;

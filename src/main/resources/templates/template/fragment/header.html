@@ -74,10 +74,10 @@
                                         회원정보 변경
                                     </a>
                                     <a
-                                            th:href="@{/user/info/{userId}(userId=${#authentication.principal.user.id})}"
+                                            th:href="@{/user/{userId}/trade-history(userId=${#authentication.principal.user.id})}"
                                             class="block rounded py-[10px] px-4 text-sm text-body-color hover:text-primary"
                                     >
-                                        거래중인 게시판
+                                        거래 내역
                                     </a>
                                 </div>
                             </li>

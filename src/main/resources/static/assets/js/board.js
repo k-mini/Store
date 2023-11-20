@@ -71,8 +71,7 @@ let board_index = {
     trade : function() {
 
         let data = {
-            boardId : boardId,
-            buyerId : userId
+            boardId : boardId
         };
 
         $.ajax({

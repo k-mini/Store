@@ -4,7 +4,7 @@ import com.kmini.store.domain.CommunityBoard;
 
 import java.util.Optional;
 
-public interface CommunityBoardRepositoryCustom {
+public interface CommunityBoardRepositoryQsdl {
 
     Optional<CommunityBoard> findByIdWithFetchJoin(Long id);
 }

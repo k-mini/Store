@@ -16,4 +16,17 @@ public class TradeDto {
         // 신청 유저 id
         private Long buyerId;
     }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class TradeHistoryReqDto {
+        // 유저 번호
+        private Long userId;
+        // 검색 조건
+        private String sType;
+        // 검색어
+        private String s;
+    }
 }

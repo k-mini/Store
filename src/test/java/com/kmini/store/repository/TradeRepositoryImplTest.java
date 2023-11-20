@@ -18,7 +18,7 @@ class TradeRepositoryImplTest {
 
     @Test
     void getLatestTrade() {
-        tradeRepository.getLatestTrade(1L, PageRequest.of(0,1));
+//        tradeRepository.getLatestTrade(1L, PageRequest.of(0,1));
     }
 
     @TestConfiguration

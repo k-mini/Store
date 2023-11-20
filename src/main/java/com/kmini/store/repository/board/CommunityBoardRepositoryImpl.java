@@ -10,7 +10,7 @@ import static com.kmini.store.domain.QCommunityBoard.communityBoard;
 import static com.kmini.store.domain.QUser.user;
 
 @RequiredArgsConstructor
-public class CommunityBoardRepositoryImpl implements CommunityBoardRepositoryCustom {
+public class CommunityBoardRepositoryImpl implements CommunityBoardRepositoryQsdl {
 
     private final JPAQueryFactory queryFactory;
 

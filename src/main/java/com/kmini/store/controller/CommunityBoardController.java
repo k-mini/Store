@@ -31,7 +31,7 @@ public class CommunityBoardController {
         CommunityBoardRespDetailDto result = communityBoardService.detail(boardId);
         model.addAttribute("result", result);
         log.debug("result = {}", result);
-        return "board/community-detail";
+        return "communitydetail";
     }
 
     @GetMapping("/form")

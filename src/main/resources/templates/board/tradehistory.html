@@ -4,7 +4,7 @@
     <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>공통 게시판</title>
+    <title>거래 내역</title>
     <link
             rel="shortcut icon"
             href="/assets/images/favicon.png"
@@ -28,104 +28,76 @@
 <div th:replace="~{template/fragment/header :: frag1}"></div>
 <!-- ====== Navbar Section End -->
 
-<!-- ====== 거래 배너 Section Start -->
-<div th:replace="~{template/fragment/banner :: list-banner}"></div>
-<!-- ====== 거래 배너 Section End -->
+<!-- ====== 배너 Section Start -->
+<div th:replace="~{template/fragment/banner :: banner (null)}"></div>
+<!-- ====== 배너 Section End -->
 
-<!-- ====== Blog Section Start -->
+<!-- ====== List Section Start -->
 <section class="pt-20 pb-10 lg:pt-[120px] lg:pb-20">
     <div class="container">
 
-        <div th:if="${results.size > 0} and ${category.equals('trade')}" class="-mx-4 flex flex-wrap" id="boardList">
-            <div th:each="result : ${results.content}" class="w-full px-4 md:w-1/2 lg:w-1/3">
-                <div class="wow fadeInUp group mb-10" data-wow-delay=".1s">
-                    <div class="mb-8 overflow-hidden rounded">
-                        <a th:href="@{/board/{category}/{subCategory}/{id}
-                        (category=${category},subCategory=${subCategory},id = ${result.id})}" class="block">
-                            <img
-                                    th:src="${result.thumbnail != null} ?
-                                        '/images/' + ${result.thumbnail} : '/assets/images/blog/blog-02.jpg'"
-                                    alt="image"
-                                    class="w-full transition group-hover:rotate-6 group-hover:scale-125"
-                                    onerror="this.onerror=null; this.src='/assets/images/blog/blog-02.jpg'"
-                            />
-                        </a>
-                    </div>
-                    <div>
-                <span
-                        th:text="${result.createdDate}"
-                        class="mb-5 inline-block rounded bg-primary py-1 px-4 text-center text-xs font-semibold leading-loose text-white"
-                >
-                  날짜
-                </span>
-                        <h3>
-                            <a
-                                    th:text="${result.title}"
-                                    th:href="@{/board/{category}/{subCategory}/{id}
-                                    (category=${category},subCategory=${subCategory},id=${result.id})}"
-                                    class="mb-4 inline-block text-xl font-semibold text-dark hover:text-primary sm:text-2xl lg:text-xl xl:text-2xl"
-                            >
-                                제목
-                            </a>
-                        </h3>
-                        <p class="text-base text-body-color">
-                            [[${result.content}]]
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div th:if="${results.content.size > 0} and ${category.equals('community')}" class="relative py-3 overflow-x-auto">
+        <div th:if="${results.content.size > 0}" class="relative py-3 overflow-x-auto">
             <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                     <th scope="col" class="px-6 py-3">
-                        게시물 번호
+                        거래 번호
                     </th>
                     <th scope="col" class="px-6 py-3">
                         제목
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        작성자
+                        판매자
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        조회 수
+                        구매자
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        댓글 수
+                        진행 상태
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        생성시간
+                        거래 신청 시간
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        관리
                     </th>
                 </tr>
                 </thead>
 
                 <tbody>
                 <tr th:each="result : ${results}" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        [[${result.id}]]
-                    </th>
+                    <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        [[${result.tradeId}]]
+                    </td>
                     <td class="px-6 py-4 hover:text-primary">
-                        <a
-                            th:href="@{/board/{category}/{subCategory}/{id}
-                            (category=${category},subCategory=${subCategory},id=${result.id})}"
-                            class="mb-4 inline-block"
-                        >
-                            [[${result.title}]]
-                        </a>
+                        [[${result.title}]]
                     </td>
                     <td class="px-6 py-4">
-                        [[${result.username}]]
+                        [[${result.sellerName}]]
                     </td>
                     <td class="px-6 py-4">
-                        [[${result.views}]]
+                        [[${result.buyerName}]]
                     </td>
                     <td class="px-6 py-4">
-                        [[${result.commentsSize}]]
+                        [[${result.tradeStatus.getMessage()}]]
                     </td>
                     <td class="px-6 py-4">
                         [[${result.createdDate}]]
+                    </td>
+                    <td th:if="${result.sellerId == #authentication.principal.user.id
+                    && result.tradeStatus.equals(com.kmini.store.domain.type.TradeStatus.WAIT)}" class="px-6 py-4">
+                        <button type="button"
+                                class="mb-5 inline-block rounded bg-primary py-1 px-4 text-center text-xs font-semibold leading-loose text-white">
+                            수락
+                        </button>
+                        <button type="button"
+                                class="mb-5 inline-block rounded bg-primary py-1 px-4 text-center text-xs font-semibold leading-loose text-white">
+                            거절
+                        </button>
+                    </td>
+                    <td th:if="${(result.buyerId == #authentication.principal.user.id || result.sellerId == #authentication.principal.user.id)
+                    && result.tradeStatus.equals('DEALING')}" class="px-6 py-4">
+                        거래 완료 버튼
                     </td>
                 </tr>
                 </tbody>
@@ -142,10 +114,10 @@
                     <h2
                             class="mb-8 text-3xl font-bold text-dark sm:text-4xl lg:text-[40px] xl:text-[42px]"
                     >
-                        게시물이 없습니다.
+                        게시물이 존재하지 않습니다.
                     </h2>
                     <h3 class="mb-8 text-xl font-normal text-dark-700 md:text-2xl">
-                        작성된 게시글이 없습니다.
+                        거래 내역이 없습니다.
                     </h3>
                     <ul class="flex flex-wrap justify-center">
                         <li>
@@ -156,14 +128,6 @@
                                 메인으로
                             </a>
                         </li>
-                        <li>
-                            <a
-                                    th:href="@{/board/{category}/{subCategory}/form(category=${category}, subCategory=${subCategory})}"
-                                    class="mx-2 my-1 inline-block rounded-md bg-[#f5f8ff] py-3 px-6 text-base font-medium text-dark hover:bg-primary hover:text-white"
-                            >
-                                글 쓰기
-                            </a>
-                        </li>
                     </ul>
                 </div>
             </div>
@@ -171,20 +135,18 @@
 
 
         <div th:if="${results.content.size > 0}" class="flex flex-wrap">
-            <div class="w-full px-4 md:w-1/2">
+            <div class="w-full px-4">
                 <ul class="list-style-none flex md:justify-start items-center">
                     <li th:if="${prev}">
                         <a  th:if="${#strings.isEmpty(s) && #strings.isEmpty(sType)}"
                                 class="relative block rounded bg-transparent px-3 py-1.5 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"
-                                th:href="@{/boards/{category}/{subCategory}(category=${category},subCategory=${subCategory},
-                                 page=${startPage} - 2)}"
+                                th:href="@{/user/{userId}/trade-history(userId=${userId},page=${startPage} - 2)}"
                                 aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                         <a th:unless="${#strings.isEmpty(s) && #strings.isEmpty(sType)}"
                                 class="relative block rounded bg-transparent px-3 py-1.5 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"
-                                th:href="@{/boards/{category}/{subCategory}
-                                (category=${category},subCategory=${subCategory},page=${startPage}-2,s=${s},sType=${sType})}"
+                                th:href="@{/user/{userId}/trade-history(userId=${userId},page=${startPage}-2,s=${s},sType=${sType})}"
                                 aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
@@ -199,27 +161,24 @@
                         <li aria-current="page" th:unless="${results.getNumber() == num - 1 }">
                             <a th:if="${#strings.isEmpty(s) && #strings.isEmpty(sType)}"
                                     class="relative block rounded bg-transparent px-3 py-1.5 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"
-                                    th:href="@{/boards/{category}/{subCategory}
-                                    (category=${category},subCategory=${subCategory},page=${num}-1)}"
+                                    th:href="@{/user/{userId}/trade-history(userId=${userId},page=${num}-1)}"
                             >[[${num}]]</a>
                             <a th:unless="${#strings.isEmpty(s) && #strings.isEmpty(sType)}"
                                class="relative block rounded bg-transparent px-3 py-1.5 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"
-                               th:href="@{/boards/{category}/{subCategory}
-                                    (category=${category},subCategory=${subCategory},page=${num}-1,s=${s},sType=${sType})}"
+                               th:href="@{/user/{userId}/trade-history(userId=${userId},page=${num}-1,s=${s},sType=${sType})}"
                             >[[${num}]]</a>
                         </li>
                     </div>
                     <li th:if="${next}">
                         <a th:if="${#strings.isEmpty(s) && #strings.isEmpty(sType)}"
                                 class="relative block rounded bg-transparent px-3 py-1.5 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"
-                                th:href="@{/boards/{category}/{subCategory}(category=${category},subCategory=${subCategory},page=${endPage})}"
+                                th:href="@{/user/{userId}/trade-history(userId=${userId},page=${endPage})}"
                                 aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                         <a th:unless="${#strings.isEmpty(s) && #strings.isEmpty(sType)}"
                                 class="relative block rounded bg-transparent px-3 py-1.5 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"
-                                th:href="@{/boards/{category}/{subCategory}
-                                (category=${category},subCategory=${subCategory},page=${endPage},s=${s},sType=${sType})}"
+                                th:href="@{/user/{userId}/trade-history(userId=${userId},page=${endPage},s=${s},sType=${sType})}"
                                 aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
@@ -227,16 +186,7 @@
                 </ul>
             </div>
 
-            <div class="w-full px-4 md:w-1/2">
-                <div class="flex items-center md:justify-end">
-                    <a th:href="@{/board/{category}/{subCategory}/form(category=${category}, subCategory=${subCategory})}">
-                    <span class="mb-5 inline-block rounded bg-primary py-1 px-4 text-center text-xs font-semibold leading-loose text-white">
-                        글 쓰기 </span>
-                    </a>
-                </div>
-            </div>
-
-            <div class="w-full md:w-1/2">
+            <div class="w-full">
                 <!--                <div class="relative mb-4 flex w-full flex-wrap items-stretch">-->
                 <form name="map2" method="get" class="relative mb-4 flex w-full flex-wrap items-stretch">
                     <!--                    <div class="relative mb-4 flex w-full flex-wrap items-stretch">-->
@@ -281,7 +231,7 @@
         </div>
     </div>
 </section>
-<!-- ====== Blog Section End -->
+<!-- ====== List Section End -->
 
 <!-- ====== Footer Start ====== -->
 <div th:replace="~{template/fragment/footer :: frag1}"></div>

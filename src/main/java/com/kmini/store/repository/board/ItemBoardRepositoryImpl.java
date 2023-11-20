@@ -1,8 +1,6 @@
 package com.kmini.store.repository.board;
 
 import com.kmini.store.domain.*;
-import com.kmini.store.domain.type.TradeStatus;
-import com.kmini.store.dto.response.ItemBoardDto;
 import com.kmini.store.dto.response.ItemBoardDto.ItemBoardRespDetailDto;
 import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.Expressions;
@@ -15,12 +13,9 @@ import java.util.Optional;
 import static com.kmini.store.domain.QComment.comment;
 import static com.kmini.store.domain.QItemBoard.itemBoard;
 import static com.kmini.store.domain.QTrade.trade;
-import static com.kmini.store.domain.QUser.user;
-import static com.kmini.store.domain.type.TradeStatus.WAIT;
-import static com.querydsl.core.types.ExpressionUtils.count;
 
 @RequiredArgsConstructor
-public class ItemBoardRepositoryImpl implements ItemBoardRepositoryCustom{
+public class ItemBoardRepositoryImpl implements ItemBoardRepositoryQsdl {
 
     private final JPAQueryFactory queryFactory;
 
