@@ -33,4 +33,19 @@ public class Trade extends BaseTime{
     @Enumerated(EnumType.STRING)
     private TradeStatus tradeStatus;
 
+    public User getSeller() {
+        return this.getBoard().getUser();
+    }
+
+    public void checkBuyerOrSellerIsMe() {
+        Long buyerId = this.getBuyer().getId();
+        Long sellerId = this.getSeller().getId();
+
+        User user = User.getSecurityContextUser();
+
+        // 상관 없는 사용자 거부
+        if (!user.getId().equals(buyerId) && !user.getId().equals(sellerId)) {
+            throw new IllegalArgumentException("판매자나 구매자가 아닙니다.");
+        }
+    }
 }

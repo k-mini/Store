@@ -15,7 +15,7 @@ public class CommunityBoardRepositoryImpl implements CommunityBoardRepositoryQsd
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Optional<CommunityBoard> findByIdWithFetchJoin(Long id) {
+    public Optional<CommunityBoard> findByIdFetchJoin(Long id) {
         CommunityBoard board = queryFactory
                 .selectFrom(communityBoard)
                 .leftJoin(communityBoard.comments).fetchJoin()

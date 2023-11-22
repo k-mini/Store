@@ -1,8 +1,10 @@
 package com.kmini.store.domain;
 
+import com.kmini.store.config.auth.AccountContext;
 import com.kmini.store.domain.type.UserRole;
 import com.kmini.store.domain.type.UserStatus;
 import lombok.*;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.persistence.*;
 
@@ -43,5 +45,9 @@ public class User {
         this.role = role;
         this.userStatus = userStatus;
         this.thumbnail = thumbnail;
+    }
+
+    public static User getSecurityContextUser() {
+        return ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
     }
 }

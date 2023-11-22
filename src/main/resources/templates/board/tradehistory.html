@@ -84,20 +84,27 @@
                     <td class="px-6 py-4">
                         [[${result.createdDate}]]
                     </td>
-                    <td th:if="${result.sellerId == #authentication.principal.user.id
-                    && result.tradeStatus.equals(com.kmini.store.domain.type.TradeStatus.WAIT)}" class="px-6 py-4">
-                        <button type="button"
+                    <td th:if="${ result.sellerId == #authentication.principal.user.id
+                    && result.tradeStatus.equals('WAIT')  }" class="px-6 py-4">
+                        <button type="button" th:onclick="acceptTrade([[${result.tradeId}]], [[${#authentication.principal.user.id}]])"
                                 class="mb-5 inline-block rounded bg-primary py-1 px-4 text-center text-xs font-semibold leading-loose text-white">
                             수락
                         </button>
-                        <button type="button"
+                        <button type="button" th:onclick="denyTrade([[${result.tradeId}]], [[${#authentication.principal.user.id}]])"
                                 class="mb-5 inline-block rounded bg-primary py-1 px-4 text-center text-xs font-semibold leading-loose text-white">
                             거절
                         </button>
                     </td>
                     <td th:if="${(result.buyerId == #authentication.principal.user.id || result.sellerId == #authentication.principal.user.id)
                     && result.tradeStatus.equals('DEALING')}" class="px-6 py-4">
-                        거래 완료 버튼
+                        <button type="button" th:onclick="completeTrade([[${result.tradeId}]], [[${#authentication.principal.user.id}]])"
+                                class="mb-5 inline-block rounded bg-primary py-1 px-4 text-center text-xs font-semibold leading-loose text-white">
+                            거래 완료
+                        </button>
+                        <button type="button" th:onclick="cancelTrade([[${result.tradeId}]], [[${#authentication.principal.user.id}]])"
+                                class="mb-5 inline-block rounded bg-primary py-1 px-4 text-center text-xs font-semibold leading-loose text-white">
+                            거래 취소
+                        </button>
                     </td>
                 </tr>
                 </tbody>
@@ -250,5 +257,6 @@
 
 <!-- ====== All Scripts -->
 <script src="/assets/js/main.js"></script>
+<script src="/assets/js/trade.js"></script>
 </body>
 </html>

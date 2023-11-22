@@ -1,6 +1,6 @@
 package com.kmini.store.controller;
 
-import com.kmini.store.config.auth.PrincipalDetail;
+import com.kmini.store.config.auth.AccountContext;
 import com.kmini.store.dto.request.BoardDto.CommunityBoardFormSaveDto;
 import com.kmini.store.dto.request.BoardDto.ItemBoardFormSaveDto;
 import com.kmini.store.dto.response.CommunityBoardDto.CommunityBoardRespDetailDto;
@@ -44,10 +44,10 @@ public class CommunityBoardController {
     @PostMapping("/form")
     public String save(
             @ModelAttribute CommunityBoardFormSaveDto communityBoardFormSaveDto,
-            @AuthenticationPrincipal PrincipalDetail principalDetail,
+            @AuthenticationPrincipal AccountContext accountContext,
             RedirectAttributes redirectAttributes) throws IOException {
         log.debug("communityBoardFormSaveDto = {}", communityBoardFormSaveDto);
-        communityBoardService.save(communityBoardFormSaveDto, principalDetail);
+        communityBoardService.save(communityBoardFormSaveDto, accountContext);
 
         redirectAttributes.addAttribute("category", "community");
         redirectAttributes.addAttribute("subCategory", communityBoardFormSaveDto.getSubCategory());

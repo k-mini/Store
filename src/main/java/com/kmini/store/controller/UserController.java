@@ -1,12 +1,11 @@
 package com.kmini.store.controller;
 
-import com.kmini.store.config.auth.PrincipalDetail;
+import com.kmini.store.config.auth.AccountContext;
 import com.kmini.store.config.util.CustomPageUtils;
 import com.kmini.store.domain.User;
 import com.kmini.store.dto.request.TradeDto.TradeHistoryReqDto;
 import com.kmini.store.dto.request.UserDto.SignUpDto;
 import com.kmini.store.dto.request.UserDto.UserUpdateReqDto;
-import com.kmini.store.dto.response.TradeDto;
 import com.kmini.store.dto.response.TradeDto.TradeHistoryRespDto;
 import com.kmini.store.service.TradeService;
 import com.kmini.store.service.UserService;
@@ -69,8 +68,8 @@ public class UserController {
     }
 
     @GetMapping("/auth/my-page")
-    public String myPage(@AuthenticationPrincipal PrincipalDetail principal, Model model) {
-        User user = principal.getUser();
+    public String myPage(@AuthenticationPrincipal AccountContext accountContext, Model model) {
+        User user = accountContext.getUser();
         log.debug("user = {}", user);
         model.addAttribute("userUpdateReqDto", UserUpdateReqDto.toDto(user));
         return "/auth/mypage";
@@ -78,8 +77,8 @@ public class UserController {
 
     @PostMapping("/auth/my-page")
     public String update(@Validated UserUpdateReqDto userUpdateReqDto, BindingResult bindingResult,
-                         @AuthenticationPrincipal PrincipalDetail principal) {
-        User user = principal.getUser();
+                         @AuthenticationPrincipal AccountContext accountContext) {
+        User user = accountContext.getUser();
         log.debug("userUpdateReqDto = {}", userUpdateReqDto);
 
         if (!userUpdateReqDto.getPassword().equals(userUpdateReqDto.getPasswordCheck())) {
@@ -94,19 +93,5 @@ public class UserController {
         userService.update(user.getId(), userUpdateReqDto);
 
         return "redirect:/";
-    }
-
-    @GetMapping("/user/{userId}/trade-history")
-    public String viewTradeHistory(@PageableDefault(sort = "createdDate", direction = DESC) Pageable pageable,
-                                   TradeHistoryReqDto tradeHistoryReqDto, Model model) {
-        log.debug("tradeHistoryReqDto = {}", tradeHistoryReqDto);
-        Page<TradeHistoryRespDto> results = tradeService.viewTradeHistory(tradeHistoryReqDto, pageable);
-
-        log.debug("results = {}", results);
-        CustomPageUtils.configure(results, 5, model);
-        model.addAttribute("sType", tradeHistoryReqDto.getSType());
-        model.addAttribute("s", tradeHistoryReqDto.getS());
-        model.addAttribute("results", results);
-        return "board/tradehistory";
     }
 }

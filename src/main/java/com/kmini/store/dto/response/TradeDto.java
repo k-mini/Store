@@ -44,7 +44,7 @@ public class TradeDto {
         // 구매자 이름
         private String buyerName;
         // 거래 상태
-        private TradeStatus tradeStatus;
+        private String tradeStatus;
         // 거래 시작 날짜
         private String createdDate;
 
@@ -57,7 +57,7 @@ public class TradeDto {
                     .sellerName(trade.getBoard().getUser().getUsername())
                     .buyerId(trade.getBuyer().getId())
                     .buyerName(trade.getBuyer().getUsername())
-                    .tradeStatus(trade.getTradeStatus())
+                    .tradeStatus(trade.getTradeStatus().name())
                     .createdDate(CustomTimeUtils.convertTime(trade.getCreatedDate()))
                     .build();
         }

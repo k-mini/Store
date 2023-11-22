@@ -1,6 +1,6 @@
 package com.kmini.store.service;
 
-import com.kmini.store.config.auth.PrincipalDetail;
+import com.kmini.store.config.auth.AccountContext;
 import com.kmini.store.config.file.SystemFileManager;
 import com.kmini.store.domain.*;
 import com.kmini.store.domain.type.CategoryType;
@@ -11,6 +11,7 @@ import com.kmini.store.repository.CategoryRepository;
 import com.kmini.store.repository.CommentRepository;
 import com.kmini.store.repository.board.CommunityBoardRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,7 +31,7 @@ public class CommunityBoardService {
     private final SystemFileManager systemFileManager;
 
     @Transactional
-    public void save(CommunityBoardFormSaveDto communityBoardFormSaveDto, PrincipalDetail principalDetail) throws IOException {
+    public void save(CommunityBoardFormSaveDto communityBoardFormSaveDto, AccountContext accountContext) throws IOException {
 
         // 파일 시스템에 저장하고 랜덤 파일명 반환
         MultipartFile file = communityBoardFormSaveDto.getFile();
@@ -47,7 +48,7 @@ public class CommunityBoardService {
 
         CommunityBoard board = communityBoardFormSaveDto.toEntity();
         board.setThumbnail(uri);
-        board.setUser(principalDetail.getUser());
+        board.setUser(accountContext.getUser());
         communityBoardRepository.save(board);
 
         // 상위 카테고리 정보 저장
@@ -63,7 +64,7 @@ public class CommunityBoardService {
     public CommunityBoardRespDetailDto detail(Long id) {
 
         // 게시물 조회
-        CommunityBoard board = communityBoardRepository.findByIdWithFetchJoin(id)
+        CommunityBoard board = communityBoardRepository.findByIdFetchJoin(id)
                 .orElseThrow(()-> new IllegalArgumentException("게시물을 찾을 수 없습니다."));
 
         // 상위 댓글 조회
@@ -83,7 +84,7 @@ public class CommunityBoardService {
     // 게시물 삭제
     @Transactional
     public void delete(Long boardId) {
-        CommunityBoard communityBoard = communityBoardRepository.findByIdWithFetchJoin(boardId)
+        CommunityBoard communityBoard = communityBoardRepository.findByIdFetchJoin(boardId)
                 .orElseThrow(() -> new IllegalArgumentException("게시물을 찾을 수 없습니다."));
         User user = communityBoard.getUser();
 

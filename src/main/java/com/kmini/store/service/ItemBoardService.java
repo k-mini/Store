@@ -1,6 +1,6 @@
 package com.kmini.store.service;
 
-import com.kmini.store.config.auth.PrincipalDetail;
+import com.kmini.store.config.auth.AccountContext;
 import com.kmini.store.config.file.ResourceManager;
 import com.kmini.store.domain.*;
 import com.kmini.store.domain.type.CategoryType;
@@ -19,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,7 +48,7 @@ public class ItemBoardService {
                 .collect(Collectors.toList());
 
         // 최신 거래
-        boolean tradePossible = tradeService.isTradePossible(id);
+        boolean tradePossible = tradeService.checkRegisterTradeAvailable(id);
 
 
         // 현재 조회수 
@@ -62,7 +61,7 @@ public class ItemBoardService {
 
     // 게시물 저장
     @Transactional
-    public void save(ItemBoardFormSaveDto itemBoardFormSaveDto, PrincipalDetail principalDetail) throws IOException {
+    public void save(ItemBoardFormSaveDto itemBoardFormSaveDto, AccountContext accountContext) throws IOException {
         
         // 파일 시스템에 저장하고 랜덤 파일명 반환
         MultipartFile file = itemBoardFormSaveDto.getFile();
@@ -79,7 +78,7 @@ public class ItemBoardService {
 
         // 게시물 저장
         ItemBoard board = itemBoardFormSaveDto.toEntity();
-        board.setUser(principalDetail.getUser());
+        board.setUser(accountContext.getUser());
         board.setThumbnail(uri);
         itemBoardRepository.save(board);
 

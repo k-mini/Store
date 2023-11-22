@@ -71,6 +71,8 @@ public class SecurityConfig {
     @Bean
     public WebSecurityCustomizer configure() {
         return web -> web.ignoring()
-                .requestMatchers(PathRequest.toStaticResources().atCommonLocations(), PathRequest.toH2Console());
+                .requestMatchers(PathRequest.toH2Console())
+                .antMatchers("/assets/**");
+
     }
 }

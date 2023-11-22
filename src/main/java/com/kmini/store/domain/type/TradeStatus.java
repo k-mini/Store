@@ -4,7 +4,8 @@ public enum TradeStatus {
     WAIT("수락 대기중"),
     DEALING("거래 진행중"),
     COMPLETE("거래 완료"),
-    CANCEL("거래 취소");
+    CANCEL("거래 취소"),
+    DENY("거래 거절");
 
     private String message;
 
@@ -15,4 +16,6 @@ public enum TradeStatus {
     public String getMessage() {
         return message;
     }
+
+
 }

@@ -10,15 +10,16 @@ import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
-public class PrincipalDetailsService implements UserDetailsService {
+public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        User userEntity = userRepository.findByEmail(email)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(()-> new UsernameNotFoundException("등록된 유저가 없습니다."));
-        return new PrincipalDetail(userEntity);
+
+        return new AccountContext(user);
     }
 }

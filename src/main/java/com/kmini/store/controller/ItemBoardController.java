@@ -1,6 +1,6 @@
 package com.kmini.store.controller;
 
-import com.kmini.store.config.auth.PrincipalDetail;
+import com.kmini.store.config.auth.AccountContext;
 import com.kmini.store.domain.type.CategoryType;
 import com.kmini.store.dto.request.BoardDto.ItemBoardFormSaveDto;
 import com.kmini.store.dto.request.ItemBoardDto.ItemBoardUpdateFormDto;
@@ -60,11 +60,11 @@ public class ItemBoardController {
     public String saveBoard(
             @ModelAttribute ItemBoardFormSaveDto itemBoardFormSaveDto,
             @PathVariable("subCategory") String subCategoryName,
-            @AuthenticationPrincipal PrincipalDetail principal, RedirectAttributes redirectAttributes) throws IOException {
+            @AuthenticationPrincipal AccountContext accountContext, RedirectAttributes redirectAttributes) throws IOException {
         log.debug("formSaveDto = {}", itemBoardFormSaveDto);
         log.debug("subCategory = {}", subCategoryName);
 
-        itemBoardService.save(itemBoardFormSaveDto, principal);
+        itemBoardService.save(itemBoardFormSaveDto, accountContext);
 
         redirectAttributes.addAttribute("category", "trade");
         redirectAttributes.addAttribute("subCategory", subCategoryName);

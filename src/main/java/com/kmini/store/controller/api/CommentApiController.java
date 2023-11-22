@@ -1,6 +1,6 @@
 package com.kmini.store.controller.api;
 
-import com.kmini.store.config.auth.PrincipalDetail;
+import com.kmini.store.config.auth.AccountContext;
 import com.kmini.store.domain.User;
 import com.kmini.store.dto.CommonRespDto;
 import com.kmini.store.dto.request.CommentDto.BoardCommentSaveDto;
@@ -27,9 +27,9 @@ public class CommentApiController {
     @PostMapping
     public ResponseEntity<?> saveComment(
             @RequestBody BoardCommentSaveDto boardCommentSaveDto,
-            @AuthenticationPrincipal PrincipalDetail principalDetail) {
+            @AuthenticationPrincipal AccountContext accountContext) {
         log.info("boardCommentReqDto = {}", boardCommentSaveDto);
-        BoardCommentRespDto result = commentService.saveComment(boardCommentSaveDto, principalDetail.getUser());
+        BoardCommentRespDto result = commentService.saveComment(boardCommentSaveDto, accountContext.getUser());
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(new CommonRespDto<>(1, "성공", result));
@@ -46,10 +46,10 @@ public class CommentApiController {
 
     @DeleteMapping("/{commentId}")
     public ResponseEntity<?> deleteComment(
-            @PathVariable Long commentId, @AuthenticationPrincipal PrincipalDetail principalDetail
+            @PathVariable Long commentId, @AuthenticationPrincipal AccountContext accountContext
     ) {
         log.info("commentId = {}", commentId);
-        User user = principalDetail.getUser();
+        User user = accountContext.getUser();
         int result = commentService.delete(commentId, user);
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -59,10 +59,10 @@ public class CommentApiController {
     @PostMapping("{commentId}/reply")
     public ResponseEntity<?> saveReply(
             @RequestBody BoardReplySaveDto boardReplySaveDto,
-            @AuthenticationPrincipal PrincipalDetail principalDetail
+            @AuthenticationPrincipal AccountContext accountContext
     ) {
         log.info("boardReplyReqDto = {} ", boardReplySaveDto);
-        BoardReplyRespDto result = commentService.saveReply(boardReplySaveDto, principalDetail.getUser());
+        BoardReplyRespDto result = commentService.saveReply(boardReplySaveDto, accountContext.getUser());
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(new CommonRespDto<>(1, "성공", result));

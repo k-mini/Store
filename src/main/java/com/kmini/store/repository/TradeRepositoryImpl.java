@@ -45,7 +45,7 @@ public class TradeRepositoryImpl implements TradeRepositoryQsl {
                 queryFactory.selectFrom(trade)
                         .join(trade.buyer).fetchJoin()
                         .join(trade.board).fetchJoin()
-                        .where(trade.buyer.id.eq(userId).or(trade.buyer.id.eq(userId)),
+                        .where(trade.buyer.id.eq(userId).or(trade.board.user.id.eq(userId)),
                                 titleLike(cond.getTitle()),
                                 contentLike(cond.getContent()),
                                 statusEq(cond.getStatus())
@@ -59,7 +59,7 @@ public class TradeRepositoryImpl implements TradeRepositoryQsl {
                         .from(trade)
                         .join(trade.buyer).fetchJoin()
                         .join(trade.board).fetchJoin()
-                        .where(trade.buyer.id.eq(userId).or(trade.buyer.id.eq(userId)),
+                        .where(trade.buyer.id.eq(userId).or(trade.board.user.id.eq(userId)),
                                 titleLike(cond.getTitle()),
                                 contentLike(cond.getContent()),
                                 statusEq(cond.getStatus())
