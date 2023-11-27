@@ -8,7 +8,7 @@ import com.kmini.store.dto.request.CommentDto.BoardCommentUpdateDto;
 import com.kmini.store.dto.request.CommentDto.BoardReplySaveDto;
 import com.kmini.store.dto.response.CommentDto.BoardCommentRespDto;
 import com.kmini.store.dto.response.CommentDto.BoardReplyRespDto;
-import com.kmini.store.service.CommentService;
+import com.kmini.store.service.impl.CommentServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class CommentApiController {
 
-    private final CommentService commentService;
+    private final CommentServiceImpl commentService;
 
     @PostMapping
     public ResponseEntity<?> saveComment(

@@ -2,7 +2,7 @@ package com.kmini.store.controller.api;
 
 import com.kmini.store.dto.CommonRespDto;
 import com.kmini.store.dto.request.TradeDto.TradeReqDto;
-import com.kmini.store.service.TradeService;
+import com.kmini.store.service.impl.TradeServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class TradeApiController {
 
-    private final TradeService tradeService;
+    private final TradeServiceImpl tradeService;
 
     @PostMapping("/{boardId}")
     public CommonRespDto<?> trade(TradeReqDto tradeReqDto) {

@@ -1,4 +1,4 @@
-package com.kmini.store.service;
+package com.kmini.store.service.impl;
 
 import com.kmini.store.config.auth.AccountContext;
 import com.kmini.store.config.file.ResourceManager;
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserServiceImpl {
 
     private final ResourceManager resourceManager;
     private final UserRepository userRepository;

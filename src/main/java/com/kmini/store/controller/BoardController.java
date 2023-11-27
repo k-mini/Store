@@ -1,11 +1,9 @@
 package com.kmini.store.controller;
 
-import com.kmini.store.aop.CategoryHolder;
 import com.kmini.store.config.util.CustomPageUtils;
-import com.kmini.store.dto.request.BoardDto.ItemBoardFormSaveDto;
 import com.kmini.store.dto.request.SearchDto.SearchBoardDto;
 import com.kmini.store.dto.response.BoardDto;
-import com.kmini.store.service.BoardService;
+import com.kmini.store.service.impl.BoardServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -26,7 +24,7 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 @RequiredArgsConstructor
 public class BoardController {
 
-    private final BoardService boardService;
+    private final BoardServiceImpl boardServiceImpl;
 
     // 카테고리별 게시물 조회
     @GetMapping
@@ -53,7 +51,7 @@ public class BoardController {
             pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(DESC, "createdDate"));
         }
 
-        Page<BoardDto> results = boardService.load(pageable, categoryName, subCategoryName, searchBoardDto);
+        Page<BoardDto> results = boardServiceImpl.viewPosts(pageable, categoryName, subCategoryName, searchBoardDto);
         for (BoardDto result : results.getContent()) {
             log.debug("result = {}", result);
         }

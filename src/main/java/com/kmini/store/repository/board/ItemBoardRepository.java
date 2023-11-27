@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface ItemBoardRepository extends JpaRepository<ItemBoard, Long>, ItemBoardRepositoryQsdl {
 
-    @Query("select i from ItemBoard i join fetch i.trades where i.id = :boardId")
+    @Query("select i from ItemBoard i left join fetch i.trades where i.id = :boardId")
     Optional<ItemBoard> findByIdFetchJoinTrade(@Param("boardId") Long boardId);
 
 }

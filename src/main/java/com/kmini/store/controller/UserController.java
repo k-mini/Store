@@ -1,19 +1,13 @@
 package com.kmini.store.controller;
 
 import com.kmini.store.config.auth.AccountContext;
-import com.kmini.store.config.util.CustomPageUtils;
 import com.kmini.store.domain.User;
-import com.kmini.store.dto.request.TradeDto.TradeHistoryReqDto;
 import com.kmini.store.dto.request.UserDto.SignUpDto;
 import com.kmini.store.dto.request.UserDto.UserUpdateReqDto;
-import com.kmini.store.dto.response.TradeDto.TradeHistoryRespDto;
-import com.kmini.store.service.TradeService;
-import com.kmini.store.service.UserService;
+import com.kmini.store.service.impl.TradeServiceImpl;
+import com.kmini.store.service.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,15 +18,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import static org.springframework.data.domain.Sort.Direction.DESC;
-
 @Controller
 @RequiredArgsConstructor
 @Slf4j
 public class UserController {
 
-    private final UserService userService;
-    private final TradeService tradeService;
+    private final UserServiceImpl userService;
+    private final TradeServiceImpl tradeService;
 
     @GetMapping({"/","/index"})
     public String home() {

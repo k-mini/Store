@@ -1,4 +1,4 @@
-package com.kmini.store.service;
+package com.kmini.store.service.impl;
 
 import com.kmini.store.domain.ItemBoard;
 import com.kmini.store.domain.Trade;
@@ -19,7 +19,7 @@ import static com.kmini.store.domain.type.TradeStatus.*;
 
 @Service
 @RequiredArgsConstructor
-public class TradeService {
+public class TradeServiceImpl {
 
     private final TradeRepository tradeRepository;
     private final UserRepository userRepository;
@@ -47,29 +47,6 @@ public class TradeService {
 
         // 거래 등록
         tradeRepository.save(trade);
-    }
-
-    // 거래 가능 여부 판별
-    public boolean checkRegisterTradeAvailable(Long boardId) {
-        Trade latestTrade = tradeRepository.getLatestTrade(boardId)
-                .orElse(null);
-
-//         거래 이력이 없음
-        if (latestTrade == null) {
-            return true;
-        }
-
-        TradeStatus latestStatus = latestTrade.getTradeStatus();
-//         WAIT(수락 대기중) 이거나 DEALING(거래 중), COMPLETE(거래 완료)면  거래 불가
-        if (latestStatus == WAIT || latestStatus == DEALING || latestStatus == COMPLETE) {
-            return false;
-        }
-        // 거래 취소된 상태면 거래 가능
-        if (latestStatus == CANCEL) {
-            return true;
-        }
-
-        throw new IllegalStateException("등록되지 않은 거래 상태입니다.");
     }
 
     // 거래중인 목록
@@ -121,6 +98,29 @@ public class TradeService {
         // 거래 취소 가능한지 체크
         checkCancelAvailable(trade);
         trade.setTradeStatus(CANCEL);
+    }
+
+    // 거래 가능 여부 판별
+    public boolean checkRegisterTradeAvailable(Long boardId) {
+        Trade latestTrade = tradeRepository.getLatestTrade(boardId)
+                .orElse(null);
+
+//         거래 이력이 없음
+        if (latestTrade == null) {
+            return true;
+        }
+
+        TradeStatus latestStatus = latestTrade.getTradeStatus();
+//         WAIT(수락 대기중) 이거나 DEALING(거래 중), COMPLETE(거래 완료)면  거래 불가
+        if (latestStatus == WAIT || latestStatus == DEALING || latestStatus == COMPLETE) {
+            return false;
+        }
+        // 거래 취소된 상태면 거래 가능
+        if (latestStatus == CANCEL) {
+            return true;
+        }
+
+        throw new IllegalStateException("등록되지 않은 거래 상태입니다.");
     }
 
     private void checkCompleteAvailable(Trade trade) {

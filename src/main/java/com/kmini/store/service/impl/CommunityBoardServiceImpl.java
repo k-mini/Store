@@ -1,7 +1,7 @@
-package com.kmini.store.service;
+package com.kmini.store.service.impl;
 
 import com.kmini.store.config.auth.AccountContext;
-import com.kmini.store.config.file.SystemFileManager;
+import com.kmini.store.config.file.UserFileManager;
 import com.kmini.store.domain.*;
 import com.kmini.store.domain.type.CategoryType;
 import com.kmini.store.dto.request.BoardDto.CommunityBoardFormSaveDto;
@@ -11,7 +11,6 @@ import com.kmini.store.repository.CategoryRepository;
 import com.kmini.store.repository.CommentRepository;
 import com.kmini.store.repository.board.CommunityBoardRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,13 +21,13 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class CommunityBoardService {
+public class CommunityBoardServiceImpl {
 
     private final CommunityBoardRepository communityBoardRepository;
     private final BoardCategoryRepository boardCategoryRepository;
     private final CommentRepository commentRepository;
     private final CategoryRepository categoryRepository;
-    private final SystemFileManager systemFileManager;
+    private final UserFileManager userFileManager;
 
     @Transactional
     public void save(CommunityBoardFormSaveDto communityBoardFormSaveDto, AccountContext accountContext) throws IOException {
@@ -37,7 +36,7 @@ public class CommunityBoardService {
         MultipartFile file = communityBoardFormSaveDto.getFile();
         String uri = null;
         if (file != null) {
-            uri = systemFileManager.storeFile(file);
+            uri = userFileManager.storeFileInUserDirectory(file);
         }
 
         // 카테고리 조회

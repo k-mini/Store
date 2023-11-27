@@ -2,8 +2,10 @@ package com.kmini.store.controller.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kmini.store.repository.UserRepository;
-import com.kmini.store.service.UserService;
+import com.kmini.store.service.impl.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,13 +21,14 @@ class UserApiControllerTest {
     @Autowired
     MockMvc mockMvc;
     @Autowired
-    UserService userService;
+    UserServiceImpl userService;
     @Autowired
     UserRepository userRepository;
     @Autowired
     ObjectMapper om;
 
-    // 회원수정 테스트
+    // 회원가입 테스트
+//    @DisplayName("회원가입 테스트")
 //    @Test
 //    void signup() throws Exception {
 //        // given
@@ -50,8 +53,6 @@ class UserApiControllerTest {
 //        Assertions.assertThat(resultDto.getUsername()).isEqualTo(user.getUsername());
 //        Assertions.assertThat(resultDto.getPassword()).isEqualTo(user.getPassword());
 //        Assertions.assertThat(resultDto.getThumbnail()).isEqualTo(user.getThumbnail());
-//
-//
 //    }
 
 }

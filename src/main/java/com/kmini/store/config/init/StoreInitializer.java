@@ -12,14 +12,19 @@ import com.kmini.store.dto.request.CommentDto.BoardCommentSaveDto;
 import com.kmini.store.dto.request.CommentDto.BoardReplySaveDto;
 import com.kmini.store.repository.CategoryRepository;
 import com.kmini.store.repository.UserRepository;
-import com.kmini.store.service.*;
+import com.kmini.store.service.impl.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 import static com.kmini.store.domain.type.CategoryType.*;
 
@@ -27,15 +32,15 @@ import static com.kmini.store.domain.type.CategoryType.*;
 @Profile({"default", "dev", "local"})
 @Slf4j
 @RequiredArgsConstructor
-public class DummyInit implements ApplicationRunner {
+public class StoreInitializer implements ApplicationRunner {
 
-    private final UserService userService;
+    private final UserServiceImpl userService;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
-    private final ItemBoardService itemBoardService;
-    private final CommunityBoardService communityBoardService;
-    private final CommentService commentService;
-    private final TradeService tradeService;
+    private final ItemBoardServiceImpl itemBoardService;
+    private final CommunityBoardServiceImpl communityBoardService;
+    private final CommentServiceImpl commentService;
+    private final TradeServiceImpl tradeService;
     private final CategoryHolder categoryHolder;
     private final BCryptPasswordEncoder passwordEncoder;
 
@@ -74,7 +79,7 @@ public class DummyInit implements ApplicationRunner {
         for (int i = 1; i < 157; i++) {
             ItemBoardFormSaveDto saveFormDto =
                     new ItemBoardFormSaveDto( "electronics", "title" + i, "content" + i, null, "item" + i);
-            itemBoardService.save(saveFormDto, accountContext);
+            itemBoardService.save(saveFormDto);
         }
         log.debug("커뮤니티 게사판 샘플 데이터 넣기! ...");
         for (int i = 1; i < 93; i++) {
@@ -94,6 +99,9 @@ public class DummyInit implements ApplicationRunner {
         commentService.saveReply(new BoardReplySaveDto(156L, 2L, "댓글2의 대댓글2"), user);
 
         log.info("거래 넣기");
+        UsernamePasswordAuthenticationToken token =
+                UsernamePasswordAuthenticationToken.authenticated(new AccountContext(user2), null, List.of(new SimpleGrantedAuthority(UserRole.USER.name())));
+        SecurityContextHolder.getContext().setAuthentication(token);
         tradeService.registerTrade(1L);
         tradeService.registerTrade(2L);
         tradeService.registerTrade(3L);

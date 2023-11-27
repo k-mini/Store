@@ -5,7 +5,7 @@ import com.kmini.store.domain.type.CategoryType;
 import com.kmini.store.dto.request.BoardDto.ItemBoardFormSaveDto;
 import com.kmini.store.dto.request.ItemBoardDto.ItemBoardUpdateFormDto;
 import com.kmini.store.dto.response.ItemBoardDto.ItemBoardRespDetailDto;
-import com.kmini.store.service.ItemBoardService;
+import com.kmini.store.service.impl.ItemBoardServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,7 +22,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class ItemBoardController {
 
-    private final ItemBoardService itemBoardService;
+    private final ItemBoardServiceImpl itemBoardService;
 
     // 게시물 자세히 조회
     @GetMapping("/{boardId}")
@@ -59,12 +59,11 @@ public class ItemBoardController {
     @PostMapping("/form")
     public String saveBoard(
             @ModelAttribute ItemBoardFormSaveDto itemBoardFormSaveDto,
-            @PathVariable("subCategory") String subCategoryName,
-            @AuthenticationPrincipal AccountContext accountContext, RedirectAttributes redirectAttributes) throws IOException {
+            @PathVariable("subCategory") String subCategoryName, RedirectAttributes redirectAttributes) throws IOException {
         log.debug("formSaveDto = {}", itemBoardFormSaveDto);
         log.debug("subCategory = {}", subCategoryName);
 
-        itemBoardService.save(itemBoardFormSaveDto, accountContext);
+        itemBoardService.save(itemBoardFormSaveDto);
 
         redirectAttributes.addAttribute("category", "trade");
         redirectAttributes.addAttribute("subCategory", subCategoryName);

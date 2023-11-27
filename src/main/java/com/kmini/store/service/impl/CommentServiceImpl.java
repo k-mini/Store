@@ -1,9 +1,8 @@
-package com.kmini.store.service;
+package com.kmini.store.service.impl;
 
 import com.kmini.store.domain.Board;
 import com.kmini.store.domain.Comment;
 import com.kmini.store.domain.User;
-import com.kmini.store.dto.request.CommentDto;
 import com.kmini.store.dto.request.CommentDto.BoardCommentSaveDto;
 import com.kmini.store.dto.request.CommentDto.BoardCommentUpdateDto;
 import com.kmini.store.dto.request.CommentDto.BoardReplySaveDto;
@@ -20,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class CommentService {
+public class CommentServiceImpl {
 
     private final CommentRepository commentRepository;
     private final BoardRepository boardRepository;

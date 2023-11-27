@@ -4,6 +4,8 @@ import com.kmini.store.config.auth.AccountContext;
 import com.kmini.store.domain.type.UserRole;
 import com.kmini.store.domain.type.UserStatus;
 import lombok.*;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.persistence.*;
@@ -48,6 +50,11 @@ public class User {
     }
 
     public static User getSecurityContextUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication instanceof AnonymousAuthenticationToken) {
+            throw new IllegalStateException("로그인된 상태가 아닙니다.");
+        }
         return ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
     }
 }

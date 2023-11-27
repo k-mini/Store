@@ -34,7 +34,7 @@ public class UserDto {
                     .username(username)
                     .password(password)
                     .email(email)
-                    .thumbnail(resourceManager.storeFile(file))
+                    .thumbnail(resourceManager.storeFile(email, file))
                     .build();
         }
     }

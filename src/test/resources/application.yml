@@ -17,15 +17,20 @@ spring:
     console:
       enabled: true
 
+  config:
+    activate:
+      on-profile: test
 
-#logging:
-#  level:
-#    org.hibernate.SQL: debug
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    com.kmini.store: debug
 #    org.hibernate.type: trace
 
 file:
   dir:
-    C:/Users/kmin/images/
+    C:/Users/kmin/images/test/
 
 
 

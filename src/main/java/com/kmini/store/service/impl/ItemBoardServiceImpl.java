@@ -1,7 +1,7 @@
-package com.kmini.store.service;
+package com.kmini.store.service.impl;
 
 import com.kmini.store.config.auth.AccountContext;
-import com.kmini.store.config.file.ResourceManager;
+import com.kmini.store.config.file.UserFileManager;
 import com.kmini.store.domain.*;
 import com.kmini.store.domain.type.CategoryType;
 import com.kmini.store.dto.request.BoardDto.ItemBoardFormSaveDto;
@@ -13,6 +13,7 @@ import com.kmini.store.repository.CommentRepository;
 import com.kmini.store.repository.TradeRepository;
 import com.kmini.store.repository.board.ItemBoardRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,15 +24,15 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class ItemBoardService {
+public class ItemBoardServiceImpl {
 
     private final ItemBoardRepository itemBoardRepository;
     private final CommentRepository commentRepository;
     private final CategoryRepository categoryRepository;
     private final BoardCategoryRepository boardCategoryRepository;
     private final TradeRepository tradeRepository;
-    private final TradeService tradeService;
-    private final ResourceManager resourceManager;
+    private final TradeServiceImpl tradeService;
+    private final UserFileManager userFileManager;
 
     // 게시물 상세 조회
     @Transactional
@@ -61,13 +62,15 @@ public class ItemBoardService {
 
     // 게시물 저장
     @Transactional
-    public void save(ItemBoardFormSaveDto itemBoardFormSaveDto, AccountContext accountContext) throws IOException {
+    public void save(ItemBoardFormSaveDto itemBoardFormSaveDto) throws IOException {
+
+        AccountContext accountContext = (AccountContext) SecurityContextHolder.getContext().getAuthentication();
         
         // 파일 시스템에 저장하고 랜덤 파일명 반환
         MultipartFile file = itemBoardFormSaveDto.getFile();
         String uri = null;
         if (file != null) {
-            uri = resourceManager.storeFile(file);
+            uri = userFileManager.storeFileInUserDirectory(file);
         }
 
         // 카테고리 조회
@@ -99,8 +102,8 @@ public class ItemBoardService {
 
         MultipartFile submittedFile = itemBoardUpdateFormDto.getFile();
         if (!submittedFile.isEmpty()) {
-            resourceManager.deleteFile(itemBoard.getThumbnail());
-            String updatedUri = resourceManager.storeFile(submittedFile);
+            userFileManager.deleteFile(itemBoard.getThumbnail());
+            String updatedUri = userFileManager.storeFileInUserDirectory(submittedFile);
             itemBoard.setThumbnail(updatedUri);
         }
 

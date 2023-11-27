@@ -16,15 +16,14 @@ public class ControllerExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public String exception(Exception ex) {
-        log.debug("exception method");
-        log.error("msg = " + ex.getMessage(), ex);
+        log.warn("msg = " + ex.getMessage(), ex);
         return "error/5xx";
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(IllegalArgumentException.class)
     public String badRequest(IllegalArgumentException ex) {
-        log.error("msg = " + ex.getMessage(), ex);
+        log.warn("msg = " + ex.getMessage(), ex);
         return "error/400";
     }
 }

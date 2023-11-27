@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 
 @DataJpaTest
-class ItemBoardServiceTest {
+class ItemBoardServiceImplTest {
 
     @Autowired
     private ItemBoardRepository itemBoardRepository;

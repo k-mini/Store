@@ -4,7 +4,7 @@ package com.kmini.store.controller.api;
 import com.kmini.store.dto.CommonRespDto;
 import com.kmini.store.dto.request.UserDto;
 import com.kmini.store.dto.request.UserDto.UserUpdateReqDto;
-import com.kmini.store.service.UserService;
+import com.kmini.store.service.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserApiController {
 
-    private final UserService userService;
+    private final UserServiceImpl userService;
 
     // 회원가입 (API 방식)
     @PostMapping("/signup")

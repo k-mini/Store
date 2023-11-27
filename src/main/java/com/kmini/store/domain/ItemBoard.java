@@ -25,7 +25,7 @@ public class ItemBoard extends Board{
     }
     private String itemName;
 
-    @OneToMany(mappedBy = "tradeId")
+    @OneToMany(mappedBy = "id")
     private List<Trade> trades = new ArrayList<>();
 
     public boolean hasCompletedTrade() {

@@ -3,7 +3,7 @@ package com.kmini.store.controller;
 import com.kmini.store.config.util.CustomPageUtils;
 import com.kmini.store.dto.request.TradeDto;
 import com.kmini.store.dto.response.TradeDto.TradeHistoryRespDto;
-import com.kmini.store.service.TradeService;
+import com.kmini.store.service.impl.TradeServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -20,7 +20,7 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 @RequiredArgsConstructor
 public class TradeController {
 
-    private final TradeService tradeService;
+    private final TradeServiceImpl tradeService;
 
     @GetMapping("/user/{userId}/trade-history")
     public String viewTradeHistory(@PageableDefault(sort = "createdDate", direction = DESC) Pageable pageable,

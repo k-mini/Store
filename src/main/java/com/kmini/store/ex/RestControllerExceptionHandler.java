@@ -14,8 +14,7 @@ public class RestControllerExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<?> illegalArgumentException(IllegalArgumentException ex) {
-        log.debug("illegalArgumentException method");
-        log.error("msg = " + ex.getMessage(), ex);
+        log.warn("msg = " + ex.getMessage(), ex);
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new CommonRespDto<>(-1, ex.getMessage(), null));
@@ -23,7 +22,7 @@ public class RestControllerExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> exception(Exception ex) {
-        log.error("msg = " + ex.getMessage(), ex);
+        log.warn("msg = " + ex.getMessage(), ex);
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new CommonRespDto<>(-1,ex.getMessage(),null));
