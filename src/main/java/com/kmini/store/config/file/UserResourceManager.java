@@ -10,7 +10,7 @@ public interface UserResourceManager {
 
     // 해당 파일이 있으면 삭제하고 교체한다.
     // 없으면 삭제하지 않는다.
-    boolean updateFile(String fileName, MultipartFile multipartFile);
+    String updateFile(String fileName, MultipartFile multipartFile);
 
     // 해당 파일을 삭제한다.
     boolean deleteFile(String fileName);

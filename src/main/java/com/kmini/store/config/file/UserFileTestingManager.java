@@ -53,11 +53,11 @@ public class UserFileTestingManager implements UserResourceManager {
     }
 
     @Override
-    public boolean updateFile(String fileName, MultipartFile multipartFile) {
+    public String updateFile(String fileName, MultipartFile multipartFile) {
 
         if (!StringUtils.hasText(fileName)) {
             storeFile(User.getSecurityContextUser().getEmail(), multipartFile);
-            return false;
+            return null;
         }
 
         File file = new File(fileDir + User.getSecurityContextUser().getEmail() +  fileName);
@@ -74,7 +74,7 @@ public class UserFileTestingManager implements UserResourceManager {
         } catch (IOException e) {
             throw new IllegalStateException("파일을 저장하는데에 실패했습니다", e);
         }
-        return deleted;
+        return fileName;
     }
 
     @Override

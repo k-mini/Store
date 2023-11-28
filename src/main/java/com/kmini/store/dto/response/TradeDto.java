@@ -2,25 +2,31 @@ package com.kmini.store.dto.response;
 
 import com.kmini.store.config.util.CustomTimeUtils;
 import com.kmini.store.domain.Trade;
-import com.kmini.store.domain.type.TradeStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.domain.Page;
 
 public class TradeDto {
 
     @Data
     @Builder
     @AllArgsConstructor @NoArgsConstructor
-    public static class TradeRespDto {
+    public static class TradeRegisterRespDto {
         // 생성 거래 번호
         private Long tradeId;
+        private Long sellerId;
+        private String sellerName;
+        private Long buyerId;
+        private String buyerName;
 
-        public static TradeRespDto toDto(Trade savedTrade) {
-            return TradeRespDto.builder()
+        public static TradeRegisterRespDto toDto(Trade savedTrade) {
+            return TradeRegisterRespDto.builder()
                     .tradeId(savedTrade.getId())
+                    .sellerId(savedTrade.getSeller().getId())
+                    .sellerName(savedTrade.getSeller().getUsername())
+                    .buyerId(savedTrade.getBuyer().getId())
+                    .buyerName(savedTrade.getBuyer().getUsername())
                     .build();
         }
     }

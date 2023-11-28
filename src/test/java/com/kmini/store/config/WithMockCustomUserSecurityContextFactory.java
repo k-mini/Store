@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+
 @RequiredArgsConstructor
 public class WithMockCustomUserSecurityContextFactory implements WithSecurityContextFactory<WithMockCustomUser> {
 
@@ -33,6 +34,19 @@ public class WithMockCustomUserSecurityContextFactory implements WithSecurityCon
         AccountContext accountContext = new AccountContext(savedUser);
 
 //        AccountContext accountContext = (AccountContext) customUserDetailsService.loadUserByUsername(customUser.email());
+
+        UsernamePasswordAuthenticationToken authentication =
+                UsernamePasswordAuthenticationToken.authenticated(accountContext, null, accountContext.getAuthorities());
+        securityContext.setAuthentication(authentication);
+        return securityContext;
+    }
+
+    public SecurityContext createSecurityContext(String username, String password, String email) {
+        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+
+        User user = new User(username, password, email, UserRole.USER, UserStatus.SIGNUP, null);
+        User savedUser = userRepository.save(user);
+        AccountContext accountContext = new AccountContext(savedUser);
 
         UsernamePasswordAuthenticationToken authentication =
                 UsernamePasswordAuthenticationToken.authenticated(accountContext, null, accountContext.getAuthorities());

@@ -2,9 +2,13 @@ package com.kmini.store.controller.api;
 
 import com.kmini.store.dto.CommonRespDto;
 import com.kmini.store.dto.request.TradeDto.TradeReqDto;
+import com.kmini.store.dto.response.TradeDto;
+import com.kmini.store.dto.response.TradeDto.TradeRegisterRespDto;
 import com.kmini.store.service.impl.TradeServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,12 +19,14 @@ public class TradeApiController {
 
     private final TradeServiceImpl tradeService;
 
+    // 거래 신청
     @PostMapping("/{boardId}")
-    public CommonRespDto<?> trade(TradeReqDto tradeReqDto) {
+    public ResponseEntity<?> registerTrade(TradeReqDto tradeReqDto) {
         log.debug("tradeReqDto = {}", tradeReqDto);
         Long boardId = tradeReqDto.getBoardId();
-        tradeService.registerTrade(boardId);
-        return new CommonRespDto<>(1,"성공",null);
+        TradeRegisterRespDto result = tradeService.registerTrade(boardId);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                             .body(new CommonRespDto<>(1, "성공", result));
     }
 
     // 거래 승낙
@@ -41,13 +47,13 @@ public class TradeApiController {
     @PatchMapping("/{tradeId}/complete")
     public CommonRespDto<?> completeTrade(@PathVariable Long tradeId) {
         tradeService.completeTrade(tradeId);
-        return new CommonRespDto<Void>(1,"성공", null);
+        return new CommonRespDto<Void>(1, "성공", null);
     }
 
     // 거래 취소
     @PatchMapping("/{tradeId}/cancel")
     public CommonRespDto<?> cancelTrade(@PathVariable Long tradeId) {
         tradeService.cancelTrade(tradeId);
-        return new CommonRespDto<Void>(1,"성공", null);
+        return new CommonRespDto<Void>(1, "성공", null);
     }
 }

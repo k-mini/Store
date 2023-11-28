@@ -143,19 +143,23 @@ class UserControllerTest {
     @Test
     void postMyPage() throws Exception {
         // given
-        UserUpdateReqDto userUpdateReqDto = new UserUpdateReqDto();
-        userUpdateReqDto.setEmail("kmini@gmail.com");
-        userUpdateReqDto.setUsername("kmini2");
-        userUpdateReqDto.setPassword("1111");
-        userUpdateReqDto.setPasswordCheck("1111");
+        String email = "kmini@gmail.com";
+        String username = "kmini2";
+        String password = "1111";
+        String passwordCheck = "1111";
+        String fileName = "testImage";
+        String contentType = "png";
+        FileInputStream inputStream = new FileInputStream("C:\\Users\\kmin\\images\\test\\" + fileName + "." + contentType);
+        MockMultipartFile thumbnailFile = new MockMultipartFile("thumbnailFile", fileName + "." + contentType, contentType, inputStream);
 
         // when
         ResultActions resultActions = mockMvc.perform(
-                post("/auth/my-page")
-                        .param("email", userUpdateReqDto.getEmail())
-                        .param("username", userUpdateReqDto.getUsername())
-                        .param("password", userUpdateReqDto.getPassword())
-                        .param("passwordCheck",userUpdateReqDto.getPasswordCheck())
+                multipart("/auth/my-page")
+                        .file(thumbnailFile)
+                        .param("email", email)
+                        .param("username", username)
+                        .param("password", password)
+                        .param("passwordCheck",passwordCheck)
         );
 
         // then

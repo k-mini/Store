@@ -5,7 +5,9 @@ import com.kmini.store.domain.Trade;
 import com.kmini.store.domain.User;
 import com.kmini.store.domain.type.TradeStatus;
 import com.kmini.store.dto.request.TradeDto.TradeHistoryReqDto;
+import com.kmini.store.dto.response.TradeDto;
 import com.kmini.store.dto.response.TradeDto.TradeHistoryRespDto;
+import com.kmini.store.dto.response.TradeDto.TradeRegisterRespDto;
 import com.kmini.store.repository.TradeRepository;
 import com.kmini.store.repository.UserRepository;
 import com.kmini.store.repository.board.ItemBoardRepository;
@@ -26,7 +28,7 @@ public class TradeServiceImpl {
     private final ItemBoardRepository itemBoardRepository;
 
     @Transactional
-    public void registerTrade(Long boardId) {
+    public TradeRegisterRespDto registerTrade(Long boardId) {
 
         ItemBoard board = itemBoardRepository.findByIdFetchJoinTrade(boardId)
                 .orElseThrow(()-> new IllegalArgumentException("게시물을 찾을 수 없습니다."));
@@ -46,7 +48,8 @@ public class TradeServiceImpl {
         trade.setBoard(board);
 
         // 거래 등록
-        tradeRepository.save(trade);
+        Trade savedTrade = tradeRepository.save(trade);
+        return TradeRegisterRespDto.toDto(savedTrade);
     }
 
     // 거래중인 목록
