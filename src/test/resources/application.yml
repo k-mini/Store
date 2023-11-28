@@ -10,29 +10,29 @@ spring:
       ddl-auto: create
     properties:
       hibernate:
-#        show_sql: true
         format_sql: true
-        default_batch_fetch_size: 1000
     database-platform: org.hibernate.dialect.H2Dialect
 
   h2:
     console:
       enabled: true
-  batch:
-    jdbc:
-      schema:
-  messages:
-    basename: errors
+
+  config:
+    activate:
+      on-profile: test
+
 
 logging:
   level:
     org.hibernate.SQL: debug
     com.kmini.store: debug
-#    org.hibernate.type.descriptor.sql: trace
 #    org.hibernate.type: trace
 
 file:
   dir:
-    C:/Users/kmin/images/
+    C:/Users/kmin/images/test/
+
+
+
 
 

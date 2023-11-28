@@ -1,0 +1,153 @@
+package com.kmini.store.controller;
+
+import com.kmini.store.config.WithMockCustomUser;
+import com.kmini.store.domain.ItemBoard;
+import com.kmini.store.dto.request.BoardDto.ItemBoardFormSaveDto;
+import com.kmini.store.service.impl.ItemBoardServiceImpl;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import javax.servlet.ServletException;
+import java.io.FileInputStream;
+
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+@Slf4j
+@ActiveProfiles("test")
+@AutoConfigureMockMvc
+@Transactional
+@SpringBootTest
+class ItemBoardControllerTest {
+
+    @Autowired
+    MockMvc mockMvc;
+    @Autowired
+    ItemBoardServiceImpl itemBoardService;
+    @Autowired
+    EntityManager em;
+
+    @BeforeEach
+    public void setUp() throws ServletException {
+//        DelegatingFilterProxy delegatingFilterProxy = new DelegatingFilterProxy();
+//        delegatingFilterProxy.init(new MockFilterConfig(applicationContext.getServletContext(), "filterChainProxy"));
+//        mockMvc = MockMvcBuilders
+//                    .webAppContextSetup(applicationContext)
+//                    .addFilter(delegatingFilterProxy).build();
+
+//        mockMvc = MockMvcBuilders
+//                .webAppContextSetup(applicationContext)
+//                .apply(springSecurity(filterChain)).build();
+    }
+
+    @WithMockCustomUser
+    @DisplayName("게시물 상세화면 진입")
+    @Test
+    void viewBoard() throws Exception {
+        // given
+        String category = "trade";
+        String subCategory = "electronics";
+        ItemBoardFormSaveDto formSaveDto = new ItemBoardFormSaveDto(subCategory, "Life is Good", "what is your favorite food?", null, null);
+        ItemBoard itemBoard = itemBoardService.save(formSaveDto);
+        em.clear();
+
+        // when
+        String url = "/board/" + category + "/" + subCategory + "/" + itemBoard.getId();
+        log.info("url = {}", url);
+        ResultActions resultActions = mockMvc.perform(
+                get(url)
+            );
+
+        // then
+        resultActions.andExpect(view().name("board/tradedetail"))
+                .andExpect(status().isOk());
+    }
+
+    @WithMockCustomUser
+    @Transactional
+    @DisplayName("거래 게시판 수정화면 진입")
+    @Test
+    void getUpdateForm() throws Exception {
+
+        // given
+        String category = "trade";
+        String subCategory = "electronics";
+        ItemBoardFormSaveDto formSaveDto = new ItemBoardFormSaveDto(subCategory, "Life is Good", "what is your favorite food?", null, null);
+        ItemBoard itemBoard = itemBoardService.save(formSaveDto);
+        em.clear();
+
+        // when
+        String url = "/board/" + category + "/"  + subCategory + "/" + itemBoard.getId() + "/form";
+        log.info("url = {}", url);
+        ResultActions resultActions = mockMvc.perform(
+                get(url)
+        );
+
+        // then
+        resultActions.andExpect(view().name("board/updateform"))
+                .andExpect(status().isOk());
+    }
+
+    @WithMockCustomUser
+    @DisplayName("거래 게시판 등록 화면 진입")
+    @Test
+    void getSaveForm() throws Exception {
+
+        // given
+        String category = "trade";
+        String subCategory = "electronics";
+
+        // when
+        ResultActions resultActions = mockMvc.perform(
+                get("/board/" + category + "/"  + subCategory + "/form")
+        );
+
+        // then
+        resultActions.andExpect(view().name("board/form"))
+                .andExpect(status().isOk());
+    }
+
+    @WithMockCustomUser
+    @DisplayName("거래 게시판 게시물 등록")
+    @Test
+    void saveBoard() throws Exception {
+
+        // given
+        String category = "trade";
+        String subCategory = "electronics";
+        String title = "이 값은 제목입니다.";
+        String content = "콘텐츠 내용입니다.";
+        String fileName = "testImage";
+        String contentType = "png";
+        FileInputStream inputStream = new FileInputStream("C:\\Users\\kmin\\images\\test\\" + fileName + "." + contentType);
+        MockMultipartFile file = new MockMultipartFile("file", fileName + "." + contentType, contentType, inputStream);
+
+        // when
+        ResultActions resultActions = mockMvc.perform(
+                multipart("/board/" + category + "/"  + subCategory + "/form")
+                        .file(file)
+                        .param("title", title)
+                        .param("content",content)
+        );
+
+        // then
+        resultActions
+                .andExpect(redirectedUrl("/boards/" + category+ "/" + subCategory))
+                .andExpect(status().is3xxRedirection());
+    }
+
+}

@@ -1,7 +1,14 @@
+buildscript {
+	ext {
+		queryDslVersion = "5.0.0"
+	}
+}
+
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '2.7.17'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
 }
 
 group = 'com.kmini'
@@ -26,15 +33,45 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	// 타임리프에서 스프링시큐리티의 문법이나 형식을 지원하는 확장팩 라이브러리
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
+	implementation 'org.springframework.boot:spring-boot-devtools'
+	implementation 'com.querydsl:querydsl-jpa'
+
+	//querydsl 추가
+	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+	annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
 
 	runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+	testCompileOnly 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+//querydsl 추가 시작
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+	jpa = true
+	querydslSourcesDir = querydslDir
+}
+sourceSets {
+	main.java.srcDir querydslDir
+}
+configurations {
+	querydsl.extendsFrom compileClasspath
+}
+compileQuerydsl {
+	options.annotationProcessorPath = configurations.querydsl
+}
+//querydsl 추가 끝
