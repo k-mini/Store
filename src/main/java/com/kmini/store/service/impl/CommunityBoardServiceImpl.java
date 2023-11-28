@@ -1,7 +1,7 @@
 package com.kmini.store.service.impl;
 
 import com.kmini.store.config.auth.AccountContext;
-import com.kmini.store.config.file.UserFileManager;
+import com.kmini.store.config.file.UserFileTestingManager;
 import com.kmini.store.domain.*;
 import com.kmini.store.domain.type.CategoryType;
 import com.kmini.store.dto.request.BoardDto.CommunityBoardFormSaveDto;
@@ -11,6 +11,7 @@ import com.kmini.store.repository.CategoryRepository;
 import com.kmini.store.repository.CommentRepository;
 import com.kmini.store.repository.board.CommunityBoardRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,10 +28,12 @@ public class CommunityBoardServiceImpl {
     private final BoardCategoryRepository boardCategoryRepository;
     private final CommentRepository commentRepository;
     private final CategoryRepository categoryRepository;
-    private final UserFileManager userFileManager;
+    private final UserFileTestingManager userFileManager;
 
     @Transactional
-    public void save(CommunityBoardFormSaveDto communityBoardFormSaveDto, AccountContext accountContext) throws IOException {
+    public void save(CommunityBoardFormSaveDto communityBoardFormSaveDto) throws IOException {
+
+        AccountContext accountContext = (AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         // 파일 시스템에 저장하고 랜덤 파일명 반환
         MultipartFile file = communityBoardFormSaveDto.getFile();

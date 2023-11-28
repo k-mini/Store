@@ -1,6 +1,7 @@
 package com.kmini.store.controller.api;
 
 
+import com.kmini.store.dto.CommonRespDto;
 import com.kmini.store.dto.request.ItemBoardDto.ItemBoardUpdateFormDto;
 import com.kmini.store.service.impl.ItemBoardServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -21,25 +22,24 @@ public class ItemBoardApiController {
     private static final String category = "trade";
 
     @DeleteMapping("/{boardId}")
-    public String delete(
+    public CommonRespDto<?> deletePost(
                        @PathVariable("subCategory") String subCategory,@PathVariable("boardId") Long boardId,
                        RedirectAttributes redirectAttributes) {
         log.debug("category = {} subCategory = {} boardId = {}", category, subCategory, boardId);
-        itemBoardService.delete(boardId);
+        itemBoardService.deletePost(boardId);
 
-        redirectAttributes.addAttribute("subCategory", subCategory);
-        return "redirect:/boards/trade/{subCategory}";
+        return new CommonRespDto<Void>(1, "성공", null);
     }
 
     @PatchMapping("/{boardId}")
-    public String update(@Validated ItemBoardUpdateFormDto itemBoardUpdateFormDto, BindingResult bindingResult, Model model) {
+    public CommonRespDto<?> updatePost(@Validated ItemBoardUpdateFormDto itemBoardUpdateFormDto, BindingResult bindingResult, Model model) {
         log.debug("itemBoardUpdateFormDto = {}", itemBoardUpdateFormDto);
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("itemBoardUpdateFormDto", itemBoardUpdateFormDto);
         }
 
-        itemBoardService.update(itemBoardUpdateFormDto);
-        return "board/updateform";
+        itemBoardService.updatePost(itemBoardUpdateFormDto);
+        return new CommonRespDto<Void>(1, "성공", null);
     }
 }

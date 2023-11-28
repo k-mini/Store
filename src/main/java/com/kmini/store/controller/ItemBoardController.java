@@ -38,7 +38,7 @@ public class ItemBoardController {
     
     // 게시물 수정
     @GetMapping("/{boardId}/form")
-    public String updateBoard(@PathVariable Long boardId,
+    public String getUpdateForm(@PathVariable Long boardId,
                               @PathVariable String subCategory, Model model) {
 
         ItemBoardUpdateFormDto result = itemBoardService.getUpdateForm(boardId);
@@ -49,7 +49,7 @@ public class ItemBoardController {
     
     // 게시물 생성
     @GetMapping("/form")
-    public String saveBoard(
+    public String getSaveForm(
             @ModelAttribute ItemBoardFormSaveDto itemBoardFormSaveDto, Model model) {
         // PathVariable 자동 modelAttribute 저장.
         model.addAttribute("itemBoardFormSaveDto", new ItemBoardFormSaveDto());

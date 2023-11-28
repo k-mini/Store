@@ -51,8 +51,6 @@ class UserControllerTest {
 
     @Autowired
     MockMvc mockMvc;
-    @Autowired
-    CustomUserDetailsService customUserDetailsService;
 
     @DisplayName("메인화면 진입")
     @Test
@@ -116,7 +114,6 @@ class UserControllerTest {
     void getLogin() throws Exception {
         // given
         // when
-
         ResultActions resultActions = mockMvc.perform(
                 get("/auth/signin")
         );

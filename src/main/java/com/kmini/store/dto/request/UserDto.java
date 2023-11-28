@@ -1,6 +1,6 @@
 package com.kmini.store.dto.request;
 
-import com.kmini.store.config.file.ResourceManager;
+import com.kmini.store.config.file.UserResourceManager;
 import com.kmini.store.domain.User;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,12 +29,12 @@ public class UserDto {
 
         private MultipartFile file;
 
-        public User toEntity(ResourceManager resourceManager) {
+        public User toEntity(UserResourceManager userResourceManager) {
             return User.builder()
                     .username(username)
                     .password(password)
                     .email(email)
-                    .thumbnail(resourceManager.storeFile(email, file))
+                    .thumbnail(userResourceManager.storeFile(email, file))
                     .build();
         }
     }

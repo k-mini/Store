@@ -47,7 +47,7 @@ public class CommunityBoardController {
             @AuthenticationPrincipal AccountContext accountContext,
             RedirectAttributes redirectAttributes) throws IOException {
         log.debug("communityBoardFormSaveDto = {}", communityBoardFormSaveDto);
-        communityBoardService.save(communityBoardFormSaveDto, accountContext);
+        communityBoardService.save(communityBoardFormSaveDto);
 
         redirectAttributes.addAttribute("category", "community");
         redirectAttributes.addAttribute("subCategory", communityBoardFormSaveDto.getSubCategory());

@@ -1,7 +1,7 @@
 package com.kmini.store.service.impl;
 
 import com.kmini.store.config.auth.AccountContext;
-import com.kmini.store.config.file.ResourceManager;
+import com.kmini.store.config.file.UserResourceManager;
 import com.kmini.store.domain.User;
 import com.kmini.store.domain.type.UserRole;
 import com.kmini.store.domain.type.UserStatus;
@@ -19,14 +19,14 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserServiceImpl {
 
-    private final ResourceManager resourceManager;
+    private final UserResourceManager userResourceManager;
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     // 회원가입
     @Transactional
     public void save(SignUpDto signUpDto) {
-        User user = signUpDto.toEntity(resourceManager);
+        User user = signUpDto.toEntity(userResourceManager);
         user.setRole(UserRole.USER);
         user.setUserStatus(UserStatus.SIGNUP);
         user.setPassword(encryptPassword(user.getPassword()));

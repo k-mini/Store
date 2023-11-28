@@ -28,7 +28,7 @@ public class BoardController {
 
     // 카테고리별 게시물 조회
     @GetMapping
-    public String load(
+    public String viewPosts(
             @PathVariable("category") String categoryName,
             @PathVariable("subCategory") String subCategoryName,
             @PageableDefault(sort = "createdDate", direction = DESC) Pageable pageable,

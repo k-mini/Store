@@ -15,4 +15,6 @@ public interface ItemBoardRepository extends JpaRepository<ItemBoard, Long>, Ite
     @Query("select i from ItemBoard i left join fetch i.trades where i.id = :boardId")
     Optional<ItemBoard> findByIdFetchJoinTrade(@Param("boardId") Long boardId);
 
+    @Query("select i from ItemBoard i join fetch i.user left join fetch i.comments where i.id = :id")
+    Optional<ItemBoard> findByIdWithUserAndComments2(@Param("id") Long id);
 }
