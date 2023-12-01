@@ -14,5 +14,4 @@ public interface TradeRepository extends JpaRepository<Trade,Long>, TradeReposit
 
     @Query("select t from Trade t join fetch t.board join fetch t.buyer where t.id = :tradeId")
     Optional<Trade> findByIdFetchJoin(@Param("tradeId") Long tradeId);
-
 }

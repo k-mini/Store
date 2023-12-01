@@ -1,6 +1,5 @@
 package com.kmini.store.repository.board;
 
-import com.kmini.store.domain.Board;
 import com.kmini.store.domain.ItemBoard;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,5 +15,5 @@ public interface ItemBoardRepository extends JpaRepository<ItemBoard, Long>, Ite
     Optional<ItemBoard> findByIdFetchJoinTrade(@Param("boardId") Long boardId);
 
     @Query("select i from ItemBoard i join fetch i.user left join fetch i.comments where i.id = :id")
-    Optional<ItemBoard> findByIdWithUserAndComments2(@Param("id") Long id);
+    Optional<ItemBoard> findByIdWithUserAndComments(@Param("id") Long id);
 }

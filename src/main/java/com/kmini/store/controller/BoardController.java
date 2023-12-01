@@ -3,7 +3,7 @@ package com.kmini.store.controller;
 import com.kmini.store.config.util.CustomPageUtils;
 import com.kmini.store.dto.request.SearchDto.SearchBoardDto;
 import com.kmini.store.dto.response.BoardDto;
-import com.kmini.store.service.impl.BoardServiceImpl;
+import com.kmini.store.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -24,7 +24,13 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 @RequiredArgsConstructor
 public class BoardController {
 
-    private final BoardServiceImpl boardServiceImpl;
+    private final BoardService boardService;
+
+    @ModelAttribute
+    public void categories(@PathVariable String category, @PathVariable String subCategory, Model model) {
+        model.addAttribute("category", category);
+        model.addAttribute("subCategory", subCategory);
+    }
 
     // 카테고리별 게시물 조회
     @GetMapping
@@ -35,6 +41,7 @@ public class BoardController {
             @ModelAttribute SearchBoardDto searchBoardDto,
             Model model) {
         log.debug("category = {}, subCategory = {}", categoryName, subCategoryName);
+        System.out.println("model = " + model.getClass());
         if (log.isDebugEnabled()) {
             Sort sort = pageable.getSort();
             log.debug("Sort = {}", sort);
@@ -51,7 +58,7 @@ public class BoardController {
             pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(DESC, "createdDate"));
         }
 
-        Page<BoardDto> results = boardServiceImpl.viewPosts(pageable, categoryName, subCategoryName, searchBoardDto);
+        Page<BoardDto> results = boardService.viewPosts(pageable, categoryName, subCategoryName, searchBoardDto);
         for (BoardDto result : results.getContent()) {
             log.debug("result = {}", result);
         }

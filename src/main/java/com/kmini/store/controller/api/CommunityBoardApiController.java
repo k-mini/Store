@@ -1,7 +1,7 @@
 package com.kmini.store.controller.api;
 
 
-import com.kmini.store.service.impl.CommunityBoardServiceImpl;
+import com.kmini.store.service.CommunityBoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,7 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Slf4j
 public class CommunityBoardApiController {
 
-    private final CommunityBoardServiceImpl communityBoardService;
+    private final CommunityBoardService communityBoardService;
     private static final String category = "community";
 
     @DeleteMapping("/{boardId}")

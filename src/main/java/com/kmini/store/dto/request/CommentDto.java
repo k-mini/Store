@@ -12,7 +12,7 @@ public class CommentDto {
     @Data
     @AllArgsConstructor @Builder
     @NoArgsConstructor
-    public static class BoardCommentSaveDto {
+    public static class BoardCommentSaveReqDto {
         // 게시물 id
         private Long boardId;
         // 내용
@@ -23,7 +23,7 @@ public class CommentDto {
     @Data
     @AllArgsConstructor @Builder
     @NoArgsConstructor
-    public static class BoardCommentUpdateDto {
+    public static class BoardCommentUpdateReqDto {
         // 게시물 id
         private Long boardId;
         // 댓글 번호

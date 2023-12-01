@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserFileManagerTest {
 
     @DisplayName("삭제 테스트")
-    @Test
+//    @Test
     void deleteFile() {
     }
 }

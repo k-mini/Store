@@ -38,6 +38,7 @@ dependencies {
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
 	implementation 'org.springframework.boot:spring-boot-devtools'
 	implementation 'com.querydsl:querydsl-jpa'
+	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.1'
 
 	//querydsl 추가
 	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"

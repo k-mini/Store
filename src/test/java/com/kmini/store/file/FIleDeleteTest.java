@@ -35,5 +35,4 @@ public class FIleDeleteTest {
         String path = "C:\\Users\\kmin\\images\\test\\Hi.txt";
         Files.write(Paths.get(path),"테스트 파일입니다.".getBytes());
     }
-
 }

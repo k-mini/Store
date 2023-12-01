@@ -13,12 +13,13 @@ public class TradeDto {
     @Builder
     @AllArgsConstructor @NoArgsConstructor
     public static class TradeRegisterRespDto {
-        // 생성 거래 번호
+
         private Long tradeId;
         private Long sellerId;
         private String sellerName;
         private Long buyerId;
         private String buyerName;
+        private String tradeStatus;
 
         public static TradeRegisterRespDto toDto(Trade savedTrade) {
             return TradeRegisterRespDto.builder()
@@ -27,6 +28,111 @@ public class TradeDto {
                     .sellerName(savedTrade.getSeller().getUsername())
                     .buyerId(savedTrade.getBuyer().getId())
                     .buyerName(savedTrade.getBuyer().getUsername())
+                    .tradeStatus(savedTrade.getTradeStatus().name())
+                    .build();
+        }
+    }
+
+    @Data
+    @Builder
+    @AllArgsConstructor @NoArgsConstructor
+    public static class TradeAcceptRespDto {
+
+        private Long tradeId;
+        private Long sellerId;
+        private String sellerName;
+        private Long buyerId;
+        private String buyerName;
+        private String tradeStatus;
+
+        public static TradeAcceptRespDto toDto(Trade acceptedTrade) {
+            return TradeAcceptRespDto.builder()
+                    .tradeId(acceptedTrade.getId())
+                    .sellerId(acceptedTrade.getSeller().getId())
+                    .sellerName(acceptedTrade.getSeller().getUsername())
+                    .buyerId(acceptedTrade.getBuyer().getId())
+                    .buyerName(acceptedTrade.getBuyer().getUsername())
+                    .tradeStatus(acceptedTrade.getTradeStatus().name())
+                    .build();
+        }
+    }
+
+    @Data
+    @Builder
+    @AllArgsConstructor @NoArgsConstructor
+    public static class TradeDenyRespDto {
+
+        private Long tradeId;
+        private Long sellerId;
+        private String sellerName;
+        private Long buyerId;
+        private String buyerName;
+        private String tradeStatus;
+
+        public static TradeDenyRespDto toDto(Trade deniedTrade) {
+            return TradeDenyRespDto.builder()
+                    .tradeId(deniedTrade.getId())
+                    .sellerId(deniedTrade.getSeller().getId())
+                    .sellerName(deniedTrade.getSeller().getUsername())
+                    .buyerId(deniedTrade.getBuyer().getId())
+                    .buyerName(deniedTrade.getBuyer().getUsername())
+                    .tradeStatus(deniedTrade.getTradeStatus().name())
+                    .build();
+        }
+    }
+
+    @Data
+    @Builder
+    @AllArgsConstructor @NoArgsConstructor
+    public static class TradeCompleteRespDto {
+
+        private Long tradeId;
+        private Long sellerId;
+        private String sellerName;
+        private Long buyerId;
+        private String buyerName;
+        private String tradeStatus;
+        private String buyerCompleteFlag;
+        private String sellerCompleteFlag;
+
+        public static TradeCompleteRespDto toDto(Trade completedTrade) {
+            return TradeCompleteRespDto.builder()
+                    .tradeId(completedTrade.getId())
+                    .sellerId(completedTrade.getSeller().getId())
+                    .sellerName(completedTrade.getSeller().getUsername())
+                    .buyerId(completedTrade.getBuyer().getId())
+                    .buyerName(completedTrade.getBuyer().getUsername())
+                    .tradeStatus(completedTrade.getTradeStatus().name())
+                    .buyerCompleteFlag(completedTrade.getBuyerCompleteFlag().toString())
+                    .sellerCompleteFlag(completedTrade.getSellerCompleteFlag().toString())
+                    .build();
+        }
+    }
+
+    @Data
+    @Builder
+    @AllArgsConstructor @NoArgsConstructor
+    public static class TradeCancelRespDto {
+
+        private Long tradeId;
+        private Long sellerId;
+        private String sellerName;
+        private Long buyerId;
+        private String buyerName;
+        private String tradeStatus;
+        private String buyerCompleteFlag;
+        private String sellerCompleteFlag;
+
+        public static TradeCancelRespDto toDto(Trade canceledTrade) {
+            return TradeCancelRespDto.builder()
+                    .tradeId(canceledTrade.getId())
+                    .sellerId(canceledTrade.getSeller().getId())
+                    .sellerName(canceledTrade.getSeller().getUsername())
+                    .buyerId(canceledTrade.getBuyer().getId())
+                    .buyerName(canceledTrade.getBuyer().getUsername())
+                    .tradeStatus(canceledTrade.getTradeStatus().name())
+                    .buyerCompleteFlag(canceledTrade.getBuyerCompleteFlag().toString())
+                    .sellerCompleteFlag(canceledTrade.getSellerCompleteFlag().toString())
                     .build();
         }
     }

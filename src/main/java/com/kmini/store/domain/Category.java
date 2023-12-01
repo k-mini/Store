@@ -1,30 +1,45 @@
 package com.kmini.store.domain;
 
-import com.kmini.store.domain.type.CategoryType;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
+@Getter
+@ToString(exclude = "superCategory")
 public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="CATEGORY_ID")
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    private CategoryType categoryType;
+    @Column(name="CATEGORY_NAME",unique = true)
+    private String categoryName;
 
-    @ManyToOne
+    @Column(name="CATEGORY_KO_NAME",unique = true)
+    private String categoryKoName;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="SUPER_CATEGORY")
     private Category superCategory;
 
-    public Category(CategoryType categoryType) {
-        this.categoryType = categoryType;
+    @OneToMany(mappedBy = "superCategory")
+    private List<Category> childCategories = new ArrayList<>();
+
+    public Category(String categoryName, String categoryKoName) {
+        this.categoryName = categoryName;
+        this.categoryKoName = categoryKoName;
     }
 
-    public Category(CategoryType categoryType, Category superCategory) {
-        this.categoryType = categoryType;
+    public Category(String categoryName, String categoryKoName, Category superCategory) {
+        this.categoryName = categoryName;
+        this.categoryKoName = categoryKoName;
         this.superCategory = superCategory;
     }
 }

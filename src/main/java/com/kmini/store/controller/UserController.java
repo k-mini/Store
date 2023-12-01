@@ -5,7 +5,7 @@ import com.kmini.store.config.file.UserResourceManager;
 import com.kmini.store.domain.User;
 import com.kmini.store.dto.request.UserDto.SignUpDto;
 import com.kmini.store.dto.request.UserDto.UserUpdateReqDto;
-import com.kmini.store.service.impl.UserServiceImpl;
+import com.kmini.store.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class UserController {
 
     private final UserResourceManager userResourceManager;
-    private final UserServiceImpl userService;
+    private final UserService userService;
 
     @GetMapping({"/", "/index"})
     public String home() {

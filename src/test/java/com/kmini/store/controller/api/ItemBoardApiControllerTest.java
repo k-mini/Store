@@ -2,11 +2,9 @@ package com.kmini.store.controller.api;
 
 import com.kmini.store.config.WithMockCustomUser;
 import com.kmini.store.domain.ItemBoard;
-import com.kmini.store.dto.request.BoardDto;
 import com.kmini.store.dto.request.BoardDto.ItemBoardFormSaveDto;
-import com.kmini.store.dto.request.ItemBoardDto;
 import com.kmini.store.dto.request.ItemBoardDto.ItemBoardUpdateFormDto;
-import com.kmini.store.service.impl.ItemBoardServiceImpl;
+import com.kmini.store.service.ItemBoardService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,14 +17,12 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 
 import java.io.FileInputStream;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -42,7 +38,7 @@ class ItemBoardApiControllerTest {
     @Autowired
     EntityManager em;
     @Autowired
-    ItemBoardServiceImpl itemBoardService;
+    ItemBoardService itemBoardService;
 
     @WithMockCustomUser
     @DisplayName("거래 게시판 게시물 삭제")
@@ -55,7 +51,7 @@ class ItemBoardApiControllerTest {
         String subCategory = "electronics";
         String fileName = "testImage";
         String contentType = "png";
-        FileInputStream inputStream = new FileInputStream("C:\\Users\\kmin\\images\\test\\" + fileName + "." + contentType);
+        FileInputStream inputStream = new FileInputStream(".\\docs\\test\\" + fileName + "." + contentType);
         MockMultipartFile existingFile = new MockMultipartFile("file", fileName + "." + contentType, contentType, inputStream);
         ItemBoardFormSaveDto formSaveDto = new ItemBoardFormSaveDto(subCategory, "Life is Good", "what is your favorite food?", existingFile, null);
         ItemBoard itemBoard = itemBoardService.save(formSaveDto);

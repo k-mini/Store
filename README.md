@@ -121,6 +121,7 @@
 <img src="./docs/erd/erd-image.png">
 
 
-## 아키텍처
+## 거래 플로우 차트
 
+<img src="./docs/flow/trade-flow-chart.png">
 

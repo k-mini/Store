@@ -34,7 +34,7 @@ public class UserFileTestingManager implements UserResourceManager {
         String originalFilename = multipartFile.getOriginalFilename();
         String ext = extractExt(originalFilename);
         String randomName = createRandomFileName(ext);
-        log.info("dirPath = {}" , email);
+        log.trace("dirPath = {}" , email);
         String realDirectoryPath = getRealDirectoryPath(email);
         File directory = new File(realDirectoryPath);
 

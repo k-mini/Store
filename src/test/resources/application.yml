@@ -10,7 +10,8 @@ spring:
       ddl-auto: create
     properties:
       hibernate:
-        format_sql: true
+#        format_sql: true
+#        show_sql: true
     database-platform: org.hibernate.dialect.H2Dialect
 
   h2:
@@ -24,9 +25,16 @@ spring:
 
 logging:
   level:
-    org.hibernate.SQL: debug
+#    org.hibernate.SQL: debug
     com.kmini.store: debug
 #    org.hibernate.type: trace
+
+
+#p6spy query logging
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: true
 
 file:
   dir:

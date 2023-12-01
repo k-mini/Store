@@ -1,15 +1,14 @@
-package com.kmini.store.service.impl;
+package com.kmini.store.service;
 
 import com.kmini.store.domain.Board;
 import com.kmini.store.domain.Comment;
 import com.kmini.store.domain.User;
-import com.kmini.store.dto.request.CommentDto.BoardCommentSaveDto;
-import com.kmini.store.dto.request.CommentDto.BoardCommentUpdateDto;
+import com.kmini.store.dto.request.CommentDto.BoardCommentSaveReqDto;
+import com.kmini.store.dto.request.CommentDto.BoardCommentUpdateReqDto;
 import com.kmini.store.dto.request.CommentDto.BoardReplySaveDto;
 import com.kmini.store.dto.response.CommentDto.BoardCommentRespDto;
 import com.kmini.store.dto.response.CommentDto.BoardReplyRespDto;
 import com.kmini.store.repository.CommentRepository;
-import com.kmini.store.repository.UserRepository;
 import com.kmini.store.repository.board.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,17 +18,18 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class CommentServiceImpl {
+public class CommentService {
 
     private final CommentRepository commentRepository;
     private final BoardRepository boardRepository;
-    private final UserRepository userRepository;
 
     @Transactional
-    public BoardCommentRespDto saveComment(BoardCommentSaveDto boardCommentSaveDto, User user) {
+    public BoardCommentRespDto saveComment(BoardCommentSaveReqDto boardCommentSaveReqDto) {
 
-        Board board = boardRepository.getReferenceById(boardCommentSaveDto.getBoardId());
-        String content = boardCommentSaveDto.getContent();
+        User user = User.getSecurityContextUser();
+
+        Board board = boardRepository.getReferenceById(boardCommentSaveReqDto.getBoardId());
+        String content = boardCommentSaveReqDto.getContent();
 
         // 댓글 엔티티 생성
         Comment comment = new Comment(user, board, null, content);
@@ -39,7 +39,9 @@ public class CommentServiceImpl {
     }
 
     @Transactional
-    public BoardReplyRespDto saveReply(BoardReplySaveDto boardReplySaveDto, User user) {
+    public BoardReplyRespDto saveReplyComment(BoardReplySaveDto boardReplySaveDto) {
+
+        User user = User.getSecurityContextUser();
 
         Board board = boardRepository.getReferenceById(boardReplySaveDto.getBoardId());
         Comment topComment = commentRepository.getReferenceById(boardReplySaveDto.getTopCommentId());
@@ -52,16 +54,17 @@ public class CommentServiceImpl {
         return BoardReplyRespDto.toDto(savedReply);
     }
     @Transactional
-    public void update(BoardCommentUpdateDto boardCommentUpdateDto) {
+    public BoardCommentRespDto updateComment(BoardCommentUpdateReqDto boardCommentUpdateReqDto) {
 
-        Comment comment = commentRepository.findById(boardCommentUpdateDto.getCommentId())
+        Comment comment = commentRepository.findById(boardCommentUpdateReqDto.getCommentId())
                 .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
 
-        comment.setContent(boardCommentUpdateDto.getContent());
+        comment.setContent(boardCommentUpdateReqDto.getContent());
+        return BoardCommentRespDto.toDto(comment);
     }
 
     @Transactional
-    public int delete(Long commentId, User commentUser) {
+    public int deleteComment(Long commentId) {
 
         // 자식 댓글 삭제
         int result = commentRepository.deleteSubComments(commentId);

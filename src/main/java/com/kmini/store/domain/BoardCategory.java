@@ -1,6 +1,5 @@
 package com.kmini.store.domain;
 
-import com.kmini.store.domain.type.CategoryType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

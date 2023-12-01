@@ -7,7 +7,7 @@ import com.kmini.store.dto.CommonRespDto;
 import com.kmini.store.dto.request.UserDto.SignUpDto;
 import com.kmini.store.dto.request.UserDto.UserUpdateReqDto;
 import com.kmini.store.dto.response.UserDto.UserUpdateRespDto;
-import com.kmini.store.service.impl.UserServiceImpl;
+import com.kmini.store.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserApiController {
 
-    private final UserServiceImpl userService;
+    private final UserService userService;
     private final UserResourceManager userResourceManager;
 
     // 회원가입

@@ -2,10 +2,8 @@ package com.kmini.store.controller.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kmini.store.repository.UserRepository;
-import com.kmini.store.service.impl.UserServiceImpl;
+import com.kmini.store.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,7 +19,7 @@ class UserApiControllerTest {
     @Autowired
     MockMvc mockMvc;
     @Autowired
-    UserServiceImpl userService;
+    UserService userService;
     @Autowired
     UserRepository userRepository;
     @Autowired

@@ -3,7 +3,7 @@ package com.kmini.store.controller.api;
 
 import com.kmini.store.dto.CommonRespDto;
 import com.kmini.store.dto.request.ItemBoardDto.ItemBoardUpdateFormDto;
-import com.kmini.store.service.impl.ItemBoardServiceImpl;
+import com.kmini.store.service.ItemBoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ui.Model;
@@ -18,16 +18,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Slf4j
 public class ItemBoardApiController {
 
-    private final ItemBoardServiceImpl itemBoardService;
+    private final ItemBoardService itemBoardService;
     private static final String category = "trade";
 
     @DeleteMapping("/{boardId}")
     public CommonRespDto<?> deletePost(
-                       @PathVariable("subCategory") String subCategory,@PathVariable("boardId") Long boardId,
-                       RedirectAttributes redirectAttributes) {
+                       @PathVariable("subCategory") String subCategory,@PathVariable("boardId") Long boardId) {
         log.debug("category = {} subCategory = {} boardId = {}", category, subCategory, boardId);
         itemBoardService.deletePost(boardId);
-
         return new CommonRespDto<Void>(1, "성공", null);
     }
 

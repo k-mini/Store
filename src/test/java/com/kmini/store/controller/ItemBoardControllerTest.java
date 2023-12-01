@@ -3,7 +3,7 @@ package com.kmini.store.controller;
 import com.kmini.store.config.WithMockCustomUser;
 import com.kmini.store.domain.ItemBoard;
 import com.kmini.store.dto.request.BoardDto.ItemBoardFormSaveDto;
-import com.kmini.store.service.impl.ItemBoardServiceImpl;
+import com.kmini.store.service.ItemBoardService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,7 +15,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -37,7 +36,7 @@ class ItemBoardControllerTest {
     @Autowired
     MockMvc mockMvc;
     @Autowired
-    ItemBoardServiceImpl itemBoardService;
+    ItemBoardService itemBoardService;
     @Autowired
     EntityManager em;
 
@@ -133,7 +132,7 @@ class ItemBoardControllerTest {
         String content = "콘텐츠 내용입니다.";
         String fileName = "testImage";
         String contentType = "png";
-        FileInputStream inputStream = new FileInputStream("C:\\Users\\kmin\\images\\test\\" + fileName + "." + contentType);
+        FileInputStream inputStream = new FileInputStream(".\\docs\\test\\" + fileName + "." + contentType);
         MockMultipartFile file = new MockMultipartFile("file", fileName + "." + contentType, contentType, inputStream);
 
         // when

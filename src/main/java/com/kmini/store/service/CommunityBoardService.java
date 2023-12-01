@@ -1,9 +1,8 @@
-package com.kmini.store.service.impl;
+package com.kmini.store.service;
 
 import com.kmini.store.config.auth.AccountContext;
 import com.kmini.store.config.file.UserFileTestingManager;
 import com.kmini.store.domain.*;
-import com.kmini.store.domain.type.CategoryType;
 import com.kmini.store.dto.request.BoardDto.CommunityBoardFormSaveDto;
 import com.kmini.store.dto.response.CommunityBoardDto.CommunityBoardRespDetailDto;
 import com.kmini.store.repository.BoardCategoryRepository;
@@ -22,7 +21,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class CommunityBoardServiceImpl {
+public class CommunityBoardService {
 
     private final CommunityBoardRepository communityBoardRepository;
     private final BoardCategoryRepository boardCategoryRepository;
@@ -43,9 +42,9 @@ public class CommunityBoardServiceImpl {
         }
 
         // 카테고리 조회
-        Category category = categoryRepository.findByCategoryType(CategoryType.COMMUNITY)
+        Category category = categoryRepository.findByCategoryName("COMMUNITY")
                 .orElseThrow(()->new IllegalArgumentException("상위 카테고리가 존재하지 않습니다."));
-        Category subCategory = categoryRepository.findByCategoryType(communityBoardFormSaveDto.getSubCategoryType())
+        Category subCategory = categoryRepository.findByCategoryName(communityBoardFormSaveDto.getSubCategory().toUpperCase())
                 .orElseThrow(()->new IllegalArgumentException("하위 카테고리가 존재하지 않습니다."));
 
         CommunityBoard board = communityBoardFormSaveDto.toEntity();

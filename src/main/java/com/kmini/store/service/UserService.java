@@ -1,4 +1,4 @@
-package com.kmini.store.service.impl;
+package com.kmini.store.service;
 
 import com.kmini.store.config.auth.AccountContext;
 import com.kmini.store.config.file.UserResourceManager;
@@ -6,7 +6,6 @@ import com.kmini.store.domain.User;
 import com.kmini.store.domain.type.UserRole;
 import com.kmini.store.domain.type.UserStatus;
 import com.kmini.store.dto.request.UserDto.UserUpdateReqDto;
-import com.kmini.store.dto.response.UserDto;
 import com.kmini.store.dto.response.UserDto.UserUpdateRespDto;
 import com.kmini.store.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl {
+public class UserService {
 
     private final UserResourceManager userResourceManager;
     private final UserRepository userRepository;
@@ -26,11 +25,11 @@ public class UserServiceImpl {
 
     // 회원가입
     @Transactional
-    public void save(User user) {
+    public User save(User user) {
         user.setRole(UserRole.USER);
         user.setUserStatus(UserStatus.SIGNUP);
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     // 회원 수정
