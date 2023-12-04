@@ -48,9 +48,9 @@ public class ItemBoardService {
         // 최신 거래
         boolean tradePossible = tradeService.checkRegisterTradeAvailable(id);
 
-
-        // 현재 조회수 
+        // 현재 조회수
         long views = board.getViews();
+
         // 조회수 증가 => 동시성 문제
         board.setViews(views + 1);
         

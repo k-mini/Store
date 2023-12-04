@@ -1,11 +1,11 @@
 package com.kmini.store.service;
 
-import com.kmini.store.domain.ItemBoard;
-import com.kmini.store.domain.Trade;
-import com.kmini.store.domain.User;
+import com.kmini.store.domain.*;
 import com.kmini.store.domain.type.TradeStatus;
 import com.kmini.store.dto.request.TradeDto.TradeHistoryReqDto;
 import com.kmini.store.dto.response.TradeDto.*;
+import com.kmini.store.repository.BoardCategoryRepository;
+import com.kmini.store.repository.CategoryRepository;
 import com.kmini.store.repository.TradeRepository;
 import com.kmini.store.repository.board.ItemBoardRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,8 +14,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import static com.kmini.store.domain.type.CompleteFlag.*;
 import static com.kmini.store.domain.type.TradeStatus.*;
+import static java.util.stream.Collectors.*;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +29,7 @@ public class TradeService {
 
     private final TradeRepository tradeRepository;
     private final ItemBoardRepository itemBoardRepository;
+    private final BoardCategoryRepository boardCategoryRepository;
 
     // 거래중인 목록
     @Transactional
@@ -30,7 +37,27 @@ public class TradeService {
 
         Page<Trade> histories = tradeRepository.findByHistoryByUserIdAndKeyword(tradeHistoryReqDto, pageable);
 
-        return histories.map(TradeHistoryRespDto::toDto);
+        List<Long> boardIds = histories.getContent()
+                                       .stream()
+                                       .map(trade -> trade.getBoard().getId()).collect(Collectors.toList());
+
+        List<BoardCategory> boardCategories = boardCategoryRepository.findByBoardIds(boardIds);
+
+        Map<Long, Category> superCategoryMap = new HashMap<>();
+        Map<Long, Category> subCategoriyMap = new HashMap<>();
+
+        for (BoardCategory boardCategory : boardCategories) {
+            Long boardId = boardCategory.getBoard().getId();
+            Category category = boardCategory.getCategory();
+
+            if (category.isSuperCategory()) {
+                superCategoryMap.put(boardId, category);
+            }
+            else {
+                subCategoriyMap.put(boardId, category);
+            }
+        }
+        return histories.map(trade -> TradeHistoryRespDto.toDto(trade, superCategoryMap, subCategoriyMap));
     }
 
     @Transactional

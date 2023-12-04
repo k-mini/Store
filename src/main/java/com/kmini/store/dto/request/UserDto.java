@@ -57,7 +57,7 @@ public class UserDto {
 
         private String passwordCheck;
 
-        private MultipartFile thumbnailFile;
+        private MultipartFile file;
 
         public static UserUpdateReqDto getUserUpdateForm(User user) {
             return UserUpdateReqDto.builder()

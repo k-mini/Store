@@ -271,7 +271,7 @@ class TradeApiControllerTest {
     // 둘다 취소 버튼을 누르지 않으면 조율 후 관리자가 어드민 페이지로 직접 취소
     // 만장일치 취소면 취소처리
     @WithMockCustomUser
-    @DisplayName("구매 취소 (판매자가 거래 완료를 눌렀으나 구매자는 거래 취소 버튼을 누름)")
+    @DisplayName("거래 취소 (판매자가 거래 완료를 눌렀으나 구매자는 거래 취소 버튼을 누름)")
     @Test
     void cancelTrade() throws Exception {
 

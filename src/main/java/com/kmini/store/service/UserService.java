@@ -15,6 +15,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -26,6 +28,9 @@ public class UserService {
     // 회원가입
     @Transactional
     public User save(User user) {
+        userRepository.findByEmail(user.getEmail())
+                .ifPresent((existedUser)-> {throw new IllegalArgumentException("이미 존재하는 이메일입니다. email : " + existedUser.getEmail());});
+
         user.setRole(UserRole.USER);
         user.setUserStatus(UserStatus.SIGNUP);
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
@@ -39,9 +44,10 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("유저가 발견되지 않았습니다."));
         user.setUsername(userUpdateReqDto.getUsername());
         user.setPassword(bCryptPasswordEncoder.encode(userUpdateReqDto.getPassword()));
-        user.setThumbnail(userResourceManager.updateFile(user.getThumbnail(), userUpdateReqDto.getThumbnailFile()));
+        user.setThumbnail(userResourceManager.updateFile(user.getThumbnail(), userUpdateReqDto.getFile()));
 
-        updateSecurityContext(user);
+        userRepository.save(user);
+        User.updateSecurityContext(user);
 
         return UserUpdateRespDto.builder()
                 .id(user.getId())
@@ -58,14 +64,9 @@ public class UserService {
     }
 
     // 회원 삭제
+    @Transactional
     public void delete(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
         userRepository.delete(user);
-    }
-
-    private void updateSecurityContext(User user) {
-        AccountContext accountContext = new AccountContext(user);
-        UsernamePasswordAuthenticationToken authentication = UsernamePasswordAuthenticationToken.authenticated(accountContext, null, accountContext.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 }

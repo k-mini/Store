@@ -28,7 +28,6 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        log.debug("디버그 : filterChain 빈 등록됨 ");
         // CSRF 끄기
         http.csrf().disable();
         // 인가 정책

@@ -48,6 +48,7 @@ public class ItemBoardRepositoryImpl implements ItemBoardRepositoryQsdl {
                 .join(itemBoard.user)
                 .where(itemBoard.id.eq(id))
                 .fetchOne();
+        
         queryFactory.select(Expressions.stringTemplate("cast({0} as character varying)",trade.id))
                 .from(trade)
                 .limit(1)

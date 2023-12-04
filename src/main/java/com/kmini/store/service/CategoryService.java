@@ -11,14 +11,10 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.mapping;
 
 @Service
 @RequiredArgsConstructor
@@ -56,7 +52,7 @@ public class CategoryService {
 
         for (Category category : superCategories) {
             CategoryRespDto categoryRespDto = CategoryRespDto.toDto(category);
-            map.put(categoryRespDto, categoryRespDto.getChildCategories());
+            map.put(categoryRespDto, categoryRespDto.getSubCategories());
         }
         return map;
     }

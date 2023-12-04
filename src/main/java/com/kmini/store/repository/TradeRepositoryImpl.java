@@ -57,7 +57,6 @@ public class TradeRepositoryImpl implements TradeRepositoryQsl {
         JPAQuery<Long> countQuery =
                 queryFactory.select(trade.count())
                         .from(trade)
-                        .join(trade.buyer).fetchJoin()
                         .join(trade.board).fetchJoin()
                         .where(trade.buyer.id.eq(userId).or(trade.board.user.id.eq(userId)),
                                 titleLike(cond.getTitle()),
@@ -86,7 +85,6 @@ public class TradeRepositoryImpl implements TradeRepositoryQsl {
 
     @Data
     public static class TradeHistorySearchCond {
-
         // 제목
         private String title;
         // 내용

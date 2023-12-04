@@ -56,11 +56,11 @@ public class UserFileTestingManager implements UserResourceManager {
     public String updateFile(String fileName, MultipartFile multipartFile) {
 
         if (!StringUtils.hasText(fileName)) {
-            storeFile(User.getSecurityContextUser().getEmail(), multipartFile);
-            return null;
+            return storeFile(User.getSecurityContextUser().getEmail(), multipartFile);
         }
 
-        File file = new File(fileDir + User.getSecurityContextUser().getEmail() +  fileName);
+//        File file = new File(fileDir + User.getSecurityContextUser().getEmail() +  fileName);
+        File file = new File(plusPaths(fileDir, User.getSecurityContextUser().getEmail(), fileName));
 
         boolean deleted = false;
         if (file.exists()) {
@@ -89,13 +89,29 @@ public class UserFileTestingManager implements UserResourceManager {
 
 
     private String plusPath(String dirPath, String fileName) {
+        StringBuilder sb = new StringBuilder();
         if (!fileName.startsWith("/") && !dirPath.endsWith("/")) {
             fileName = "/" + fileName;
         }
         if (fileName.startsWith("/") && dirPath.endsWith("/")) {
             fileName = fileName.substring(1);
         }
+//        return sb.append(dirPath).append(fileName).toString();
         return dirPath + fileName;
+    }
+
+    private String plusPaths(String... paths) {
+        if (paths.length == 0) {
+            return null;
+        }
+        if (paths.length == 1) {
+            return paths[0];
+        }
+        String answer = paths[0];
+        for (int i=1;i<paths.length;i++) {
+            answer = plusPath(answer, paths[i]);
+        }
+        return answer;
     }
 
     private String getRealDirectoryPath(String dirPath) {

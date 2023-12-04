@@ -44,7 +44,7 @@
                             <img src="/assets/images/logo/logo.svg" alt="logo"/>
                         </a>
                     </div>
-                    <form th:action th:object="${userUpdateReqDto}" method="POST">
+                    <form th:action th:object="${userUpdateReqDto}" method="POST" enctype="multipart/form-data">
                         <div class="mb-6">
                             <input
                                     th:field="*{email}"
@@ -70,6 +70,7 @@
                                 </p>
                             </div>
                         </div>
+
                         <div class="mb-4">
                             <input
                                     th:field="*{password}"
@@ -90,6 +91,15 @@
                                     class="bordder-[#E9EDF4] w-full rounded-md border bg-[#FCFDFE] py-3 px-5 text-base text-body-color placeholder-[#ACB6BE] outline-none transition focus:border-primary focus-visible:shadow-none"
                             />
                         </div>
+
+                        <div class="mb-6">
+                            <input
+                                    th:field="*{file}"
+                                    type="file"
+                                    class="w-full cursor-pointer rounded-lg border-[1.5px] border-stroke dark:border-dark-3 font-medium text-body-color dark:text-dark-6 outline-none transition file:mr-5 file:border-collapse file:cursor-pointer file:border-0 file:border-r file:border-solid file:border-stroke dark:file:border-dark-3 file:bg-[#F5F7FD] dark:file:bg-dark-2 file:py-3 file:px-5 file:text-body-color dark:file:text-dark-6 file:hover:bg-primary file:hover:bg-opacity-10 focus:border-primary active:border-primary disabled:cursor-default disabled:bg-[#F5F7FD]"
+                            />
+                        </div>
+
                         <div class="mb-10">
                             <input
                                     type="submit"

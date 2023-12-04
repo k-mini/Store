@@ -187,4 +187,27 @@ class UserControllerTest {
         resultActions.andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
     }
+
+    @WithMockCustomUser
+    @DisplayName("로그아웃")
+    @Test
+    void logout() throws Exception {
+
+        // given
+
+        // when
+        ResultActions resultActions = mockMvc.perform(
+                post("/logout"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/"));
+
+
+        // then
+        // 로그아웃이 되면 게시판 자원에 접근이 불가능하고 로그인 페이지로 이동.
+        mockMvc.perform(
+                get("/boards/trade/all"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("http:localhost/auth/signin"));
+
+    }
 }

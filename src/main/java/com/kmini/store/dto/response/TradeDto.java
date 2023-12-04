@@ -1,11 +1,14 @@
 package com.kmini.store.dto.response;
 
 import com.kmini.store.config.util.CustomTimeUtils;
+import com.kmini.store.domain.Category;
 import com.kmini.store.domain.Trade;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Map;
 
 public class TradeDto {
 
@@ -159,10 +162,18 @@ public class TradeDto {
         private String tradeStatus;
         // 거래 상태 한국어
         private String tradeStatusKoName;
+        // 대 카테고리
+        private String superCategoryName;
+        // 대 카테고리 한국어
+        private String superCategoryKoName;
+        // 소 카테고리
+        private String subCategoryName;
+        // 소 카테고리 한국어
+        private String subCategoryKoName;
         // 거래 시작 날짜
         private String createdDate;
 
-        public static TradeHistoryRespDto toDto(Trade trade) {
+        public static TradeHistoryRespDto toDto(Trade trade, Map<Long, Category> superCategoryMap, Map<Long,Category> subCategoryMap) {
             return TradeHistoryRespDto.builder()
                     .tradeId(trade.getId())
                     .boardId(trade.getBoard().getId())
@@ -173,6 +184,10 @@ public class TradeDto {
                     .buyerName(trade.getBuyer().getUsername())
                     .tradeStatus(trade.getTradeStatus().name())
                     .tradeStatusKoName(trade.getTradeStatus().getMessage())
+                    .superCategoryName(superCategoryMap.get(trade.getBoard().getId()).getCategoryName().toLowerCase())
+                    .superCategoryKoName(superCategoryMap.get(trade.getBoard().getId()).getCategoryKoName())
+                    .subCategoryName(subCategoryMap.get(trade.getBoard().getId()).getCategoryName().toLowerCase())
+                    .subCategoryKoName(subCategoryMap.get(trade.getBoard().getId()).getCategoryKoName())
                     .createdDate(CustomTimeUtils.convertTime(trade.getCreatedDate()))
                     .build();
         }

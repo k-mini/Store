@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @ToString(exclude = "superCategory")
-public class Category {
+public class Category extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,5 +41,9 @@ public class Category {
         this.categoryName = categoryName;
         this.categoryKoName = categoryKoName;
         this.superCategory = superCategory;
+    }
+
+    public boolean isSuperCategory() {
+        return this.superCategory == null;
     }
 }

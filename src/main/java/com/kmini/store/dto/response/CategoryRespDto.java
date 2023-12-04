@@ -15,13 +15,13 @@ public class CategoryRespDto {
 
     private String categoryName;
     private String categoryKoName;
-    private List<CategoryRespDto> childCategories;
+    private List<CategoryRespDto> subCategories;
 
     public static CategoryRespDto toDto(Category category) {
         return CategoryRespDto.builder()
                 .categoryKoName(category.getCategoryKoName())
                 .categoryName(category.getCategoryName())
-                .childCategories(category.getChildCategories().size() > 0 ?
+                .subCategories(category.getChildCategories().size() > 0 ?
                         category.getChildCategories().stream().map(CategoryRespDto::toDto).collect(Collectors.toList()) : null)
                 .build();
     }
