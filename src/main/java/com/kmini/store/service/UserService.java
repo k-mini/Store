@@ -1,12 +1,12 @@
-package com.kmini.store.service.impl;
+package com.kmini.store.service;
 
 import com.kmini.store.config.auth.AccountContext;
 import com.kmini.store.config.file.UserResourceManager;
 import com.kmini.store.domain.User;
 import com.kmini.store.domain.type.UserRole;
 import com.kmini.store.domain.type.UserStatus;
-import com.kmini.store.dto.request.UserDto.SignUpDto;
 import com.kmini.store.dto.request.UserDto.UserUpdateReqDto;
+import com.kmini.store.dto.response.UserDto.UserUpdateRespDto;
 import com.kmini.store.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,9 +15,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl {
+public class UserService {
 
     private final UserResourceManager userResourceManager;
     private final UserRepository userRepository;
@@ -25,25 +27,33 @@ public class UserServiceImpl {
 
     // 회원가입
     @Transactional
-    public void save(SignUpDto signUpDto) {
-        User user = signUpDto.toEntity(userResourceManager);
+    public User save(User user) {
+        userRepository.findByEmail(user.getEmail())
+                .ifPresent((existedUser)-> {throw new IllegalArgumentException("이미 존재하는 이메일입니다. email : " + existedUser.getEmail());});
+
         user.setRole(UserRole.USER);
         user.setUserStatus(UserStatus.SIGNUP);
-        user.setPassword(encryptPassword(user.getPassword()));
-        userRepository.save(user);
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        return userRepository.save(user);
     }
 
     // 회원 수정
     @Transactional
-    public UserUpdateReqDto update(Long id, UserUpdateReqDto userUpdateReqDto) {
+    public UserUpdateRespDto updateUser(Long userId, UserUpdateReqDto userUpdateReqDto) {
 
-        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("유저가 발견되지 않았습니다."));
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("유저가 발견되지 않았습니다."));
         user.setUsername(userUpdateReqDto.getUsername());
-        user.setPassword(encryptPassword(userUpdateReqDto.getPassword()));
-        user.setThumbnail(userUpdateReqDto.getThumbnail());
+        user.setPassword(bCryptPasswordEncoder.encode(userUpdateReqDto.getPassword()));
+        user.setThumbnail(userResourceManager.updateFile(user.getThumbnail(), userUpdateReqDto.getFile()));
 
-        updateSecurityContext(user);
-        return UserUpdateReqDto.toDto(user);
+        userRepository.save(user);
+        User.updateSecurityContext(user);
+
+        return UserUpdateRespDto.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .username(user.getUsername())
+                .thumbnail(user.getThumbnail()).build();
     }
 
     // 회원 탈퇴
@@ -52,19 +62,11 @@ public class UserServiceImpl {
         User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
         user.setUserStatus(UserStatus.WITHDREW);
     }
+
     // 회원 삭제
+    @Transactional
     public void delete(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
         userRepository.delete(user);
-    }
-
-    private void updateSecurityContext(User user) {
-        AccountContext accountContext = new AccountContext(user);
-        UsernamePasswordAuthenticationToken authentication = UsernamePasswordAuthenticationToken.authenticated(accountContext, null, accountContext.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-    }
-
-    private String encryptPassword(String password) {
-        return bCryptPasswordEncoder.encode(password);
     }
 }

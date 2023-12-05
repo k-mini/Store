@@ -22,6 +22,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
@@ -81,7 +82,7 @@ class UserControllerTest {
                 .andExpect(view().name("auth/signup"));
     }
 
-    @DisplayName("회원가입 화면 진입")
+    @DisplayName("회원가입")
     @Test
     void postSignup() throws Exception {
 
@@ -92,7 +93,7 @@ class UserControllerTest {
         String passwordCheck = "1111";
         String fileName = "testImage";
         String contentType = "png";
-        FileInputStream inputStream = new FileInputStream("C:\\Users\\kmin\\images\\test\\" + fileName + "." + contentType);
+        FileInputStream inputStream = new FileInputStream(".\\docs\\test\\" + fileName + "." + contentType);
         MockMultipartFile file = new MockMultipartFile("file", fileName + "." + contentType, contentType, inputStream);
         log.info("file={}", file.getOriginalFilename());
         // when
@@ -123,6 +124,26 @@ class UserControllerTest {
                 .andExpect(view().name("auth/signin"));
     }
 
+    @WithAnonymousUser
+    @DisplayName("로그인 진행")
+    @Test
+    void login() throws Exception {
+        // given
+        String email = "test@gmail.com";
+        String password = "1111";
+
+        // when
+        ResultActions resultActions = mockMvc.perform(
+                post("/auth/signin")
+                        .param("email", email)
+                        .param("password", password)
+        );
+
+        // then
+        resultActions.andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/"));
+    }
+
     @WithMockCustomUser
     @DisplayName("마이페이지 화면 진입")
     @Test
@@ -143,23 +164,50 @@ class UserControllerTest {
     @Test
     void postMyPage() throws Exception {
         // given
-        UserUpdateReqDto userUpdateReqDto = new UserUpdateReqDto();
-        userUpdateReqDto.setEmail("kmini@gmail.com");
-        userUpdateReqDto.setUsername("kmini2");
-        userUpdateReqDto.setPassword("1111");
-        userUpdateReqDto.setPasswordCheck("1111");
+        String email = "kmini@gmail.com";
+        String username = "kmini2";
+        String password = "1111";
+        String passwordCheck = "1111";
+        String fileName = "testImage";
+        String contentType = "png";
+        FileInputStream inputStream = new FileInputStream(".\\docs\\test\\" + fileName + "." + contentType);
+        MockMultipartFile thumbnailFile = new MockMultipartFile("thumbnailFile", fileName + "." + contentType, contentType, inputStream);
 
         // when
         ResultActions resultActions = mockMvc.perform(
-                post("/auth/my-page")
-                        .param("email", userUpdateReqDto.getEmail())
-                        .param("username", userUpdateReqDto.getUsername())
-                        .param("password", userUpdateReqDto.getPassword())
-                        .param("passwordCheck",userUpdateReqDto.getPasswordCheck())
+                multipart("/auth/my-page")
+                        .file(thumbnailFile)
+                        .param("email", email)
+                        .param("username", username)
+                        .param("password", password)
+                        .param("passwordCheck",passwordCheck)
         );
 
         // then
         resultActions.andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
+    }
+
+    @WithMockCustomUser
+    @DisplayName("로그아웃")
+    @Test
+    void logout() throws Exception {
+
+        // given
+
+        // when
+        ResultActions resultActions = mockMvc.perform(
+                post("/logout"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/"));
+
+
+        // then
+        // 로그아웃이 되면 게시판 자원에 접근이 불가능하고 로그인 페이지로 이동.
+        mockMvc.perform(
+                get("/boards/trade/all"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("http:localhost/auth/signin"));
+
     }
 }

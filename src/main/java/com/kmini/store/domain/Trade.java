@@ -1,6 +1,7 @@
 package com.kmini.store.domain;
 
 
+import com.kmini.store.domain.type.CompleteFlag;
 import com.kmini.store.domain.type.TradeStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,19 +34,17 @@ public class Trade extends BaseTime{
     @Enumerated(EnumType.STRING)
     private TradeStatus tradeStatus;
 
+    // 거래 완료 시 구매자가 버튼을 누를 경우 플래그 저장
+    @Column(name="BUYER_COMPLETE")
+    @Enumerated(EnumType.STRING)
+    private CompleteFlag buyerCompleteFlag;
+    // 거래 완료 시 판매자가 버튼을 누를 경우 플래그 저장
+    @Column(name="SELLER_COMPLETE")
+    @Enumerated(EnumType.STRING)
+    private CompleteFlag sellerCompleteFlag;
+
     public User getSeller() {
         return this.getBoard().getUser();
     }
 
-    public void checkBuyerOrSellerIsMe() {
-        Long buyerId = this.getBuyer().getId();
-        Long sellerId = this.getSeller().getId();
-
-        User user = User.getSecurityContextUser();
-
-        // 상관 없는 사용자 거부
-        if (!user.getId().equals(buyerId) && !user.getId().equals(sellerId)) {
-            throw new IllegalArgumentException("판매자나 구매자가 아닙니다.");
-        }
-    }
 }

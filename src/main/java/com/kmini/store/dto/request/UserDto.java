@@ -3,6 +3,7 @@ package com.kmini.store.dto.request;
 import com.kmini.store.config.file.UserResourceManager;
 import com.kmini.store.domain.User;
 import lombok.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.*;
@@ -29,14 +30,14 @@ public class UserDto {
 
         private MultipartFile file;
 
-        public User toEntity(UserResourceManager userResourceManager) {
-            return User.builder()
-                    .username(username)
-                    .password(password)
-                    .email(email)
-                    .thumbnail(userResourceManager.storeFile(email, file))
-                    .build();
-        }
+//        public User toEntity(UserResourceManager userResourceManager) {
+//            return User.builder()
+//                    .username(username)
+//                    .password(password)
+//                    .email(email)
+//                    .thumbnail(userResourceManager.storeFile(email, file))
+//                    .build();
+//        }
     }
 
     @Data
@@ -56,14 +57,13 @@ public class UserDto {
 
         private String passwordCheck;
 
-        private String thumbnail;
+        private MultipartFile file;
 
-        public static UserUpdateReqDto toDto(User user) {
+        public static UserUpdateReqDto getUserUpdateForm(User user) {
             return UserUpdateReqDto.builder()
                     .email(user.getEmail())
                     .username(user.getUsername())
                     .password(user.getPassword())
-                    .thumbnail(user.getThumbnail())
                     .build();
         }
     }

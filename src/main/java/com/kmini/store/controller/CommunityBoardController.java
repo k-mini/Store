@@ -4,7 +4,7 @@ import com.kmini.store.config.auth.AccountContext;
 import com.kmini.store.dto.request.BoardDto.CommunityBoardFormSaveDto;
 import com.kmini.store.dto.request.BoardDto.ItemBoardFormSaveDto;
 import com.kmini.store.dto.response.CommunityBoardDto.CommunityBoardRespDetailDto;
-import com.kmini.store.service.impl.CommunityBoardServiceImpl;
+import com.kmini.store.service.CommunityBoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,7 +21,12 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class CommunityBoardController {
 
-    private final CommunityBoardServiceImpl communityBoardService;
+    private final CommunityBoardService communityBoardService;
+
+    @ModelAttribute
+    public void categories(@PathVariable String subCategory, Model model) {
+        model.addAttribute("subCategory", subCategory);
+    }
 
     // 게시물 자세히 조회
     @GetMapping("/{boardId}")

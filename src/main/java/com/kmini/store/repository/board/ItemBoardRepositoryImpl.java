@@ -19,18 +19,6 @@ public class ItemBoardRepositoryImpl implements ItemBoardRepositoryQsdl {
 
     private final JPAQueryFactory queryFactory;
 
-
-    @Override
-    public Optional<ItemBoard> findByIdWithUserAndComments(Long id) {
-        ItemBoard board = queryFactory
-                .selectFrom(itemBoard)
-                .leftJoin(itemBoard.comments).fetchJoin()
-                .join(itemBoard.user).fetchJoin()
-                .where(itemBoard.id.eq(id))
-                .fetchOne();
-        return Optional.ofNullable(board);
-    }
-
     @Override
     public Optional<ItemBoardRespDetailDto> findDetailById(Long id) {
 
@@ -60,6 +48,7 @@ public class ItemBoardRepositoryImpl implements ItemBoardRepositoryQsdl {
                 .join(itemBoard.user)
                 .where(itemBoard.id.eq(id))
                 .fetchOne();
+        
         queryFactory.select(Expressions.stringTemplate("cast({0} as character varying)",trade.id))
                 .from(trade)
                 .limit(1)

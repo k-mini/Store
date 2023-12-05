@@ -8,7 +8,5 @@ import java.util.Optional;
 
 public interface ItemBoardRepositoryQsdl {
 
-    Optional<ItemBoard> findByIdWithUserAndComments(Long id);
-
     Optional<ItemBoardRespDetailDto> findDetailById(Long id);
 }

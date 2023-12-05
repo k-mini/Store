@@ -1,10 +1,12 @@
 package com.kmini.store.controller.api;
 
 import com.kmini.store.dto.CommonRespDto;
-import com.kmini.store.dto.request.TradeDto.TradeReqDto;
-import com.kmini.store.service.impl.TradeServiceImpl;
+import com.kmini.store.dto.response.TradeDto.*;
+import com.kmini.store.service.TradeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,41 +15,46 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class TradeApiController {
 
-    private final TradeServiceImpl tradeService;
+    private final TradeService tradeService;
 
+    // 거래 신청
     @PostMapping("/{boardId}")
-    public CommonRespDto<?> trade(TradeReqDto tradeReqDto) {
-        log.debug("tradeReqDto = {}", tradeReqDto);
-        Long boardId = tradeReqDto.getBoardId();
-        tradeService.registerTrade(boardId);
-        return new CommonRespDto<>(1,"성공",null);
+    public ResponseEntity<?> registerTrade(@PathVariable Long boardId) {
+        log.debug("boardId = {}", boardId);
+        TradeRegisterRespDto result = tradeService.registerTrade(boardId);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                             .body(new CommonRespDto<>(1, "성공", result));
     }
 
     // 거래 승낙
     @PatchMapping("/{tradeId}/accept")
-    public CommonRespDto<?> acceptTrade(@PathVariable Long tradeId) {
-        tradeService.acceptTrade(tradeId);
-        return new CommonRespDto<Void>(1, "성공", null);
+    public ResponseEntity<?> acceptTrade(@PathVariable Long tradeId) {
+        TradeAcceptRespDto result = tradeService.acceptTrade(tradeId);
+        return ResponseEntity.status(HttpStatus.OK)
+                             .body(new CommonRespDto<>(1, "성공", result));
     }
 
     // 거래 거절
     @PatchMapping("/{tradeId}/deny")
-    public CommonRespDto<?> denyTrade(@PathVariable Long tradeId) {
-        tradeService.denyTrade(tradeId);
-        return new CommonRespDto<Void>(1, "성공", null);
+    public ResponseEntity<?> denyTrade(@PathVariable Long tradeId) {
+        TradeDenyRespDto result = tradeService.denyTrade(tradeId);
+        return ResponseEntity.status(HttpStatus.OK)
+                             .body(new CommonRespDto<>(1, "성공", result));
     }
 
     // 거래 완료
     @PatchMapping("/{tradeId}/complete")
-    public CommonRespDto<?> completeTrade(@PathVariable Long tradeId) {
-        tradeService.completeTrade(tradeId);
-        return new CommonRespDto<Void>(1,"성공", null);
+    public ResponseEntity<?> completeTrade(@PathVariable Long tradeId) {
+        TradeCompleteRespDto result = tradeService.completeTrade(tradeId);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new CommonRespDto<>(1, "성공", result));
     }
 
     // 거래 취소
     @PatchMapping("/{tradeId}/cancel")
-    public CommonRespDto<?> cancelTrade(@PathVariable Long tradeId) {
-        tradeService.cancelTrade(tradeId);
-        return new CommonRespDto<Void>(1,"성공", null);
+    public ResponseEntity<?> cancelTrade(@PathVariable Long tradeId) {
+        TradeCancelRespDto result = tradeService.cancelTrade(tradeId);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new CommonRespDto<>(1, "성공", result));
     }
 }

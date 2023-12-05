@@ -4,7 +4,6 @@ package com.kmini.store.dto.response;
 import com.kmini.store.config.util.CustomTimeUtils;
 import com.kmini.store.domain.Comment;
 import com.kmini.store.domain.CommunityBoard;
-import com.kmini.store.domain.ItemBoard;
 import com.kmini.store.dto.response.CommentDto.BoardCommentRespDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

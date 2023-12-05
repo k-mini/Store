@@ -1,19 +1,16 @@
 package com.kmini.store.controller.api;
 
-import com.kmini.store.config.auth.AccountContext;
-import com.kmini.store.domain.User;
 import com.kmini.store.dto.CommonRespDto;
-import com.kmini.store.dto.request.CommentDto.BoardCommentSaveDto;
-import com.kmini.store.dto.request.CommentDto.BoardCommentUpdateDto;
+import com.kmini.store.dto.request.CommentDto.BoardCommentSaveReqDto;
+import com.kmini.store.dto.request.CommentDto.BoardCommentUpdateReqDto;
 import com.kmini.store.dto.request.CommentDto.BoardReplySaveDto;
 import com.kmini.store.dto.response.CommentDto.BoardCommentRespDto;
 import com.kmini.store.dto.response.CommentDto.BoardReplyRespDto;
-import com.kmini.store.service.impl.CommentServiceImpl;
+import com.kmini.store.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,35 +19,32 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class CommentApiController {
 
-    private final CommentServiceImpl commentService;
+    private final CommentService commentService;
 
     @PostMapping
     public ResponseEntity<?> saveComment(
-            @RequestBody BoardCommentSaveDto boardCommentSaveDto,
-            @AuthenticationPrincipal AccountContext accountContext) {
-        log.info("boardCommentReqDto = {}", boardCommentSaveDto);
-        BoardCommentRespDto result = commentService.saveComment(boardCommentSaveDto, accountContext.getUser());
+            @RequestBody BoardCommentSaveReqDto boardCommentSaveReqDto) {
+        log.info("boardCommentReqDto = {}", boardCommentSaveReqDto);
+        BoardCommentRespDto result = commentService.saveComment(boardCommentSaveReqDto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(new CommonRespDto<>(1, "성공", result));
     }
 
     @PatchMapping("/{commentId}")
-    public ResponseEntity<?> updateComment(@RequestBody BoardCommentUpdateDto boardCommentUpdateDto) {
-        log.debug("boardCommentUpdateDto = {}", boardCommentUpdateDto);
-        commentService.update(boardCommentUpdateDto);
+    public ResponseEntity<?> updateComment(@RequestBody BoardCommentUpdateReqDto boardCommentUpdateReqDto) {
+        log.debug("boardCommentUpdateReqDto = {}", boardCommentUpdateReqDto);
+        BoardCommentRespDto result = commentService.updateComment(boardCommentUpdateReqDto);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new CommonRespDto<>(1,"성공", null));
+                .body(new CommonRespDto<>(1,"성공", result));
     }
 
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<?> deleteComment(
-            @PathVariable Long commentId, @AuthenticationPrincipal AccountContext accountContext
-    ) {
+    public ResponseEntity<?> deleteComment(@PathVariable Long commentId) {
         log.info("commentId = {}", commentId);
-        User user = accountContext.getUser();
-        int result = commentService.delete(commentId, user);
+        int result = commentService.deleteComment(commentId);
+
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new CommonRespDto<>(1, "성공", result));
@@ -58,11 +52,10 @@ public class CommentApiController {
 
     @PostMapping("{commentId}/reply")
     public ResponseEntity<?> saveReply(
-            @RequestBody BoardReplySaveDto boardReplySaveDto,
-            @AuthenticationPrincipal AccountContext accountContext
-    ) {
+            @RequestBody BoardReplySaveDto boardReplySaveDto) {
         log.info("boardReplyReqDto = {} ", boardReplySaveDto);
-        BoardReplyRespDto result = commentService.saveReply(boardReplySaveDto, accountContext.getUser());
+        BoardReplyRespDto result = commentService.saveReplyComment(boardReplySaveDto);
+
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(new CommonRespDto<>(1, "성공", result));

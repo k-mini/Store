@@ -43,6 +43,12 @@
                     <th scope="col" class="px-6 py-3">
                         거래 번호
                     </th>
+                    <th>
+                        카테고리
+                    </th>
+                    <th>
+                        소 카테고리
+                    </th>
                     <th scope="col" class="px-6 py-3">
                         제목
                     </th>
@@ -69,8 +75,18 @@
                     <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                         [[${result.tradeId}]]
                     </td>
+                    <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        [[${result.superCategoryKoName}]]
+                    </td>
+                    <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        [[${result.subCategoryKoName}]]
+                    </td>
                     <td class="px-6 py-4 hover:text-primary">
-                        [[${result.title}]]
+
+                        <a th:href="@{/board/{superCategoryName}/{subCategoryName}/{boardId}
+                        (superCategoryName=${result.superCategoryName}, subCategoryName=${result.subCategoryName},boardId=${result.boardId})  }">
+                            [[${result.title}]]
+                        </a>
                     </td>
                     <td class="px-6 py-4">
                         [[${result.sellerName}]]
@@ -195,7 +211,7 @@
 
             <div class="w-full">
                 <!--                <div class="relative mb-4 flex w-full flex-wrap items-stretch">-->
-                <form name="map2" method="get" class="relative mb-4 flex w-full flex-wrap items-stretch">
+                <form method="get" class="relative mb-4 flex w-full flex-wrap items-stretch">
                     <!--                    <div class="relative mb-4 flex w-full flex-wrap items-stretch">-->
                     <div class="flex px-2 items-center">
                         <select name="sType" data-te-select-init>

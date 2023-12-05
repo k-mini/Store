@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 public class CommentDto {
 
     @Data
+    @NoArgsConstructor
     @AllArgsConstructor @Builder
     public static class BoardCommentRespDto {
         // comment id

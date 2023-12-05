@@ -2,7 +2,6 @@ package com.kmini.store.dto.request;
 
 import com.kmini.store.domain.CommunityBoard;
 import com.kmini.store.domain.ItemBoard;
-import com.kmini.store.domain.type.CategoryType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -51,10 +50,6 @@ public class BoardDto {
                     .itemName(itemName)
                     .build();
         }
-
-        public CategoryType getSubCategoryType() {
-            return CategoryType.valueOf(this.getSubCategory().toUpperCase());
-        }
     }
 
     /**
@@ -75,10 +70,6 @@ public class BoardDto {
                     .title(title)
                     .content(content)
                     .build();
-        }
-
-        public CategoryType getSubCategoryType() {
-            return CategoryType.valueOf(subCategory.toUpperCase());
         }
     }
 

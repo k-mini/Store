@@ -2,8 +2,6 @@ package com.kmini.store.repository.board;
 
 import com.kmini.store.config.util.CustomPageUtils;
 import com.kmini.store.domain.Board;
-import com.kmini.store.domain.QBoard;
-import com.kmini.store.domain.type.CategoryType;
 import com.kmini.store.dto.request.SearchDto;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -21,7 +19,6 @@ import static com.kmini.store.domain.QBoard.board;
 import static com.kmini.store.domain.QBoardCategory.boardCategory;
 import static com.kmini.store.domain.QCategory.category;
 import static com.kmini.store.domain.QUser.user;
-import static com.kmini.store.domain.type.CategoryType.ALL;
 
 @RequiredArgsConstructor
 public class BoardRepositoryImpl implements BoardRepositoryQsdl {
@@ -32,7 +29,7 @@ public class BoardRepositoryImpl implements BoardRepositoryQsdl {
     @Override
     public Page<Board> findBoards(BoardSearchCond cond, Pageable pageable) {
 
-        CategoryType categoryType = cond.getCategoryType();
+        String categoryName = cond.getCategoryName();
         // order 지시자 만들기
         OrderSpecifier<?>[] orderSpecifiers = CustomPageUtils.getOrderSpecifiers(pageable, board);
 
@@ -44,7 +41,7 @@ public class BoardRepositoryImpl implements BoardRepositoryQsdl {
                                         .from(boardCategory)
                                         .where(boardCategory.category.eq(
                                                         JPAExpressions.selectFrom(category)
-                                                                .where(category.categoryType.eq(categoryType))
+                                                                .where(category.categoryName.eq(categoryName))
                                                 )
                                         )
                         ),
@@ -65,7 +62,7 @@ public class BoardRepositoryImpl implements BoardRepositoryQsdl {
                                         .from(boardCategory)
                                         .where(boardCategory.category.eq(
                                                         JPAExpressions.selectFrom(category)
-                                                                .where(category.categoryType.eq(categoryType))
+                                                                .where(category.categoryName.eq(categoryName))
                                                 )
                                         )
                         ),
@@ -87,24 +84,20 @@ public class BoardRepositoryImpl implements BoardRepositoryQsdl {
     @Data
     public static class BoardSearchCond {
 
-        private CategoryType categoryName;
+        private String categoryName;
 
-        private CategoryType subCategoryName;
+        private String subCategoryName;
 
         // 제목
         private String title;
         // 내용
         private String content;
 
-        public BoardSearchCond(CategoryType categoryName, CategoryType subCategoryName, SearchDto.SearchBoardDto searchBoardDto) {
+        public BoardSearchCond(String categoryName, String subCategoryName, SearchDto.SearchBoardDto searchBoardDto) {
             this.categoryName = categoryName;
             this.subCategoryName = subCategoryName;
             this.title = "title".equals(searchBoardDto.getSType()) ? searchBoardDto.getS() : null ;
             this.content = "content".equals(searchBoardDto.getSType()) ? searchBoardDto.getS() : null ;
-        }
-
-        public CategoryType getCategoryType() {
-            return subCategoryName != ALL ? subCategoryName : categoryName;
         }
     }
 }

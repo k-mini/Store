@@ -1,16 +1,14 @@
-package com.kmini.store.service.impl;
+package com.kmini.store.service;
 
 import com.kmini.store.config.auth.AccountContext;
 import com.kmini.store.config.file.UserResourceManager;
 import com.kmini.store.domain.*;
-import com.kmini.store.domain.type.CategoryType;
 import com.kmini.store.dto.request.BoardDto.ItemBoardFormSaveDto;
 import com.kmini.store.dto.request.ItemBoardDto.ItemBoardUpdateFormDto;
 import com.kmini.store.dto.response.ItemBoardDto.ItemBoardRespDetailDto;
 import com.kmini.store.repository.BoardCategoryRepository;
 import com.kmini.store.repository.CategoryRepository;
 import com.kmini.store.repository.CommentRepository;
-import com.kmini.store.repository.TradeRepository;
 import com.kmini.store.repository.board.ItemBoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,14 +22,13 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class ItemBoardServiceImpl {
+public class ItemBoardService {
 
     private final ItemBoardRepository itemBoardRepository;
     private final CommentRepository commentRepository;
     private final CategoryRepository categoryRepository;
     private final BoardCategoryRepository boardCategoryRepository;
-    private final TradeRepository tradeRepository;
-    private final TradeServiceImpl tradeService;
+    private final TradeService tradeService;
     private final UserResourceManager userResourceManager;
 
     // 게시물 상세 조회
@@ -39,7 +36,7 @@ public class ItemBoardServiceImpl {
     public ItemBoardRespDetailDto viewBoard(Long id) {
 
         // 게시물 조회
-        ItemBoard board = itemBoardRepository.findByIdWithUserAndComments2(id)
+        ItemBoard board = itemBoardRepository.findByIdWithUserAndComments(id)
                 .orElseThrow(()-> new IllegalArgumentException("게시물을 찾을 수 없습니다."));
 
         // 상위 댓글 조회
@@ -51,9 +48,9 @@ public class ItemBoardServiceImpl {
         // 최신 거래
         boolean tradePossible = tradeService.checkRegisterTradeAvailable(id);
 
-
-        // 현재 조회수 
+        // 현재 조회수
         long views = board.getViews();
+
         // 조회수 증가 => 동시성 문제
         board.setViews(views + 1);
         
@@ -74,9 +71,9 @@ public class ItemBoardServiceImpl {
         }
 
         // 카테고리 조회
-        Category category = categoryRepository.findByCategoryType(CategoryType.TRADE)
+        Category category = categoryRepository.findByCategoryName("TRADE")
                 .orElseThrow(()-> new IllegalArgumentException("상위 카테고리가 존재하지 않습니다."));
-        Category subCategory = categoryRepository.findByCategoryType(itemBoardFormSaveDto.getSubCategoryType())
+        Category subCategory = categoryRepository.findByCategoryName(itemBoardFormSaveDto.getSubCategory().toUpperCase())
                 .orElseThrow(()-> new IllegalArgumentException("하위 카테고리가 존재하지 않습니다."));
 
         // 게시물 저장

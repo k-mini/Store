@@ -7,9 +7,15 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+import java.util.Optional;
+
 public interface BoardCategoryRepository extends JpaRepository<BoardCategory, Long> {
 
     @Modifying
     @Query("delete from BoardCategory b where b.board = :board")
     void deleteByBoard(@Param("board") Board board);
+
+    @Query("select b from BoardCategory b join fetch b.category where b.board.id in :boardIds")
+    List<BoardCategory> findByBoardIds(@Param("boardIds") List<Long> boardIds);
 }

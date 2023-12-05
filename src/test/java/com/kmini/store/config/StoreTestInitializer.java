@@ -1,18 +1,11 @@
 package com.kmini.store.config;
 
-import com.kmini.store.aop.CategoryHolder;
-import com.kmini.store.domain.Category;
+import com.kmini.store.aop.CategoryInterceptor;
 import com.kmini.store.domain.User;
-import com.kmini.store.domain.type.CategoryType;
 import com.kmini.store.domain.type.UserRole;
 import com.kmini.store.domain.type.UserStatus;
-import com.kmini.store.dto.request.BoardDto.CommunityBoardFormSaveDto;
-import com.kmini.store.dto.request.BoardDto.ItemBoardFormSaveDto;
-import com.kmini.store.dto.request.CommentDto.BoardCommentSaveDto;
-import com.kmini.store.dto.request.CommentDto.BoardReplySaveDto;
-import com.kmini.store.repository.CategoryRepository;
 import com.kmini.store.repository.UserRepository;
-import com.kmini.store.service.impl.*;
+import com.kmini.store.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
@@ -21,8 +14,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import static com.kmini.store.domain.type.CategoryType.*;
-
 @Component
 @Profile({"test"})
 @Slf4j
@@ -30,8 +21,8 @@ import static com.kmini.store.domain.type.CategoryType.*;
 public class StoreTestInitializer implements ApplicationRunner {
 
     private final UserRepository userRepository;
-    private final CategoryRepository categoryRepository;
-    private final CategoryHolder categoryHolder;
+    private final CategoryService categoryService;
+    private final CategoryInterceptor categoryInterceptor;
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Override
@@ -53,24 +44,16 @@ public class StoreTestInitializer implements ApplicationRunner {
 
     private void categorySetUp() {
         log.info("카테고리 넣기! ..");
-        Category trade = createCategory(TRADE, null);
-        Category community = createCategory(COMMUNITY, null);
+        categoryService.saveCategory("TRADE", "거래",  null);
+        categoryService.saveCategory("COMMUNITY", "커뮤니티",null);
 
         log.info("소카테고리 넣기! ..");
-        createCategory(ELECTRONICS, trade);
-        createCategory(FOODS, trade);
-        createCategory(FREE, community);
-        createCategory(QNA, community);
+        categoryService.saveCategory("ELECTRONICS", "전자", "TRADE");
+        categoryService.saveCategory("CLOTHES", "의류","TRADE");
+        categoryService.saveCategory("FREE", "자유","COMMUNITY");
+        categoryService.saveCategory("QNA", "문의", "COMMUNITY");
 
-        log.info("서버에 카테고리 정보 저장..");
-        categoryHolder.getMap().add(TRADE, ELECTRONICS);
-        categoryHolder.getMap().add(TRADE, FOODS);
-        categoryHolder.getMap().add(COMMUNITY, FREE);
-        categoryHolder.getMap().add(COMMUNITY, QNA);
-    }
-
-    private Category createCategory(CategoryType type, Category parent) {
-        return categoryRepository.save(new Category(type, parent));
+        categoryInterceptor.reload();
     }
 
     private User createAdmin(String username, String password, String email) {

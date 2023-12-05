@@ -1,14 +1,11 @@
 package com.kmini.store.controller;
 
-import com.kmini.store.config.auth.AccountContext;
-import com.kmini.store.domain.type.CategoryType;
 import com.kmini.store.dto.request.BoardDto.ItemBoardFormSaveDto;
 import com.kmini.store.dto.request.ItemBoardDto.ItemBoardUpdateFormDto;
 import com.kmini.store.dto.response.ItemBoardDto.ItemBoardRespDetailDto;
-import com.kmini.store.service.impl.ItemBoardServiceImpl;
+import com.kmini.store.service.ItemBoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,14 +19,18 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class ItemBoardController {
 
-    private final ItemBoardServiceImpl itemBoardService;
+    private final ItemBoardService itemBoardService;
+
+    @ModelAttribute
+    public void categories(@PathVariable String subCategory, Model model) {
+        model.addAttribute("subCategory", subCategory);
+    }
 
     // 게시물 자세히 조회
     @GetMapping("/{boardId}")
     public String viewBoard(
             @PathVariable("subCategory") String subCategory,
             @PathVariable("boardId") Long boardId, Model model) {
-        CategoryType.checkType(subCategory);
         ItemBoardRespDetailDto result = itemBoardService.viewBoard(boardId);
         model.addAttribute("result", result);
         log.debug("result = {}", result);
@@ -40,7 +41,6 @@ public class ItemBoardController {
     @GetMapping("/{boardId}/form")
     public String getUpdateForm(@PathVariable Long boardId,
                               @PathVariable String subCategory, Model model) {
-
         ItemBoardUpdateFormDto result = itemBoardService.getUpdateForm(boardId);
         model.addAttribute("itemBoardUpdateFormDto", result);
         log.debug("result = {}", result);
@@ -56,6 +56,7 @@ public class ItemBoardController {
         return "board/form";
     }
 
+    // 게시물 등록
     @PostMapping("/form")
     public String saveBoard(
             @ModelAttribute ItemBoardFormSaveDto itemBoardFormSaveDto,

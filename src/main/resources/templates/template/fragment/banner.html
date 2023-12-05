@@ -7,16 +7,16 @@
         th:fragment="banner (param1)"
         class="relative z-10 overflow-hidden bg-primary pt-[120px] pb-[100px] md:pt-[130px] lg:pt-[160px]"
 >
-  <div class="container">
-    <div class="-mx-4 flex flex-wrap items-center">
-      <div class="w-full px-4">
-        <div class="text-center">
-          <h1 class="text-4xl font-semibold text-white">[[${param1}]]</h1>
+    <div class="container">
+        <div class="-mx-4 flex flex-wrap items-center">
+            <div class="w-full px-4">
+                <div class="text-center">
+                    <h1 class="text-4xl font-semibold text-white">[[${param1}]]</h1>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
-  <div>
+    <div>
         <span class="absolute top-0 left-0 z-[-1]">
           <svg
                   width="495"
@@ -80,26 +80,26 @@
             />
           </svg>
         </span>
-  </div>
+    </div>
 </div>
 <!-- ====== 배너 End -->
 
 <!-- ====== 배너 Start -->
 <div th:fragment="list-banner"
-        class="relative z-10 overflow-hidden bg-primary pt-[120px] pb-[100px] md:pt-[130px] lg:pt-[160px]"
+     class="relative z-10 overflow-hidden bg-primary pt-[120px] pb-[100px] md:pt-[130px] lg:pt-[160px]"
 >
-  <div class="container">
-    <div class="-mx-4 flex flex-wrap items-center">
-      <div class="w-full px-4">
-        <div class="text-center">
-          <h1 class="text-4xl font-semibold text-white">
-            [[${T(com.kmini.store.domain.type.CategoryType).valueOf(#strings.toUpperCase(subCategory)).koName }]] 게시판
-          </h1>
+    <div class="container">
+        <div class="-mx-4 flex flex-wrap items-center">
+            <div class="w-full px-4">
+                <div class="text-center">
+                    <h1 class="text-4xl font-semibold text-white">
+                        [[${subCategoryKoName}]] 게시판
+                    </h1>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
-  <div>
+    <div>
         <span class="absolute top-0 left-0 z-[-1]">
           <svg
                   width="495"
@@ -163,24 +163,24 @@
             />
           </svg>
         </span>
-  </div>
+    </div>
 </div>
 <!-- ====== 배너 End -->
 
 <!-- ====== 게시판 상세정보 배너 Start -->
 <div th:fragment="detail-banner"
-        class="relative z-10 overflow-hidden bg-primary pt-[120px] pb-[100px] md:pt-[130px] lg:pt-[160px]"
+     class="relative z-10 overflow-hidden bg-primary pt-[120px] pb-[100px] md:pt-[130px] lg:pt-[160px]"
 >
-  <div class="container">
-    <div class="-mx-4 flex flex-wrap items-center">
-      <div class="w-full px-4">
-        <div class="text-center">
-<!--          <h1 class="text-4xl font-semibold text-white">게시판 카테고리</h1>-->
+    <div class="container">
+        <div class="-mx-4 flex flex-wrap items-center">
+            <div class="w-full px-4">
+                <div class="text-center">
+                    <!--          <h1 class="text-4xl font-semibold text-white">게시판 카테고리</h1>-->
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
-  <div>
+    <div>
         <span class="absolute top-0 left-0 z-[-1]">
           <svg
                   width="495"
@@ -244,7 +244,7 @@
             />
           </svg>
         </span>
-  </div>
+    </div>
 </div>
 <!-- ====== 게시판 상세정보 배너 End -->
 
@@ -252,19 +252,17 @@
 <div th:fragment="saveForm-banner"
      class="relative z-10 overflow-hidden bg-primary pt-[120px] pb-[100px] md:pt-[130px] lg:pt-[160px]"
 >
-  <div class="container">
-    <div class="-mx-4 flex flex-wrap items-center">
-      <div class="w-full px-4">
-        <div class="text-center">
-          <div th:each="type : ${T(com.kmini.store.domain.type.CategoryType).values()}">
-<!--            [[${type}]] [[${category}]] [[${type.name() == #strings.toUpperCase(category) }]]-->
-            <h1 th:if="${type.name() == #strings.toUpperCase(subCategory)}" th:text="|${type.koName} 게시판 글쓰기|" class="text-4xl font-semibold text-white"></h1>
-          </div>
+    <div class="container">
+        <div class="-mx-4 flex flex-wrap items-center">
+            <div class="w-full px-4">
+                <div class="text-center">
+                    <h1 th:text="|${subCategoryKoName} 게시판 글쓰기|"
+                        class="text-4xl font-semibold text-white"></h1>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
-  <div>
+    <div>
         <span class="absolute top-0 left-0 z-[-1]">
           <svg
                   width="495"
@@ -296,7 +294,7 @@
             />
           </svg>
         </span>
-    <span class="absolute top-0 right-0 z-[-1]">
+        <span class="absolute top-0 right-0 z-[-1]">
           <svg
                   width="493"
                   height="470"
@@ -328,7 +326,7 @@
             />
           </svg>
         </span>
-  </div>
+    </div>
 </div>
 <!-- ====== 글쓰기 배너 End -->
 

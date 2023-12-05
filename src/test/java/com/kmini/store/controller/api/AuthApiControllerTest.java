@@ -3,17 +3,17 @@ package com.kmini.store.controller.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kmini.store.dto.request.UserDto.SignUpDto;
 import com.kmini.store.repository.UserRepository;
-import com.kmini.store.service.impl.UserServiceImpl;
+import com.kmini.store.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -27,7 +27,7 @@ class AuthApiControllerTest {
     @Autowired
     MockMvc mockMvc;
     @Autowired
-    UserServiceImpl userService;
+    UserService userService;
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -45,7 +45,7 @@ class AuthApiControllerTest {
         ResultActions resultActions = mockMvc.perform(
                 post("/api/auth/signup")
                         .content(requestBody)
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED));
+                        .contentType(APPLICATION_FORM_URLENCODED));
 
         // then  (아이디가 있어야 성공)
         resultActions.andExpect(status().isCreated());
