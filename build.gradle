@@ -9,6 +9,7 @@ plugins {
 	id 'org.springframework.boot' version '2.7.17'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 	id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
+	id "org.asciidoctor.jvm.convert" version "3.3.2"
 }
 
 group = 'com.kmini'
@@ -22,6 +23,7 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
+	asciidoctorExt
 }
 
 repositories {
@@ -40,6 +42,10 @@ dependencies {
 	implementation 'com.querydsl:querydsl-jpa'
 	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.1'
 
+	// Rest Docs documentation
+	asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+
 	//querydsl 추가
 	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
 	annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
@@ -57,6 +63,7 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+	outputs.dir snippetsDir
 }
 
 //querydsl 추가 시작
@@ -76,3 +83,41 @@ compileQuerydsl {
 	options.annotationProcessorPath = configurations.querydsl
 }
 //querydsl 추가 끝
+
+// rest docs
+
+ext {
+	snippetsDir = file('build/generated-snippets') // 생성된 snippets를 저장할 디렉터리
+}
+
+asciidoctor.doFirst {
+	delete file('src/main/resources/static/docs')
+}
+
+asciidoctor {
+	inputs.dir snippetsDir
+	configurations 'asciidoctorExt'
+	dependsOn test
+}
+
+// 리소스 폴더로 문서이동
+task copyDocument(type: Copy) { 
+	dependsOn asciidoctor
+	from file("build/docs/asciidoc")
+	into file("src/main/resources/static/docs")
+}
+
+bootJar {
+	dependsOn asciidoctor
+	// 아래 설정이 jar 파일 내부에 docs 파일을 생성한다.
+	from ("${asciidoctor.outputDir}/asciidoc") {
+		into 'static/docs'
+	}
+}
+
+build {
+	// build task 전에 static 폴더에 복사해서 IDE에서 볼수 있게 한다.
+	dependsOn copyDocument
+}
+
+// rest docs 끝

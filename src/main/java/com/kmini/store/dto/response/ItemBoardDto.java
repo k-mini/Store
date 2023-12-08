@@ -3,7 +3,7 @@ package com.kmini.store.dto.response;
 import com.kmini.store.config.util.CustomTimeUtils;
 import com.kmini.store.domain.Comment;
 import com.kmini.store.domain.ItemBoard;
-import com.kmini.store.dto.response.CommentDto.BoardCommentRespDto;
+import com.kmini.store.dto.response.CommentDto.BoardCommentUpdateRespDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -75,7 +75,7 @@ public class ItemBoardDto {
         // 댓글 수
         private int commentTotalCount;
         // 댓글
-        private List<BoardCommentRespDto> comments = new ArrayList<>();
+        private List<BoardCommentUpdateRespDto> comments = new ArrayList<>();
         // 거래 상태
         private boolean tradePossible;
 
@@ -92,7 +92,7 @@ public class ItemBoardDto {
                     .createdDate(CustomTimeUtils.convertTime(itemBoard.getCreatedDate()))
                     .views(itemBoard.getViews())
                     .commentTotalCount(itemBoard.getComments().size())
-                    .comments(BoardCommentRespDto.toDtos(comments))
+                    .comments(BoardCommentUpdateRespDto.toDtos(comments))
                     .tradePossible(tradePossible)
                     .build();
         }

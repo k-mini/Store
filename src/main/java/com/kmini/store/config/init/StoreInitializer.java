@@ -8,7 +8,7 @@ import com.kmini.store.domain.type.UserStatus;
 import com.kmini.store.dto.request.BoardDto.CommunityBoardFormSaveDto;
 import com.kmini.store.dto.request.BoardDto.ItemBoardFormSaveDto;
 import com.kmini.store.dto.request.CommentDto.BoardCommentSaveReqDto;
-import com.kmini.store.dto.request.CommentDto.BoardReplySaveDto;
+import com.kmini.store.dto.request.CommentDto.BoardReplySaveReqDto;
 import com.kmini.store.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -71,10 +71,10 @@ public class StoreInitializer implements ApplicationRunner {
         commentService.saveComment(new BoardCommentSaveReqDto(156L, "상위 댓글댓글2222"));
 
         log.info("대댓글 넣기!!");
-        commentService.saveReplyComment(new BoardReplySaveDto(156L, 1L, "댓글1의 대댓글1"));
-        commentService.saveReplyComment(new BoardReplySaveDto(156L, 1L, "댓글1의 대댓글2"));
-        commentService.saveReplyComment(new BoardReplySaveDto(156L, 2L, "댓글2의 대댓글1"));
-        commentService.saveReplyComment(new BoardReplySaveDto(156L, 2L, "댓글2의 대댓글2"));
+        commentService.saveReplyComment(new BoardReplySaveReqDto(156L, 1L, "댓글1의 대댓글1"));
+        commentService.saveReplyComment(new BoardReplySaveReqDto(156L, 1L, "댓글1의 대댓글2"));
+        commentService.saveReplyComment(new BoardReplySaveReqDto(156L, 2L, "댓글2의 대댓글1"));
+        commentService.saveReplyComment(new BoardReplySaveReqDto(156L, 2L, "댓글2의 대댓글2"));
 
         log.info("거래 넣기");
         tradeService.registerTrade(1L);

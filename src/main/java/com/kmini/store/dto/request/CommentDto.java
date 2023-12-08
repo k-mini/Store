@@ -35,7 +35,7 @@ public class CommentDto {
     @Data
     @AllArgsConstructor @Builder
     @NoArgsConstructor
-    public static class BoardReplySaveDto {
+    public static class BoardReplySaveReqDto {
         // 게시물 id
         private Long boardId;
         // 상위 댓글 id

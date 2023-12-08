@@ -1,0 +1,27 @@
+
+= 댓글 API
+https://github.com/k-mini
+
+
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs // 문서에 표기되는 코드들의 하이라이팅을 highlightjs를 사용
+:toc: left // toc (Table Of Contents)를 문서의 좌측에 두기
+:toclevels: 2
+:sectlinks:
+
+== 댓글 작성
+
+=== 요청
+
+include::{snippets}/save-comment/http-request.adoc[]
+
+include::{snippets}/save-comment/request-fields.adoc[]
+
+// include::{snippets}/comment/path-parameters.adoc[]
+
+=== 응답
+
+include::{snippets}/save-comment/http-response.adoc[]
+
+include::{snippets}/save-comment/response-fields.adoc[]
