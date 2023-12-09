@@ -37,7 +37,7 @@ class BoardControllerTest {
         String subCategory = "all";
         // when
         ResultActions resultActions = mockMvc.perform(
-                get("/boards/" + category + "/" + subCategory)
+                get("/boards/{category}/{subCategory}",category, subCategory)
         );
         // then
         resultActions.andExpect(status().isOk())
@@ -53,7 +53,7 @@ class BoardControllerTest {
         String subCategory = "all";
         // when
         ResultActions resultActions = mockMvc.perform(
-                get("/boards/" + category + "/" + subCategory)
+                get("/boards/{category}/{subCategory}", category, subCategory)
         );
         // then
         resultActions.andExpect(status().isOk())

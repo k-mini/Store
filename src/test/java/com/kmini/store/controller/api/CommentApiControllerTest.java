@@ -26,16 +26,22 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
+import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.restdocs.payload.PayloadDocumentation;
+import org.springframework.restdocs.request.RequestDocumentation;
+import org.springframework.restdocs.snippet.Attributes;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;
 
@@ -47,6 +53,9 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -120,7 +129,7 @@ class CommentApiControllerTest {
                                 )
                                 ,
                                 responseFields(
-                                        fieldWithPath("code").type(JsonFieldType.NUMBER).description("성공 코드 (성공 : 1, 실패 :0)"),
+                                        fieldWithPath("code").description("성공 코드 (성공 : 1, 실패 :0)"),
                                         fieldWithPath("message").description("응답 관련 메시지"),
                                         fieldWithPath("data.id").description("댓글 Id"),
                                         fieldWithPath("data.commentUserId").description("작성자 Id"),
@@ -151,12 +160,12 @@ class CommentApiControllerTest {
         Long boardId = 1L;
         String content = "수정내용내용";
 
-        BoardCommentUpdateReqDto boardCommentUpdateReqDto = new BoardCommentUpdateReqDto(boardId, commentId, content);
+        BoardCommentUpdateReqDto boardCommentUpdateReqDto = new BoardCommentUpdateReqDto(boardId, 1L, content);
         String requestBody = objectMapper.writeValueAsString(boardCommentUpdateReqDto);
 
         //when
         ResultActions resultActions = mockMvc.perform(
-                patch("/api/comment/" + commentId)
+                RestDocumentationRequestBuilders.patch("/api/comment/{commentId}", commentId)
                         .content(requestBody)
                         .contentType(APPLICATION_JSON)
         );
@@ -173,7 +182,11 @@ class CommentApiControllerTest {
                                         fieldWithPath("commentId").description("수정할 댓글의 Id"),
                                         fieldWithPath("content").description("수정할 댓글의 내용")
                                 ),
+                                pathParameters(
+                                        parameterWithName("commentId").description("수정할 댓글의 Id")
+                                ),
                                 responseFields(
+                                        Attributes.attributes(key("title").value("example for title")),
                                         fieldWithPath("code").description("성공 코드 (성공 : 1, 실패 :0)"),
                                         fieldWithPath("message").description("응답 관련 메시지"),
                                         fieldWithPath("data.id").description("수정된 댓글의 Id"),
@@ -182,6 +195,18 @@ class CommentApiControllerTest {
                                         fieldWithPath("data.content").description("수정된 댓글 내용"),
                                         fieldWithPath("data.replies").description("수정된 댓글의 대댓글 배열"),
                                         fieldWithPath("data.createdDate").description("수정된 시간")
+                                ),
+                                responseFields(
+                                        // withSubsectionId : 스니펫 이름 지정
+                                        // beneathPath 경로 아래를 명세한다.
+                                        beneathPath("data").withSubsectionId("resultData"),
+                                        Attributes.attributes(key("title").value("example for title")),
+                                        fieldWithPath("id").description("수정된 댓글의 Id").attributes(key("etc").value("this is etc")),
+                                        fieldWithPath("commentUserId").description("수정된 댓글의 작성 유저 Id"),
+                                        fieldWithPath("commentUserName").description("수정된 댓글의 작성 유저 이름"),
+                                        fieldWithPath("content").description("수정된 댓글 내용"),
+                                        fieldWithPath("replies").description("수정된 댓글의 대댓글 배열"),
+                                        fieldWithPath("createdDate").description("수정된 시간")
                                 )
                         )
                 )
@@ -236,7 +261,7 @@ class CommentApiControllerTest {
 
         //when
         ResultActions resultActions = mockMvc.perform(
-                post("/api/comment/" + commentId + "/reply")
+                post("/api/comment/{commentId}/reply", commentId)
                         .content(requestBody)
                         .contentType(APPLICATION_JSON)
         );
@@ -269,6 +294,7 @@ class CommentApiControllerTest {
 
         JsonNode jsonNode = objectMapper.readTree(result).get("data");
         BoardReplySaveRespDto boardReplySaveRespDto = objectMapper.treeToValue(jsonNode, BoardReplySaveRespDto.class);
+
         assertThat(boardReplySaveRespDto.getTopCommentId()).isEqualTo(boardId);
         assertThat(boardReplySaveRespDto.getReplyUserId()).isEqualTo(user.getId());
         assertThat(boardReplySaveRespDto.getReplyUserName()).isEqualTo(user.getUsername());

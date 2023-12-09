@@ -15,6 +15,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -24,6 +25,7 @@ import java.io.FileInputStream;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @Slf4j
@@ -63,17 +65,17 @@ class ItemBoardControllerTest {
         ItemBoardFormSaveDto formSaveDto = new ItemBoardFormSaveDto(subCategory, "Life is Good", "what is your favorite food?", null, null);
         ItemBoard itemBoard = itemBoardService.save(formSaveDto);
         em.clear();
+        Long boardId = itemBoard.getId();
 
         // when
-        String url = "/board/" + category + "/" + subCategory + "/" + itemBoard.getId();
-        log.info("url = {}", url);
         ResultActions resultActions = mockMvc.perform(
-                get(url)
+                get("/board/{category}/{subCategory}/{boardId}", category, subCategory, boardId)
             );
 
         // then
         resultActions.andExpect(view().name("board/tradedetail"))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(print());
     }
 
     @WithMockCustomUser
@@ -88,17 +90,17 @@ class ItemBoardControllerTest {
         ItemBoardFormSaveDto formSaveDto = new ItemBoardFormSaveDto(subCategory, "Life is Good", "what is your favorite food?", null, null);
         ItemBoard itemBoard = itemBoardService.save(formSaveDto);
         em.clear();
+        Long boardId = itemBoard.getId();
 
         // when
-        String url = "/board/" + category + "/"  + subCategory + "/" + itemBoard.getId() + "/form";
-        log.info("url = {}", url);
         ResultActions resultActions = mockMvc.perform(
-                get(url)
+                get("/board/{category}/{subCategory}/{boardId}/form",category, subCategory, boardId)
         );
 
         // then
         resultActions.andExpect(view().name("board/updateform"))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(print());
     }
 
     @WithMockCustomUser
@@ -112,12 +114,13 @@ class ItemBoardControllerTest {
 
         // when
         ResultActions resultActions = mockMvc.perform(
-                get("/board/" + category + "/"  + subCategory + "/form")
+                get("/board/{category}/{subCategory}/form",category, subCategory)
         );
 
         // then
         resultActions.andExpect(view().name("board/form"))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(print());
     }
 
     @WithMockCustomUser
@@ -137,7 +140,7 @@ class ItemBoardControllerTest {
 
         // when
         ResultActions resultActions = mockMvc.perform(
-                multipart("/board/" + category + "/"  + subCategory + "/form")
+                multipart("/board/{category}/{subCategory}/form",category, subCategory)
                         .file(file)
                         .param("title", title)
                         .param("content",content)
@@ -146,7 +149,8 @@ class ItemBoardControllerTest {
         // then
         resultActions
                 .andExpect(redirectedUrl("/boards/" + category+ "/" + subCategory))
-                .andExpect(status().is3xxRedirection());
+                .andExpect(status().is3xxRedirection())
+                .andDo(print());
     }
 
 }

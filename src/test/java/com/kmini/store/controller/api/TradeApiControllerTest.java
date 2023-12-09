@@ -2,6 +2,7 @@ package com.kmini.store.controller.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kmini.store.config.ApiDocumentUtils;
 import com.kmini.store.config.WithMockCustomUser;
 import com.kmini.store.config.WithMockCustomUserSecurityContextFactory;
 import com.kmini.store.config.auth.AccountContext;
@@ -18,30 +19,44 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.restdocs.payload.PayloadDocumentation;
+import org.springframework.restdocs.request.RequestDocumentation;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.validation.Payload;
 import java.io.FileInputStream;
 
+import static com.kmini.store.config.ApiDocumentUtils.getDocumentRequest;
+import static com.kmini.store.config.ApiDocumentUtils.getDocumentResponse;
 import static com.kmini.store.domain.type.CompleteFlag.COMPLETE_ABSTAIN;
 import static com.kmini.store.domain.type.CompleteFlag.COMPLETE_CONFIRM;
 import static com.kmini.store.domain.type.TradeStatus.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.securityContext;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -50,6 +65,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @Slf4j
 @AutoConfigureMockMvc
+@AutoConfigureRestDocs
 @Transactional
 @SpringBootTest
 class TradeApiControllerTest {
@@ -114,7 +130,7 @@ class TradeApiControllerTest {
 
         // when
         ResultActions resultActions = mockMvc.perform(
-                post("/api/trade/" + boardId)
+                RestDocumentationRequestBuilders.post("/api/trade/{boardId}", boardId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(securityContext(buyerSecurityContext))
         );
@@ -122,6 +138,24 @@ class TradeApiControllerTest {
         // then
         String result = resultActions.andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andDo(document("register-trade",
+                                getDocumentRequest(), getDocumentResponse(),
+                                pathParameters(
+                                        parameterWithName("boardId").description("거래를 신청한 게시물의 Id")
+                                ),
+                                responseFields(
+                                        fieldWithPath("code").description("성공 코드 (성공 : 1, 실패 :0)"),
+                                        fieldWithPath("message").description("응답 관련 메시지"),
+                                        fieldWithPath("data.tradeId").description("생성된 거래 Id"),
+                                        fieldWithPath("data.sellerId").description("판매자 Id"),
+                                        fieldWithPath("data.sellerName").description("판매자 이름"),
+                                        fieldWithPath("data.buyerId").description("구매자 Id"),
+                                        fieldWithPath("data.buyerName").description("구매자 이름"),
+                                        fieldWithPath("data.tradeStatus").description("거래 상태값")
+                                )
+                        )
+                )
                 .andReturn()
                 .getResponse().getContentAsString();
         JsonNode jsonNode = objectMapper.readTree(result).get("data");
@@ -152,13 +186,31 @@ class TradeApiControllerTest {
 
         // when
         ResultActions resultActions = mockMvc.perform(
-                patch("/api/trade/" + tradeId + "/accept")
+                RestDocumentationRequestBuilders.patch("/api/trade/{tradeId}/accept", tradeId)
         );
 
 
         // then
         String result = resultActions.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andDo(document("accept-trade",
+                                getDocumentRequest(), getDocumentResponse(),
+                                pathParameters(
+                                        parameterWithName("tradeId").description("수락할 거래 Id")
+                                ),
+                                responseFields(
+                                        fieldWithPath("code").description("성공 코드 (성공 : 1, 실패 :0)"),
+                                        fieldWithPath("message").description("응답 관련 메시지"),
+                                        fieldWithPath("data.tradeId").description("수락한 거래 Id"),
+                                        fieldWithPath("data.sellerId").description("판매자 Id"),
+                                        fieldWithPath("data.sellerName").description("판매자 이름"),
+                                        fieldWithPath("data.buyerId").description("구매자 Id"),
+                                        fieldWithPath("data.buyerName").description("구매자 이름"),
+                                        fieldWithPath("data.tradeStatus").description("거래 상태값")
+                                )
+                        )
+                )
                 .andReturn().getResponse().getContentAsString();
         JsonNode jsonNode = objectMapper.readTree(result).get("data");
 
@@ -187,13 +239,32 @@ class TradeApiControllerTest {
         String tradeId = String.valueOf(tradeRegisterRespDto.getTradeId());
         // when
         ResultActions resultActions = mockMvc.perform(
-                patch("/api/trade/" + tradeId + "/deny")
+                RestDocumentationRequestBuilders.patch("/api/trade/{tradeId}/deny", tradeId)
         );
 
 
         // then
         String result = resultActions.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andDo(
+                        document("deny-trade",
+                                getDocumentRequest(), getDocumentResponse(),
+                                pathParameters(
+                                        parameterWithName("tradeId").description("거절할 거래 Id")
+                                ),
+                                responseFields(
+                                        fieldWithPath("code").description("성공 코드 (성공 : 1, 실패 :0)"),
+                                        fieldWithPath("message").description("응답 관련 메시지"),
+                                        fieldWithPath("data.tradeId").description("거절된 거래 Id"),
+                                        fieldWithPath("data.sellerId").description("판매자 Id"),
+                                        fieldWithPath("data.sellerName").description("판매자 이름"),
+                                        fieldWithPath("data.buyerId").description("구매자 Id"),
+                                        fieldWithPath("data.buyerName").description("구매자 이름"),
+                                        fieldWithPath("data.tradeStatus").description("거래 상태값")
+                                )
+                        )
+                )
                 .andReturn().getResponse().getContentAsString();
 
         JsonNode jsonNode = objectMapper.readTree(result).get("data");
@@ -230,11 +301,32 @@ class TradeApiControllerTest {
         // 판매자가 거래 완료 버튼을 누른다.
         String tradeId = String.valueOf(tradeRegisterRespDto.getTradeId());
         String sellerCompleteResult = mockMvc.perform(
-                                        patch("/api/trade/" + tradeId + "/complete")
-                                                .with(securityContext(sellerSecurityContext))
-                                       ).andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                                        .andReturn()
-                                        .getResponse().getContentAsString();
+                        RestDocumentationRequestBuilders.patch("/api/trade/{tradeId}/complete", tradeId)
+                                .with(securityContext(sellerSecurityContext))
+                ).andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andDo(
+                        document("complete-trade-seller",
+                                getDocumentRequest(), getDocumentResponse(),
+                                pathParameters(
+                                        parameterWithName("tradeId").description("완료할 거래 Id")
+                                ),
+                                responseFields(
+                                        fieldWithPath("code").description("성공 코드 (성공 : 1, 실패 :0)"),
+                                        fieldWithPath("message").description("응답 관련 메시지"),
+                                        fieldWithPath("data.tradeId").description("완료된 거래 Id"),
+                                        fieldWithPath("data.sellerId").description("판매자 Id"),
+                                        fieldWithPath("data.sellerName").description("판매자 이름"),
+                                        fieldWithPath("data.buyerId").description("구매자 Id"),
+                                        fieldWithPath("data.buyerName").description("구매자 이름"),
+                                        fieldWithPath("data.tradeStatus").description("거래 상태값"),
+                                        fieldWithPath("data.buyerCompleteFlag").description("구매자가 완료 버튼을 눌렀는지 확인하는 플래그"),
+                                        fieldWithPath("data.sellerCompleteFlag").description("판매자가 완료 버튼을 눌렀는지 확인하는 플래그")
+                                )
+                        )
+                )
+                .andReturn()
+                .getResponse().getContentAsString();
 
         JsonNode jsonNode = objectMapper.readTree(sellerCompleteResult).get("data");
         TradeCompleteRespDto sellerCompleteRespDto = objectMapper.treeToValue(jsonNode, TradeCompleteRespDto.class);
@@ -250,10 +342,31 @@ class TradeApiControllerTest {
 
         // 구매자가 거래 완료 후 완료 버튼을 누른다.
         String buyerCompleteResult = mockMvc.perform(
-                                    patch("/api/trade/" + tradeId + "/complete")
-                                    .with(securityContext(buyerSecurityContext))
-                                    ).andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                                    .andReturn().getResponse().getContentAsString();
+                        RestDocumentationRequestBuilders.patch("/api/trade/{tradeId}/complete", tradeId)
+                                .with(securityContext(buyerSecurityContext))
+                ).andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andDo(
+                        document("complete-trade-buyer",
+                                getDocumentRequest(), getDocumentResponse(),
+                                pathParameters(
+                                        parameterWithName("tradeId").description("완료할 거래 Id")
+                                ),
+                                responseFields(
+                                        fieldWithPath("code").description("성공 코드 (성공 : 1, 실패 :0)"),
+                                        fieldWithPath("message").description("응답 관련 메시지"),
+                                        fieldWithPath("data.tradeId").description("완료된 거래 Id"),
+                                        fieldWithPath("data.sellerId").description("판매자 Id"),
+                                        fieldWithPath("data.sellerName").description("판매자 이름"),
+                                        fieldWithPath("data.buyerId").description("구매자 Id"),
+                                        fieldWithPath("data.buyerName").description("구매자 이름"),
+                                        fieldWithPath("data.tradeStatus").description("거래 상태값"),
+                                        fieldWithPath("data.buyerCompleteFlag").description("구매자가 완료 버튼을 눌렀는지 확인하는 플래그"),
+                                        fieldWithPath("data.sellerCompleteFlag").description("판매자가 완료 버튼을 눌렀는지 확인하는 플래그")
+                                )
+                        )
+                )
+                .andReturn().getResponse().getContentAsString();
 
         // then
         JsonNode jsonNode2 = objectMapper.readTree(buyerCompleteResult).get("data");
@@ -294,16 +407,38 @@ class TradeApiControllerTest {
         // 판매자가 거래 완료 버튼을 누른다.
         String tradeId = String.valueOf(tradeRegisterRespDto.getTradeId());
         String completeResult = mockMvc.perform(
-                        patch("/api/trade/" + tradeId + "/complete")
+                        patch("/api/trade/{tradeId}/complete", tradeId)
                                 .with(securityContext(sellerSecurityContext))
-                ).andReturn()
-                .getResponse().getContentAsString();
+                )
+                .andDo(print())
+                .andReturn().getResponse().getContentAsString();
 
         // 구매자가 변심하여 취소 버튼을 누른다.
         String cancelResult = mockMvc.perform(
-                        patch("/api/trade/" + tradeId + "/cancel")
+                       RestDocumentationRequestBuilders.patch("/api/trade/{tradeId}/cancel", tradeId)
                                 .with(securityContext(buyerSecurityContext))
                 ).andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andDo(
+                        document("cancel-trade-buyer",
+                                getDocumentRequest(), getDocumentResponse(),
+                                pathParameters(
+                                        parameterWithName("tradeId").description("완료할 거래 Id")
+                                ),
+                                responseFields(
+                                        fieldWithPath("code").description("성공 코드 (성공 : 1, 실패 :0)"),
+                                        fieldWithPath("message").description("응답 관련 메시지"),
+                                        fieldWithPath("data.tradeId").description("완료된 거래 Id"),
+                                        fieldWithPath("data.sellerId").description("판매자 Id"),
+                                        fieldWithPath("data.sellerName").description("판매자 이름"),
+                                        fieldWithPath("data.buyerId").description("구매자 Id"),
+                                        fieldWithPath("data.buyerName").description("구매자 이름"),
+                                        fieldWithPath("data.tradeStatus").description("거래 상태값"),
+                                        fieldWithPath("data.buyerCompleteFlag").description("구매자가 완료 버튼을 눌렀는지 확인하는 플래그"),
+                                        fieldWithPath("data.sellerCompleteFlag").description("판매자가 완료 버튼을 눌렀는지 확인하는 플래그")
+                                )
+                        )
+                )
                 .andReturn().getResponse().getContentAsString();
 
         JsonNode jsonNode = objectMapper.readTree(cancelResult).get("data");

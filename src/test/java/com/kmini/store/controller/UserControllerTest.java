@@ -242,7 +242,8 @@ class UserControllerTest {
         ResultActions resultActions = mockMvc.perform(
                 post("/logout"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/"));
+                .andExpect(redirectedUrl("/"))
+                .andDo(print());
 
 
         // then
