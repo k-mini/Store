@@ -2,10 +2,9 @@ package com.kmini.store.service;
 
 import com.kmini.store.domain.*;
 import com.kmini.store.domain.type.TradeStatus;
-import com.kmini.store.dto.request.TradeDto.TradeHistoryReqDto;
+import com.kmini.store.dto.request.TradeDto.SelectUserTradeHistoryReqDto;
 import com.kmini.store.dto.response.TradeDto.*;
 import com.kmini.store.repository.BoardCategoryRepository;
-import com.kmini.store.repository.CategoryRepository;
 import com.kmini.store.repository.TradeRepository;
 import com.kmini.store.repository.board.ItemBoardRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +20,6 @@ import java.util.stream.Collectors;
 
 import static com.kmini.store.domain.type.CompleteFlag.*;
 import static com.kmini.store.domain.type.TradeStatus.*;
-import static java.util.stream.Collectors.*;
 
 @Service
 @RequiredArgsConstructor
@@ -33,9 +31,9 @@ public class TradeService {
 
     // 거래중인 목록
     @Transactional
-    public Page<TradeHistoryRespDto> viewTradeHistory(TradeHistoryReqDto tradeHistoryReqDto, Pageable pageable) {
+    public Page<TradeHistoryRespDto> selectUserTradeHistory(SelectUserTradeHistoryReqDto selectUserTradeHistoryReqDto, Pageable pageable) {
 
-        Page<Trade> histories = tradeRepository.findByHistoryByUserIdAndKeyword(tradeHistoryReqDto, pageable);
+        Page<Trade> histories = tradeRepository.findTradeHistoryByUserIdAndKeyword(selectUserTradeHistoryReqDto, pageable);
 
         List<Long> boardIds = histories.getContent()
                                        .stream()
@@ -57,6 +55,7 @@ public class TradeService {
                 subCategoriyMap.put(boardId, category);
             }
         }
+
         return histories.map(trade -> TradeHistoryRespDto.toDto(trade, superCategoryMap, subCategoriyMap));
     }
 

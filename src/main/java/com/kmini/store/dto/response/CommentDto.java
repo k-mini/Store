@@ -15,7 +15,7 @@ public class CommentDto {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor @Builder
-    public static class BoardCommentRespDto {
+    public static class BoardCommentUpdateRespDto {
         // comment id
         private Long id;
         // 작성자 id
@@ -25,22 +25,22 @@ public class CommentDto {
         // 내용
         private String content;
         // 답글
-        private List<BoardReplyRespDto> replies;
+        private List<BoardReplySaveRespDto> replies;
         // 생성 시간
         private String createdDate;
 
-        public static List<BoardCommentRespDto> toDtos(List<Comment> comments) {
+        public static List<BoardCommentUpdateRespDto> toDtos(List<Comment> comments) {
             return comments.stream()
-                    .map(BoardCommentRespDto::toDto)
+                    .map(BoardCommentUpdateRespDto::toDto)
                     .collect(Collectors.toList());
         }
-        public static BoardCommentRespDto toDto(Comment comment) {
-            return BoardCommentRespDto.builder()
+        public static BoardCommentUpdateRespDto toDto(Comment comment) {
+            return BoardCommentUpdateRespDto.builder()
                     .id(comment.getId())
                     .commentUserId(comment.getUser().getId())
                     .commentUserName(comment.getUser().getUsername())
                     .content(comment.getContent())
-                    .replies(BoardReplyRespDto.toDtos(comment.getSubComments()))
+                    .replies(BoardReplySaveRespDto.toDtos(comment.getSubComments()))
                     .createdDate(CustomTimeUtils.convertTime(comment.getCreatedDate()))
                     .build();
         }
@@ -49,7 +49,7 @@ public class CommentDto {
     @Data
     @AllArgsConstructor @Builder
     @NoArgsConstructor
-    public static class BoardReplyRespDto {
+    public static class BoardReplySaveRespDto {
         // 상위 댓글 id
         private Long topCommentId;
         // 답글 id
@@ -63,14 +63,14 @@ public class CommentDto {
         // 생성 시간
         private String createdDate;
 
-        public static List<BoardReplyRespDto> toDtos(List<Comment> comment) {
+        public static List<BoardReplySaveRespDto> toDtos(List<Comment> comment) {
             return comment.stream()
-                    .map(BoardReplyRespDto::toDto)
+                    .map(BoardReplySaveRespDto::toDto)
                     .collect(Collectors.toList());
         }
 
-        public static BoardReplyRespDto toDto(Comment reply) {
-            return BoardReplyRespDto.builder()
+        public static BoardReplySaveRespDto toDto(Comment reply) {
+            return BoardReplySaveRespDto.builder()
                     .topCommentId(reply.getTopComment().getId())
                     .replyId(reply.getId())
                     .replyUserId(reply.getUser().getId())

@@ -30,7 +30,7 @@ public class CommunityBoardController {
 
     // 게시물 자세히 조회
     @GetMapping("/{boardId}")
-    public String detail(
+    public String viewBoard(
             @PathVariable("subCategory") String subCategory,
             @PathVariable("boardId") Long boardId, Model model) {
         CommunityBoardRespDetailDto result = communityBoardService.detail(boardId);
@@ -47,11 +47,11 @@ public class CommunityBoardController {
 
     // 게시물 저장
     @PostMapping("/form")
-    public String save(
+    public String saveBoard(
             @ModelAttribute CommunityBoardFormSaveDto communityBoardFormSaveDto,
-            @AuthenticationPrincipal AccountContext accountContext,
             RedirectAttributes redirectAttributes) throws IOException {
         log.debug("communityBoardFormSaveDto = {}", communityBoardFormSaveDto);
+
         communityBoardService.save(communityBoardFormSaveDto);
 
         redirectAttributes.addAttribute("category", "community");

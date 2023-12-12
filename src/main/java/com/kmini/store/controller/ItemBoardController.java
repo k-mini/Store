@@ -31,7 +31,9 @@ public class ItemBoardController {
     public String viewBoard(
             @PathVariable("subCategory") String subCategory,
             @PathVariable("boardId") Long boardId, Model model) {
+
         ItemBoardRespDetailDto result = itemBoardService.viewBoard(boardId);
+
         model.addAttribute("result", result);
         log.debug("result = {}", result);
         return "board/tradedetail";
@@ -41,7 +43,9 @@ public class ItemBoardController {
     @GetMapping("/{boardId}/form")
     public String getUpdateForm(@PathVariable Long boardId,
                               @PathVariable String subCategory, Model model) {
+
         ItemBoardUpdateFormDto result = itemBoardService.getUpdateForm(boardId);
+
         model.addAttribute("itemBoardUpdateFormDto", result);
         log.debug("result = {}", result);
         return "board/updateform";

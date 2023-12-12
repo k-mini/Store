@@ -18,7 +18,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
-@ActiveProfiles("test")
 @Slf4j
 @AutoConfigureMockMvc
 @Transactional
@@ -37,7 +36,7 @@ class BoardControllerTest {
         String subCategory = "all";
         // when
         ResultActions resultActions = mockMvc.perform(
-                get("/boards/" + category + "/" + subCategory)
+                get("/boards/{category}/{subCategory}",category, subCategory)
         );
         // then
         resultActions.andExpect(status().isOk())
@@ -53,7 +52,7 @@ class BoardControllerTest {
         String subCategory = "all";
         // when
         ResultActions resultActions = mockMvc.perform(
-                get("/boards/" + category + "/" + subCategory)
+                get("/boards/{category}/{subCategory}", category, subCategory)
         );
         // then
         resultActions.andExpect(status().isOk())

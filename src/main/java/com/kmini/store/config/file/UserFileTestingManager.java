@@ -28,7 +28,7 @@ public class UserFileTestingManager implements UserResourceManager {
     // 파일을 저장하고 경로를 반환
     @Override
     public String storeFile(String email, MultipartFile multipartFile) {
-        if (multipartFile.isEmpty()) {
+        if (multipartFile == null || multipartFile.isEmpty()) {
             return null;
         }
         String originalFilename = multipartFile.getOriginalFilename();

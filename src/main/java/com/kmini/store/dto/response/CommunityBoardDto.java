@@ -4,7 +4,7 @@ package com.kmini.store.dto.response;
 import com.kmini.store.config.util.CustomTimeUtils;
 import com.kmini.store.domain.Comment;
 import com.kmini.store.domain.CommunityBoard;
-import com.kmini.store.dto.response.CommentDto.BoardCommentRespDto;
+import com.kmini.store.dto.response.CommentDto.BoardCommentUpdateRespDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -42,7 +42,7 @@ public class CommunityBoardDto {
         // 댓글 수
         private int commentTotalCount;
         // 댓글
-        private List<BoardCommentRespDto> comments = new ArrayList<>();
+        private List<BoardCommentUpdateRespDto> comments = new ArrayList<>();
 
         public static CommunityBoardRespDetailDto toDto(CommunityBoard communityBoard, List<Comment> comments) {
             return CommunityBoardRespDetailDto.builder()
@@ -57,7 +57,7 @@ public class CommunityBoardDto {
                     .createdDate(CustomTimeUtils.convertTime(communityBoard.getCreatedDate()))
                     .views(communityBoard.getViews())
                     .commentTotalCount(communityBoard.getComments().size())
-                    .comments(BoardCommentRespDto.toDtos(comments))
+                    .comments(BoardCommentUpdateRespDto.toDtos(comments))
                     .build();
         }
     }
