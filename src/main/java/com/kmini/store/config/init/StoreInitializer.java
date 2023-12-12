@@ -105,10 +105,10 @@ public class StoreInitializer implements ApplicationRunner {
     }
 
     private User createAdmin(String username, String password, String email) {
-        return userService.save(new User(username, password, email, UserRole.ADMIN, UserStatus.SIGNUP, null));
+        return userService.saveUser(new User(username, password, email, UserRole.ADMIN, UserStatus.SIGNUP, null));
     }
 
     private User createUser(String username, String password, String email) {
-        return userService.save(new User(username, password, email, UserRole.USER, UserStatus.SIGNUP, null));
+        return userService.saveUser(new User(username, password, email, UserRole.USER, UserStatus.SIGNUP, null));
     }
 }

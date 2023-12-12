@@ -53,6 +53,7 @@ public class CommentService {
         Comment savedReply = commentRepository.save(reply);
         return BoardReplySaveRespDto.toDto(savedReply);
     }
+
     @Transactional
     public BoardCommentUpdateRespDto updateComment(BoardCommentUpdateReqDto boardCommentUpdateReqDto) {
 

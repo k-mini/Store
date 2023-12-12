@@ -62,7 +62,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Sql("classpath:/tableInit.sql")
-@ActiveProfiles("test")
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @Slf4j

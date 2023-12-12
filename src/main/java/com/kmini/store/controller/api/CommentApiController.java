@@ -21,16 +21,18 @@ public class CommentApiController {
 
     private final CommentService commentService;
 
+    // 댓글 저장
     @PostMapping
     public ResponseEntity<?> saveComment(
             @RequestBody BoardCommentSaveReqDto boardCommentSaveReqDto) {
-        log.info("boardCommentReqDto = {}", boardCommentSaveReqDto);
+        log.debug("boardCommentReqDto = {}", boardCommentSaveReqDto);
         BoardCommentUpdateRespDto result = commentService.saveComment(boardCommentSaveReqDto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(new CommonRespDto<>(1, "성공", result));
     }
 
+    // 댓글,대댓글 수정
     @PatchMapping("/{commentId}")
     public ResponseEntity<?> updateComment(@RequestBody BoardCommentUpdateReqDto boardCommentUpdateReqDto) {
         log.debug("boardCommentUpdateReqDto = {}", boardCommentUpdateReqDto);
@@ -40,9 +42,10 @@ public class CommentApiController {
                 .body(new CommonRespDto<>(1,"성공", result));
     }
 
+    // 댓글,대댓글 삭제
     @DeleteMapping("/{commentId}")
     public ResponseEntity<?> deleteComment(@PathVariable Long commentId) {
-        log.info("commentId = {}", commentId);
+        log.debug("commentId = {}", commentId);
         int result = commentService.deleteComment(commentId);
 
         return ResponseEntity
@@ -50,10 +53,11 @@ public class CommentApiController {
                 .body(new CommonRespDto<>(1, "성공", result));
     }
 
+    // 대댓글 저장
     @PostMapping("{commentId}/reply")
     public ResponseEntity<?> saveReply(
             @RequestBody BoardReplySaveReqDto boardReplySaveReqDto) {
-        log.info("boardReplyReqDto = {} ", boardReplySaveReqDto);
+        log.debug("boardReplyReqDto = {} ", boardReplySaveReqDto);
         BoardReplySaveRespDto result = commentService.saveReplyComment(boardReplySaveReqDto);
 
         return ResponseEntity

@@ -41,14 +41,6 @@ public class BoardController {
             @ModelAttribute SearchBoardDto searchBoardDto,
             Model model) {
         log.debug("category = {}, subCategory = {}", categoryName, subCategoryName);
-        System.out.println("model = " + model.getClass());
-        if (log.isDebugEnabled()) {
-            Sort sort = pageable.getSort();
-            log.debug("Sort = {}", sort);
-            for (Sort.Order order : sort) {
-                log.debug("Order = {}", order);
-            }
-        }
         log.debug("SearchBoardDto = {}", searchBoardDto);
 
         String order = searchBoardDto.getOrder();
@@ -60,7 +52,7 @@ public class BoardController {
 
         Page<BoardDto> results = boardService.viewPosts(pageable, categoryName, subCategoryName, searchBoardDto);
         for (BoardDto result : results.getContent()) {
-            log.debug("result = {}", result);
+            log.trace("result = {}", result);
         }
 
         CustomPageUtils.configure(results, 5, model);

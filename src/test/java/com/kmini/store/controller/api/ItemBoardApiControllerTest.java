@@ -43,7 +43,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @Slf4j
-@ActiveProfiles("test")
 @Transactional
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs

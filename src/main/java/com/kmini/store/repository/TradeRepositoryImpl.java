@@ -2,8 +2,7 @@ package com.kmini.store.repository;
 
 import com.kmini.store.domain.Trade;
 import com.kmini.store.domain.type.TradeStatus;
-import com.kmini.store.dto.request.TradeDto;
-import com.kmini.store.dto.request.TradeDto.TradeHistoryReqDto;
+import com.kmini.store.dto.request.TradeDto.SelectUserTradeHistoryReqDto;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -16,7 +15,6 @@ import org.springframework.util.StringUtils;
 
 import java.util.Optional;
 
-import static com.kmini.store.domain.QBoard.board;
 import static com.kmini.store.domain.QTrade.trade;
 
 @RequiredArgsConstructor
@@ -34,12 +32,12 @@ public class TradeRepositoryImpl implements TradeRepositoryQsl {
     }
 
     @Override
-    public Page<Trade> findByHistoryByUserIdAndKeyword(TradeHistoryReqDto tradeHistoryReqDto, Pageable pageable) {
+    public Page<Trade> findTradeHistoryByUserIdAndKeyword(SelectUserTradeHistoryReqDto selectUserTradeHistoryReqDto, Pageable pageable) {
 
         // 조회자 Id
-        Long userId = tradeHistoryReqDto.getUserId();
+        Long userId = selectUserTradeHistoryReqDto.getUserId();
         // 검색 조건 만들기
-        TradeHistorySearchCond cond = getSearchCond(tradeHistoryReqDto);
+        TradeHistorySearchCond cond = getSearchCond(selectUserTradeHistoryReqDto);
 
         JPAQuery<Trade> query =
                 queryFactory.selectFrom(trade)
@@ -67,8 +65,8 @@ public class TradeRepositoryImpl implements TradeRepositoryQsl {
         return PageableExecutionUtils.getPage(query.fetch(), pageable, countQuery::fetchOne);
     }
 
-    private TradeHistorySearchCond getSearchCond(TradeHistoryReqDto tradeHistoryReqDto) {
-        return new TradeHistorySearchCond(tradeHistoryReqDto.getS(), tradeHistoryReqDto.getSType());
+    private TradeHistorySearchCond getSearchCond(SelectUserTradeHistoryReqDto selectUserTradeHistoryReqDto) {
+        return new TradeHistorySearchCond(selectUserTradeHistoryReqDto.getS(), selectUserTradeHistoryReqDto.getSType());
     }
 
     private BooleanExpression titleLike(String title) {

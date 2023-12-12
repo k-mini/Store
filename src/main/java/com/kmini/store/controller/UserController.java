@@ -3,7 +3,8 @@ package com.kmini.store.controller;
 import com.kmini.store.config.auth.AccountContext;
 import com.kmini.store.config.file.UserResourceManager;
 import com.kmini.store.domain.User;
-import com.kmini.store.dto.request.UserDto.SignUpDto;
+import com.kmini.store.dto.request.UserDto;
+import com.kmini.store.dto.request.UserDto.UserSaveReqDto;
 import com.kmini.store.dto.request.UserDto.UserUpdateReqDto;
 import com.kmini.store.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequiredArgsConstructor
@@ -34,14 +37,16 @@ public class UserController {
 
     @GetMapping("/auth/signup")
     public String saveUserForm(Model model) {
-        model.addAttribute("signUpDto", new SignUpDto());
+        model.addAttribute("userSaveReqDto", new UserSaveReqDto());
         return "auth/signup";
     }
 
     @PostMapping("/auth/signup")
-    public String saveUser(@Validated @ModelAttribute SignUpDto signUpDto, BindingResult bindingResult) {
-        log.debug("signUpDto = {}", signUpDto);
-        if (!signUpDto.getPassword().equals(signUpDto.getPasswordCheck())) {
+    public String saveUser(@Validated @ModelAttribute UserSaveReqDto userSaveReqDto,
+                                         @RequestPart MultipartFile file, BindingResult bindingResult) {
+        log.debug("userSaveReqDto = {}", userSaveReqDto);
+        log.debug("file = {}", file);
+        if (!userSaveReqDto.getPassword().equals(userSaveReqDto.getPasswordCheck())) {
             bindingResult.addError(new FieldError("signUpDto", "password", "패스워드가 일치하지 않습니다."));
         }
 
@@ -50,13 +55,12 @@ public class UserController {
             return "auth/signup";
         }
 
-        User user = User.builder()
-                .email(signUpDto.getEmail())
-                .username(signUpDto.getUsername())
-                .password(signUpDto.getPassword())
-                .thumbnail(userResourceManager.storeFile(signUpDto.getEmail(), signUpDto.getFile()))
-                .build();
-        userService.save(user);
+        userService.saveUser(User.builder()
+                             .email(userSaveReqDto.getEmail())
+                             .username(userSaveReqDto.getUsername())
+                             .password(userSaveReqDto.getPassword())
+                             .thumbnail(userResourceManager.storeFile(userSaveReqDto.getEmail(), file))
+                             .build());
         return "redirect:/auth/signin";
     }
 
@@ -75,6 +79,7 @@ public class UserController {
 
     @PostMapping("/auth/my-page")
     public String updateUser(@Validated UserUpdateReqDto userUpdateReqDto, BindingResult bindingResult,
+                             @RequestPart(required = false) MultipartFile file,
                              @AuthenticationPrincipal AccountContext accountContext) {
         User user = accountContext.getUser();
         log.debug("userUpdateReqDto = {}", userUpdateReqDto);
@@ -88,7 +93,7 @@ public class UserController {
             return "/auth/mypage";
         }
 
-        userService.updateUser(user.getId(), userUpdateReqDto);
+        userService.updateUser(user.getId(), userUpdateReqDto, file);
         return "redirect:/";
     }
 }
