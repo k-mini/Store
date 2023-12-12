@@ -1,0 +1,53 @@
+= 거래 게시판 API
+https://github.com/k-mini
+:toc-title: 목차
+:toc: left
+:toclevels: 3
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:sectnums:
+
+== 게시판 수정
+
+=== 요청
+
+include::{snippets}/itemboard/update-itemboard/curl-request.adoc[]
+
+=== 응답
+
+include::{snippets}/itemboard/update-itemboard/http-response.adoc[]
+
+=== 경로 파라미터
+
+include::{snippets}/itemboard/update-itemboard/path-parameters.adoc[]
+
+=== 요청 파라미터
+
+include::{snippets}/itemboard/update-itemboard/request-parameters.adoc[]
+
+=== 응답 필드
+
+include::{snippets}/itemboard/update-itemboard/response-fields.adoc[]
+
+
+
+
+== 게시판 삭제
+
+=== 요청
+
+include::{snippets}/itemboard/delete-itemboard/curl-request.adoc[]
+
+=== 응답
+
+include::{snippets}/itemboard/delete-itemboard/http-response.adoc[]
+
+=== 경로 파라미터
+
+include::{snippets}/itemboard/delete-itemboard/path-parameters.adoc[]
+
+=== 응답 필드
+
+include::{snippets}/itemboard/delete-itemboard/response-fields.adoc[]
+

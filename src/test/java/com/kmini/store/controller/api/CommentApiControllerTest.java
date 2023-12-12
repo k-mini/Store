@@ -119,7 +119,7 @@ class CommentApiControllerTest {
         String result = resultActions.andExpect(status().isCreated())
                 .andExpect(content().contentType(APPLICATION_JSON))
                 .andDo(print())
-                .andDo(document("save-comment",
+                .andDo(document("comment/save-comment",
                                 getDocumentRequest(),
                                 getDocumentResponse(),
                                 requestFields(
@@ -159,7 +159,7 @@ class CommentApiControllerTest {
         Long boardId = 1L;
         String content = "수정내용내용";
 
-        BoardCommentUpdateReqDto boardCommentUpdateReqDto = new BoardCommentUpdateReqDto(boardId, 1L, content);
+        BoardCommentUpdateReqDto boardCommentUpdateReqDto = new BoardCommentUpdateReqDto(boardId, content);
         String requestBody = objectMapper.writeValueAsString(boardCommentUpdateReqDto);
 
         //when
@@ -174,16 +174,15 @@ class CommentApiControllerTest {
                 .andExpect(content().contentType(APPLICATION_JSON))
                 .andDo(print())
                 .andDo(
-                        document("update-comment",
+                        document("comment/update-comment",
                                 getDocumentRequest(), getDocumentResponse(),
-                                requestFields(
-                                        fieldWithPath("boardId").description("수정할 댓글의 게시물 Id"),
-                                        fieldWithPath("commentId").description("수정할 댓글의 Id"),
-                                        fieldWithPath("content").description("수정할 댓글의 내용")
-                                ),
                                 pathParameters(
                                         parameterWithName("commentId").description("수정할 댓글의 Id")
                                 ),
+                                requestFields(
+                                        fieldWithPath("boardId").description("수정할 댓글의 게시물 Id"),
+                                                fieldWithPath("content").description("수정할 댓글의 내용")
+                                        ),
                                 responseFields(
                                         Attributes.attributes(key("title").value("example for title")),
                                         fieldWithPath("code").description("성공 코드 (성공 : 1, 실패 :0)"),
@@ -270,7 +269,7 @@ class CommentApiControllerTest {
                 .andExpect(content().contentType(APPLICATION_JSON))
                 .andDo(print())
                 .andDo(document(
-                                "save-reply",
+                                "comment/save-reply",
                                 getDocumentRequest(), getDocumentResponse(),
                                 requestFields(
                                         fieldWithPath("boardId").description("댓글을 작성한 게시물 Id"),

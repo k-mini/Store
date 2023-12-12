@@ -27,7 +27,7 @@ public class CommentDto {
         // 게시물 id
         private Long boardId;
         // 댓글 번호
-        private Long commentId;
+//        private Long commentId;
         // 내용
         private String content;
     } 

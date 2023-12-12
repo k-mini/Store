@@ -337,7 +337,7 @@
 
 <!-- ====== All Scripts -->
 <script th:inline="javascript">
-    let boardId = [[${itemBoardUpdateFormDto.boardId}]]
+    let boardId = [[${boardId}]]
     let userId = [[${#authentication.principal.user.id}]]
     let username = [[${#authentication.principal.user.username}]]
     let category = 'trade'

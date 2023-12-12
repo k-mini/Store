@@ -1,8 +1,11 @@
 package com.kmini.store.controller.api;
 
 
+import com.kmini.store.domain.ItemBoard;
 import com.kmini.store.dto.CommonRespDto;
 import com.kmini.store.dto.request.ItemBoardDto.ItemBoardUpdateFormDto;
+import com.kmini.store.dto.response.ItemBoardDto;
+import com.kmini.store.dto.response.ItemBoardDto.ItemBoardUpdateRespDto;
 import com.kmini.store.service.ItemBoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,23 +30,30 @@ public class ItemBoardApiController {
     public ResponseEntity<?> deletePost(
                        @PathVariable("subCategory") String subCategory,@PathVariable("boardId") Long boardId) {
         log.debug("category = {} subCategory = {} boardId = {}", category, subCategory, boardId);
+
         itemBoardService.deletePost(boardId);
+
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new CommonRespDto<Void>(1, "성공", null));
     }
 
     @PatchMapping("/{boardId}")
-    public ResponseEntity<?> updatePost(@Validated ItemBoardUpdateFormDto itemBoardUpdateFormDto, BindingResult bindingResult, Model model) {
-        log.debug("itemBoardUpdateFormDto = {}", itemBoardUpdateFormDto);
+    public ResponseEntity<?> updatePost(@PathVariable Long boardId,
+                                        @Validated ItemBoardUpdateFormDto itemBoardUpdateReqDto, BindingResult bindingResult,
+                                        Model model) {
+        log.debug("itemBoardUpdateReqDto = {}", itemBoardUpdateReqDto);
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("itemBoardUpdateFormDto", itemBoardUpdateFormDto);
+            model.addAttribute("itemBoardUpdateReqDto", itemBoardUpdateReqDto);
         }
 
-        itemBoardService.updatePost(itemBoardUpdateFormDto);
+        ItemBoard itemBoard = itemBoardService.updatePost(itemBoardUpdateReqDto, boardId);
+
+        ItemBoardUpdateRespDto result = ItemBoardUpdateRespDto.toDto(itemBoard);
+
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new CommonRespDto<Void>(1, "성공", null));
+                .body(new CommonRespDto<>(1, "성공", result));
     }
 }

@@ -15,16 +15,12 @@ public class ItemBoardDto {
     @Builder
     public static class ItemBoardUpdateFormDto {
 
-        // 게시물 ID
-        private Long boardId;
         // 제목
         @NotBlank
         private String title;
         // 내용
         @NotBlank
         private String content;
-        // 아이템 이름
-        private String itemName;
         // 게시물 썸네일
         private MultipartFile file;
         // 서브 카테고리
@@ -32,7 +28,7 @@ public class ItemBoardDto {
 
         public static ItemBoardUpdateFormDto toDto(ItemBoard board) {
             return ItemBoardUpdateFormDto.builder()
-                    .boardId(board.getId())
+//                    .boardId(board.getId())
                     .title(board.getTitle())
                     .content(board.getContent())
 //                    .file(board.getThumbnail())

@@ -138,7 +138,7 @@ class TradeApiControllerTest {
         String result = resultActions.andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andDo(document("register-trade",
+                .andDo(document("trade/register-trade",
                                 getDocumentRequest(), getDocumentResponse(),
                                 pathParameters(
                                         parameterWithName("boardId").description("거래를 신청한 게시물의 Id")
@@ -193,7 +193,7 @@ class TradeApiControllerTest {
         String result = resultActions.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andDo(document("accept-trade",
+                .andDo(document("trade/accept-trade",
                                 getDocumentRequest(), getDocumentResponse(),
                                 pathParameters(
                                         parameterWithName("tradeId").description("수락할 거래 Id")
@@ -247,7 +247,7 @@ class TradeApiControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andDo(
-                        document("deny-trade",
+                        document("trade/deny-trade",
                                 getDocumentRequest(), getDocumentResponse(),
                                 pathParameters(
                                         parameterWithName("tradeId").description("거절할 거래 Id")
@@ -305,7 +305,7 @@ class TradeApiControllerTest {
                 ).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andDo(
-                        document("complete-trade-seller",
+                        document("trade/complete-trade-seller",
                                 getDocumentRequest(), getDocumentResponse(),
                                 pathParameters(
                                         parameterWithName("tradeId").description("완료할 거래 Id")
@@ -346,7 +346,7 @@ class TradeApiControllerTest {
                 ).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andDo(
-                        document("complete-trade-buyer",
+                        document("trade/complete-trade-buyer",
                                 getDocumentRequest(), getDocumentResponse(),
                                 pathParameters(
                                         parameterWithName("tradeId").description("완료할 거래 Id")
@@ -419,7 +419,7 @@ class TradeApiControllerTest {
                 ).andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andDo(
-                        document("cancel-trade-buyer",
+                        document("trade/cancel-trade-buyer",
                                 getDocumentRequest(), getDocumentResponse(),
                                 pathParameters(
                                         parameterWithName("tradeId").description("완료할 거래 Id")

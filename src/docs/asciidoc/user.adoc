@@ -1,0 +1,66 @@
+= 유저 API
+https://github.com/k-mini
+:toc-title: 목차
+:toc: left
+:toclevels: 3
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:sectnums:
+
+== 유저 생성
+
+=== 요청
+
+include::{snippets}/user/save-user-api/curl-request.adoc[]
+
+=== 응답
+
+include::{snippets}/user/save-user-api/http-response.adoc[]
+
+// === 경로 파라미터
+
+// include::{snippets}/user/save-user-api/path-parameters.adoc[]
+
+=== 요청 파라미터
+
+include::{snippets}/user/save-user-api/request-parts.adoc[]
+
+==== userSaveReqDto 필드 설명
+
+include::{snippets}/user/save-user-api/request-part-userSaveReqDto-fields.adoc[]
+
+=== 응답 필드
+
+include::{snippets}/user/save-user-api/response-fields.adoc[]
+
+
+
+
+== 유저 수정
+
+=== 요청
+
+include::{snippets}/user/update-user-api/curl-request.adoc[]
+
+=== 응답
+
+include::{snippets}/user/update-user-api/http-response.adoc[]
+
+=== 경로 파라미터
+
+include::{snippets}/user/update-user-api/path-parameters.adoc[]
+
+=== 요청 파라미터
+
+include::{snippets}/user/update-user-api/request-parts.adoc[]
+
+==== userUpdateReqDto 필드 설명
+
+include::{snippets}/user/update-user-api/request-part-userUpdateReqDto-fields.adoc[]
+
+=== 응답 필드
+
+include::{snippets}/user/update-user-api/response-fields.adoc[]
+
+

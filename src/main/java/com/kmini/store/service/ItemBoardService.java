@@ -36,7 +36,7 @@ public class ItemBoardService {
     public ItemBoardRespDetailDto viewBoard(Long id) {
 
         // 게시물 조회
-        ItemBoard board = itemBoardRepository.findByIdWithUserAndComments(id)
+        ItemBoard board = itemBoardRepository.findByIdFetchJoinUserAndComments(id)
                 .orElseThrow(()-> new IllegalArgumentException("게시물을 찾을 수 없습니다."));
 
         // 상위 댓글 조회
@@ -95,9 +95,9 @@ public class ItemBoardService {
 
     // 게시물 수정
     @Transactional
-    public void updatePost(ItemBoardUpdateFormDto itemBoardUpdateFormDto) {
+    public ItemBoard updatePost(ItemBoardUpdateFormDto itemBoardUpdateFormDto, Long boardId) {
 
-        ItemBoard itemBoard = itemBoardRepository.findById(itemBoardUpdateFormDto.getBoardId())
+        ItemBoard itemBoard = itemBoardRepository.findByIdFetchJoinUser(boardId)
                 .orElseThrow(() -> new IllegalStateException("게시물을 찾을 수 없습니다."));
 
         MultipartFile submittedFile = itemBoardUpdateFormDto.getFile();
@@ -107,13 +107,13 @@ public class ItemBoardService {
 
         itemBoard.setTitle(itemBoardUpdateFormDto.getTitle());
         itemBoard.setContent(itemBoardUpdateFormDto.getContent());
-        itemBoard.setItemName(itemBoardUpdateFormDto.getItemName());
+        return itemBoard;
     }
 
     // 게시물 수정 폼 로딩
     @Transactional
     public ItemBoardUpdateFormDto getUpdateForm(Long boardId) {
-        ItemBoard itemBoard = itemBoardRepository.findByIdWithUserAndComments(boardId)
+        ItemBoard itemBoard = itemBoardRepository.findByIdFetchJoinUserAndComments(boardId)
                 .orElseThrow(() -> new IllegalArgumentException("게시물을 찾을 수 없습니다."));
 
         return ItemBoardUpdateFormDto.toDto(itemBoard);
@@ -122,7 +122,7 @@ public class ItemBoardService {
     // 게시물 삭제
     @Transactional
     public void deletePost(Long boardId) {
-        ItemBoard itemBoard = itemBoardRepository.findByIdWithUserAndComments(boardId)
+        ItemBoard itemBoard = itemBoardRepository.findByIdFetchJoinUserAndComments(boardId)
                 .orElseThrow(() -> new IllegalArgumentException("게시물을 찾을 수 없습니다."));
         User user = itemBoard.getUser();
         // 자식 댓글 삭제 진행

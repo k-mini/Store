@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.10">
 <meta name="author" content="https://github.com/k-mini">
-<title>댓글 API</title>
+<title>유저 API</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -440,7 +440,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="book toc2 toc-left">
 <div id="header">
-<h1>댓글 API</h1>
+<h1>유저 API</h1>
 <div class="details">
 <span id="author" class="author">https://github.com/k-mini</span><br>
 <span id="revnumber">version 0.0.1-SNAPSHOT</span>
@@ -448,29 +448,29 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toc" class="toc2">
 <div id="toctitle">목차</div>
 <ul class="sectlevel1">
-<li><a href="#_댓글_저장">1. 댓글 저장</a>
+<li><a href="#_유저_생성">1. 유저 생성</a>
 <ul class="sectlevel2">
 <li><a href="#_요청">1.1. 요청</a></li>
 <li><a href="#_응답">1.2. 응답</a></li>
-<li><a href="#_요청_파라미터">1.3. 요청 파라미터</a></li>
-<li><a href="#_응답_파라미터">1.4. 응답 파라미터</a></li>
+<li><a href="#_요청_파라미터">1.3. 요청 파라미터</a>
+<ul class="sectlevel3">
+<li><a href="#_usersavereqdto_필드_설명">1.3.1. userSaveReqDto 필드 설명</a></li>
 </ul>
 </li>
-<li><a href="#_댓글_수정_대댓글_포함">2. 댓글 수정 (대댓글 포함)</a>
+<li><a href="#_응답_필드">1.4. 응답 필드</a></li>
+</ul>
+</li>
+<li><a href="#_유저_수정">2. 유저 수정</a>
 <ul class="sectlevel2">
 <li><a href="#_요청_2">2.1. 요청</a></li>
 <li><a href="#_응답_2">2.2. 응답</a></li>
 <li><a href="#_경로_파라미터">2.3. 경로 파라미터</a></li>
-<li><a href="#_요청_파라미터_2">2.4. 요청 파라미터</a></li>
-<li><a href="#_응답_파라미터_2">2.5. 응답 파라미터</a></li>
+<li><a href="#_요청_파라미터_2">2.4. 요청 파라미터</a>
+<ul class="sectlevel3">
+<li><a href="#_userupdatereqdto_필드_설명">2.4.1. userUpdateReqDto 필드 설명</a></li>
 </ul>
 </li>
-<li><a href="#_대댓글_저장">3. 대댓글 저장</a>
-<ul class="sectlevel2">
-<li><a href="#_요청_3">3.1. 요청</a></li>
-<li><a href="#_응답_3">3.2. 응답</a></li>
-<li><a href="#_요청_파라미터_3">3.3. 요청 파라미터</a></li>
-<li><a href="#_응답_파라미터_3">3.4. 응답 파라미터</a></li>
+<li><a href="#_응답_필드_2">2.5. 응답 필드</a></li>
 </ul>
 </li>
 </ul>
@@ -478,23 +478,21 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_댓글_저장"><a class="link" href="#_댓글_저장">1. 댓글 저장</a></h2>
+<h2 id="_유저_생성">1. 유저 생성</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_요청"><a class="link" href="#_요청">1.1. 요청</a></h3>
+<h3 id="_요청">1.1. 요청</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/api/comment' -i -X POST \
-    -H 'Content-Type: application/json;charset=UTF-8' \
-    -d '{
-  "boardId" : 1,
-  "content" : "댓글 내용입니다~"
-}'</code></pre>
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/api/user' -i -X POST \
+    -H 'Content-Type: multipart/form-data;charset=UTF-8' \
+    -F 'userSaveReqDto={"email":"kmini","username":"kmini@gmail.com","password":"1234","passwordCheck":"1234"};type=application/json' \
+    -F 'file=@testImage.png;type=image/png'</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_응답"><a class="link" href="#_응답">1.2. 응답</a></h3>
+<h3 id="_응답">1.2. 응답</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 201 Created
@@ -505,176 +503,23 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 245
+Content-Length: 138
 
 {
   "code" : 1,
   "message" : "성공",
   "data" : {
     "id" : 1,
-    "commentUserId" : 1,
-    "commentUserName" : "kmini",
-    "content" : "댓글 내용입니다~",
-    "replies" : [ ],
-    "createdDate" : "2023.12.12  23:31"
+    "username" : "kmini@gmail.com",
+    "email" : "kmini"
   }
 }</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_요청_파라미터"><a class="link" href="#_요청_파라미터">1.3. 요청 파라미터</a></h3>
+<h3 id="_요청_파라미터">1.3. 요청 파라미터</h3>
 <table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">필드명</th>
-<th class="tableblock halign-left valign-top">타입</th>
-<th class="tableblock halign-left valign-top">필수값</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boardId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">작성할 댓글의 게시물 Id</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">새로 작성할 댓글 내용</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="_응답_파라미터"><a class="link" href="#_응답_파라미터">1.4. 응답 파라미터</a></h3>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">필드명</th>
-<th class="tableblock halign-left valign-top">타입</th>
-<th class="tableblock halign-left valign-top">설명</th>
-<th class="tableblock halign-left valign-top">기타</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>code</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">성공 코드 (성공 : 1, 실패 :0)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>message</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">응답 관련 메시지</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.id</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">댓글 Id</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.commentUserId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">작성자 Id</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.commentUserName</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">작성자 이름</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.content</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">댓글 내용</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.replies</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">하위 댓글</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.createdDate</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">생성 날짜</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_댓글_수정_대댓글_포함"><a class="link" href="#_댓글_수정_대댓글_포함">2. 댓글 수정 (대댓글 포함)</a></h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_요청_2"><a class="link" href="#_요청_2">2.1. 요청</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/api/comment/1' -i -X PATCH \
-    -H 'Content-Type: application/json;charset=UTF-8' \
-    -d '{
-  "boardId" : 1,
-  "content" : "수정내용내용"
-}'</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_응답_2"><a class="link" href="#_응답_2">2.2. 응답</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
-Content-Type: application/json
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
-Content-Length: 240
-
-{
-  "code" : 1,
-  "message" : "성공",
-  "data" : {
-    "id" : 1,
-    "commentUserId" : 1,
-    "commentUserName" : "kmini",
-    "content" : "수정내용내용",
-    "replies" : [ ],
-    "createdDate" : "2023.12.12  23:31"
-  }
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_경로_파라미터"><a class="link" href="#_경로_파라미터">2.3. 경로 파라미터</a></h3>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. /api/comment/{commentId}</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -689,15 +534,19 @@ Content-Length: 240
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>commentId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>userSaveReqDto</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">수정할 댓글의 Id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">회원 가입 JSON</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>file</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">회원 썸네일</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="sect2">
-<h3 id="_요청_파라미터_2"><a class="link" href="#_요청_파라미터_2">2.4. 요청 파라미터</a></h3>
+<div class="sect3">
+<h4 id="_usersavereqdto_필드_설명">1.3.1. userSaveReqDto 필드 설명</h4>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 25%;">
@@ -715,22 +564,35 @@ Content-Length: 240
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boardId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">수정할 댓글의 게시물 Id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>email</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">가입할 이메일</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>username</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">수정할 댓글의 내용</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">가입할 회원 유저명</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">가입할 회원 비밀번호</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>passwordCheck</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">가입할 회원 비밀번호 확인</p></td>
 </tr>
 </tbody>
 </table>
 </div>
+</div>
 <div class="sect2">
-<h3 id="_응답_파라미터_2"><a class="link" href="#_응답_파라미터_2">2.5. 응답 파라미터</a></h3>
+<h3 id="_응답_필드">1.4. 응답 필드</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 25%;">
@@ -762,37 +624,19 @@ Content-Length: 240
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.id</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">수정된 댓글의 Id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">가입 처리된 유저 ID</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.commentUserId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">수정된 댓글의 작성 유저 Id</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.commentUserName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.email</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">수정된 댓글의 작성 유저 이름</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">가입 처리된 이메일</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.content</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.username</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">수정된 댓글 내용</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.replies</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">수정된 댓글의 대댓글 배열</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.createdDate</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">수정된 시간</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">가입 처리된 유저명</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 </tbody>
@@ -801,27 +645,25 @@ Content-Length: 240
 </div>
 </div>
 <div class="sect1">
-<h2 id="_대댓글_저장"><a class="link" href="#_대댓글_저장">3. 대댓글 저장</a></h2>
+<h2 id="_유저_수정">2. 유저 수정</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_요청_3"><a class="link" href="#_요청_3">3.1. 요청</a></h3>
+<h3 id="_요청_2">2.1. 요청</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/api/comment/1/reply' -i -X POST \
-    -H 'Content-Type: application/json;charset=UTF-8' \
-    -d '{
-  "boardId" : 1,
-  "topCommentId" : 1,
-  "content" : "대댓글내용입니다~"
-}'</code></pre>
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/api/user/2' -i -X PATCH \
+    -H 'Content-Type: multipart/form-data;charset=UTF-8' \
+    -F 'file=@testImage.png;type=image/png' \
+    -F 'userUpdateReqDto={"username":"kmini2","passwordCheck":"abcd","email":"kmini22@gmail.com","password":"abcd"};type=application/json' \
+    -F 'file=@testImage.png;type=image/png'</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_응답_3"><a class="link" href="#_응답_3">3.2. 응답</a></h3>
+<h3 id="_응답_2">2.2. 응답</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 201 Created
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Content-Type: application/json
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
@@ -829,25 +671,76 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 251
+Content-Length: 204
 
 {
   "code" : 1,
   "message" : "성공",
   "data" : {
-    "topCommentId" : 1,
-    "replyId" : 2,
-    "replyUserId" : 1,
-    "replyUserName" : "kmini",
-    "content" : "대댓글내용입니다~",
-    "createdDate" : "2023.12.12  23:31"
+    "id" : 2,
+    "username" : "kmini2",
+    "email" : "kmini22@gmail.com",
+    "thumbnail" : "6a24dc67-315f-4dc8-9496-c68f37471dee.png"
   }
 }</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_요청_파라미터_3"><a class="link" href="#_요청_파라미터_3">3.3. 요청 파라미터</a></h3>
+<h3 id="_경로_파라미터">2.3. 경로 파라미터</h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. /api/user/{userId}</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">파라미터</th>
+<th class="tableblock halign-left valign-top">필수값</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>userId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">회원 수정할 유저 ID</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_요청_파라미터_2">2.4. 요청 파라미터</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">파라미터</th>
+<th class="tableblock halign-left valign-top">필수값</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>userUpdateReqDto</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">수정할 회원 정보 JSON</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>file</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">수정할 파일</p></td>
+</tr>
+</tbody>
+</table>
+<div class="sect3">
+<h4 id="_userupdatereqdto_필드_설명">2.4.1. userUpdateReqDto 필드 설명</h4>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 25%;">
@@ -865,28 +758,35 @@ Content-Length: 251
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boardId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">댓글을 작성한 게시물 Id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>email</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이메일 (해당 이메일은 서버 쪽 기술 구현때문에 넣어둔 것입니다. 이메일은 변경되지 않습니다.)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>topCommentId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">대댓글의 부모 댓글 Id</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>username</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">대댓글 내용</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">수정할 회원 유저명</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">수정할 회원 비밀번호</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>passwordCheck</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">수정할 회원 비밀번호 확인</p></td>
 </tr>
 </tbody>
 </table>
 </div>
+</div>
 <div class="sect2">
-<h3 id="_응답_파라미터_3"><a class="link" href="#_응답_파라미터_3">3.4. 응답 파라미터</a></h3>
+<h3 id="_응답_필드_2">2.5. 응답 필드</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 25%;">
@@ -916,39 +816,27 @@ Content-Length: 251
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.topCommentId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.id</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">대댓글의 부모 댓글 Id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">회원 수정 처리된 유저 ID</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.replyId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">대댓글의 Id</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.replyUserId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">대댓글의 작성자 유저 Id</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.replyUserName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.username</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">대댓글 작성자 유저 이름</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">회원 수정 처리된 유저명</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.content</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.email</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">대댓글 내용</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">회원 수정 처리된 이메일</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.createdDate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.thumbnail</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">대댓글 생성 날짜</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">회원 수정 처리된 썸네일 파일</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 </tbody>
@@ -960,7 +848,7 @@ Content-Length: 251
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-12-12 22:47:33 +0900
+Last updated 2023-12-12 22:47:42 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

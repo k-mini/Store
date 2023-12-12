@@ -26,7 +26,9 @@ public class CommentApiController {
     public ResponseEntity<?> saveComment(
             @RequestBody BoardCommentSaveReqDto boardCommentSaveReqDto) {
         log.debug("boardCommentReqDto = {}", boardCommentSaveReqDto);
+
         BoardCommentUpdateRespDto result = commentService.saveComment(boardCommentSaveReqDto);
+
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(new CommonRespDto<>(1, "성공", result));
@@ -34,9 +36,12 @@ public class CommentApiController {
 
     // 댓글,대댓글 수정
     @PatchMapping("/{commentId}")
-    public ResponseEntity<?> updateComment(@RequestBody BoardCommentUpdateReqDto boardCommentUpdateReqDto) {
+    public ResponseEntity<?> updateComment( @PathVariable Long commentId,
+                                            @RequestBody BoardCommentUpdateReqDto boardCommentUpdateReqDto) {
         log.debug("boardCommentUpdateReqDto = {}", boardCommentUpdateReqDto);
-        BoardCommentUpdateRespDto result = commentService.updateComment(boardCommentUpdateReqDto);
+
+        BoardCommentUpdateRespDto result = commentService.updateComment(boardCommentUpdateReqDto,commentId);
+
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new CommonRespDto<>(1,"성공", result));

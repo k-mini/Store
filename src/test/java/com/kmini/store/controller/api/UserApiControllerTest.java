@@ -97,12 +97,19 @@ class UserApiControllerTest {
         // then  (아이디가 있어야 성공)
         String result = resultActions.andExpect(status().isCreated())
                 .andDo(print())
-                .andDo(document("save-user-api",
+                .andDo(document("user/save-user-api",
                                 getDocumentRequest(), getDocumentResponse(),
                                 requestParts(
                                         partWithName("userSaveReqDto").description("회원 가입 JSON"),
-                                        partWithName("file").description("회원의 사진")
+                                        partWithName("file").description("회원 썸네일")
                                         ),
+                                requestPartFields(
+                                        "userSaveReqDto",
+                                        fieldWithPath("email").description("가입할 이메일").optional(),
+                                        fieldWithPath("username").description("가입할 회원 유저명"),
+                                        fieldWithPath("password").description("가입할 회원 비밀번호"),
+                                        fieldWithPath("passwordCheck").description("가입할 회원 비밀번호 확인")
+                                ),
                                 responseFields(
                                         fieldWithPath("code").description("성공 코드 (성공 : 1, 실패 :0)"),
                                         fieldWithPath("message").description("응답 관련 메시지"),
@@ -135,7 +142,7 @@ class UserApiControllerTest {
         FileInputStream inputStream = new FileInputStream(".\\docs\\test\\" + fileName + "." + contentType);
         MockMultipartFile file = new MockMultipartFile("file", fileName + "." + contentType, contentType, inputStream);
 
-        Map map = Map.of("username", "kmini2", "password", "abcd", "passwordCheck", "abcd","file", file.getBytes());
+        Map map = Map.of("email",user.getEmail(), "username", "kmini2", "password", "abcd", "passwordCheck", "abcd");
         String userUpdateReqDto = om.writeValueAsString(map);
         log.info("userUpdateReqDto = {}", userUpdateReqDto);
 
@@ -162,14 +169,22 @@ class UserApiControllerTest {
                 .andDo(print())
                 .andDo(
                         document(
-                                "update-user-api",
+                                "user/update-user-api",
                                 getDocumentRequest(), getDocumentResponse(),
                                 pathParameters(
                                         parameterWithName("userId").description("회원 수정할 유저 ID")
                                 ),
                                 requestParts(
-                                        partWithName("userUpdateReqDto").description("회원 수정 JSON"),
-                                        partWithName("file").description("회원의 사진")
+                                        partWithName("userUpdateReqDto").description("수정할 회원 정보 JSON"),
+                                        partWithName("file").description("수정할 파일")
+                                ),
+                                requestPartFields(
+                                        "userUpdateReqDto",
+                                        fieldWithPath("email").description("이메일 (해당 이메일은 서버 쪽 기술 구현때문에 넣어둔 것입니다. " +
+                                                "이메일은 변경되지 않습니다.)").optional(),
+                                        fieldWithPath("username").description("수정할 회원 유저명"),
+                                        fieldWithPath("password").description("수정할 회원 비밀번호"),
+                                        fieldWithPath("passwordCheck").description("수정할 회원 비밀번호 확인")
                                 ),
                                 responseFields(
                                         fieldWithPath("code").description("성공 코드 (성공 : 1, 실패 :0)"),

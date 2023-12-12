@@ -7,6 +7,7 @@ import com.kmini.store.dto.response.CommentDto.BoardCommentUpdateRespDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +48,40 @@ public class ItemBoardDto {
             return itemBoard.getContent().substring(0, lastIndex) + "...";
         }
     }
+
+    // 게시물 수정 반환 Dto
+    @Data
+    @AllArgsConstructor @NoArgsConstructor
+    @Builder
+    public static class ItemBoardUpdateRespDto {
+        // 게시물 ID
+        private Long id;
+        // 작성자 이메일
+        private String email;
+        // 작성자 id
+        private Long writerId;
+        // 작성자 이름
+        private String username;
+        // 제목
+        private String title;
+        // 내용
+        private String content;
+        // 작성 시간
+        private String createdDate;
+
+        public static ItemBoardUpdateRespDto toDto(ItemBoard itemBoard) {
+            return ItemBoardUpdateRespDto.builder()
+                    .id(itemBoard.getId())
+                    .email(itemBoard.getUser().getEmail())
+                    .writerId(itemBoard.getUser().getId())
+                    .username(itemBoard.getUser().getUsername())
+                    .title(itemBoard.getTitle())
+                    .content(itemBoard.getContent())
+                    .createdDate(CustomTimeUtils.convertTime(itemBoard.getCreatedDate()))
+                    .build();
+        }
+    }
+
 
     // 게시글 자세히 보기 Dto
     @Data
