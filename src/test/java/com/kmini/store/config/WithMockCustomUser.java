@@ -1,5 +1,6 @@
 package com.kmini.store.config;
 
+import com.kmini.store.domain.type.UserRole;
 import org.springframework.security.test.context.support.WithSecurityContext;
 
 import java.lang.annotation.Retention;
@@ -15,5 +16,5 @@ public @interface WithMockCustomUser {
 
     String password() default "1111";
 
-    String[] authorities() default {"USER"};
+    UserRole role() default UserRole.USER;
 }

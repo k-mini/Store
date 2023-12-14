@@ -1,7 +1,6 @@
 package com.kmini.store.repository.board;
 
-import com.kmini.store.domain.*;
-import com.kmini.store.dto.response.ItemBoardDto.ItemBoardRespDetailDto;
+import com.kmini.store.dto.response.ItemBoardDto.ItemBoardViewRespDto;
 import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
@@ -20,10 +19,10 @@ public class ItemBoardRepositoryImpl implements ItemBoardRepositoryQsdl {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Optional<ItemBoardRespDetailDto> findDetailById(Long id) {
+    public Optional<ItemBoardViewRespDto> findDetailById(Long id) {
 
-        ItemBoardRespDetailDto itemBoardRespDetailDto = queryFactory
-                .select(Projections.fields(ItemBoardRespDetailDto.class,
+        ItemBoardViewRespDto itemBoardViewRespDto = queryFactory
+                .select(Projections.fields(ItemBoardViewRespDto.class,
                         itemBoard.id,
                         itemBoard.user.email,
                         itemBoard.user.id.as("writerId"),
@@ -53,7 +52,7 @@ public class ItemBoardRepositoryImpl implements ItemBoardRepositoryQsdl {
                 .from(trade)
                 .limit(1)
                 .fetchOne();
-        return Optional.ofNullable(itemBoardRespDetailDto);
+        return Optional.ofNullable(itemBoardViewRespDto);
     }
 
 

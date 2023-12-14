@@ -3,9 +3,8 @@ package com.kmini.store.controller.api;
 import com.kmini.store.dto.CommonRespDto;
 import com.kmini.store.dto.request.CommentDto.BoardCommentSaveReqDto;
 import com.kmini.store.dto.request.CommentDto.BoardCommentUpdateReqDto;
-import com.kmini.store.dto.request.CommentDto.BoardReplySaveReqDto;
+import com.kmini.store.dto.response.CommentDto.BoardCommentSaveRespDto;
 import com.kmini.store.dto.response.CommentDto.BoardCommentUpdateRespDto;
-import com.kmini.store.dto.response.CommentDto.BoardReplySaveRespDto;
 import com.kmini.store.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,20 +20,20 @@ public class CommentApiController {
 
     private final CommentService commentService;
 
-    // 댓글 저장
+    // 댓글, 대댓글 저장
     @PostMapping
     public ResponseEntity<?> saveComment(
             @RequestBody BoardCommentSaveReqDto boardCommentSaveReqDto) {
-        log.debug("boardCommentReqDto = {}", boardCommentSaveReqDto);
+        log.debug("boardCommentSaveReqDto = {}", boardCommentSaveReqDto);
 
-        BoardCommentUpdateRespDto result = commentService.saveComment(boardCommentSaveReqDto);
+        BoardCommentSaveRespDto result = commentService.saveComment(boardCommentSaveReqDto);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(new CommonRespDto<>(1, "성공", result));
     }
 
-    // 댓글,대댓글 수정
+    // 댓글, 대댓글 수정
     @PatchMapping("/{commentId}")
     public ResponseEntity<?> updateComment( @PathVariable Long commentId,
                                             @RequestBody BoardCommentUpdateReqDto boardCommentUpdateReqDto) {
@@ -47,7 +46,7 @@ public class CommentApiController {
                 .body(new CommonRespDto<>(1,"성공", result));
     }
 
-    // 댓글,대댓글 삭제
+    // 댓글, 대댓글 삭제
     @DeleteMapping("/{commentId}")
     public ResponseEntity<?> deleteComment(@PathVariable Long commentId) {
         log.debug("commentId = {}", commentId);
@@ -55,18 +54,6 @@ public class CommentApiController {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new CommonRespDto<>(1, "성공", result));
-    }
-
-    // 대댓글 저장
-    @PostMapping("{commentId}/reply")
-    public ResponseEntity<?> saveReply(
-            @RequestBody BoardReplySaveReqDto boardReplySaveReqDto) {
-        log.debug("boardReplyReqDto = {} ", boardReplySaveReqDto);
-        BoardReplySaveRespDto result = commentService.saveReplyComment(boardReplySaveReqDto);
-
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
                 .body(new CommonRespDto<>(1, "성공", result));
     }
 }

@@ -1,10 +1,7 @@
 package com.kmini.store.dto.response;
 
 import com.kmini.store.domain.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Email;
@@ -13,7 +10,7 @@ import javax.validation.constraints.NotBlank;
 public class UserDto {
 
 
-    @Data
+    @Getter
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
@@ -32,7 +29,7 @@ public class UserDto {
         }
     }
 
-    @Data
+    @Getter
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
@@ -51,7 +48,7 @@ public class UserDto {
         }
     }
 
-    @Data
+    @Getter
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
@@ -59,36 +56,33 @@ public class UserDto {
         private Long id;
         private String username;
         private String email;
-        private String thumbnail;
 
         public static UserUpdateRespDto toDto(User user) {
             return UserUpdateRespDto.builder()
                     .id(user.getId())
                     .email(user.getEmail())
-                    .username(user.getUsername())
-                    .thumbnail(user.getThumbnail()).build();
+                    .username(user.getUsername()).build();
         }
     }
 
+    @Getter
     @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
+    @AllArgsConstructor @NoArgsConstructor
     public static class UserWithDrawRespDto {
         private Long id;
         private String username;
         private String email;
-        private String thumbnail;
 
         public static UserWithDrawRespDto toDto(User user) {
             return UserWithDrawRespDto.builder()
                     .id(user.getId())
                     .username(user.getUsername())
                     .email(user.getEmail())
-                    .thumbnail(user.getThumbnail())
                     .build();
         }
     }
 
+    @Getter
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
@@ -96,14 +90,12 @@ public class UserDto {
         private Long id;
         private String username;
         private String email;
-        private String thumbnail;
 
         public static UserDeleteRespDto toDto(User user) {
             return UserDeleteRespDto.builder()
                     .id(user.getId())
                     .username(user.getUsername())
                     .email(user.getEmail())
-                    .thumbnail(user.getThumbnail())
                     .build();
         }
     }

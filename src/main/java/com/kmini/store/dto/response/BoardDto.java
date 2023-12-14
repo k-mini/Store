@@ -4,9 +4,9 @@ import com.kmini.store.config.util.CustomTimeUtils;
 import com.kmini.store.domain.Board;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 @AllArgsConstructor
 @Builder
 public class BoardDto {

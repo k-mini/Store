@@ -8,6 +8,7 @@ import com.kmini.store.dto.response.CommentDto.BoardCommentUpdateRespDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +16,10 @@ import java.util.List;
 public class CommunityBoardDto {
 
     // 게시글 자세히 보기 Dto
-    @Data
+    @Getter
     @AllArgsConstructor
     @Builder
-    public static class CommunityBoardRespDetailDto {
+    public static class CommunityBoardViewRespDto {
         // 게시물 ID
         private Long id;
         // 작성자 이메일
@@ -44,8 +45,8 @@ public class CommunityBoardDto {
         // 댓글
         private List<BoardCommentUpdateRespDto> comments = new ArrayList<>();
 
-        public static CommunityBoardRespDetailDto toDto(CommunityBoard communityBoard, List<Comment> comments) {
-            return CommunityBoardRespDetailDto.builder()
+        public static CommunityBoardViewRespDto toDto(CommunityBoard communityBoard, List<Comment> comments) {
+            return CommunityBoardViewRespDto.builder()
                     .id(communityBoard.getId())
                     .email(communityBoard.getUser().getEmail())
                     .writerId(communityBoard.getUser().getId())

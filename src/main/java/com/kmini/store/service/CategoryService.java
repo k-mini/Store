@@ -36,7 +36,13 @@ public class CategoryService {
     }
 
     @Transactional
-    public MultiValueMap<CategoryRespDto, CategoryRespDto> retrieveCategories() {
+    public Category selectCategory(String categoryName) {
+        return categoryRepository.findByCategoryName(categoryName)
+                .orElseThrow(()-> new IllegalArgumentException(categoryName + " 카테고리가 존재하지 않습니다."));
+    }
+
+    @Transactional
+    public MultiValueMap<CategoryRespDto, CategoryRespDto> selectCategories() {
 
         // 방법 1
 //        Map<String, List<String>> result = categoryRepository.findAll()

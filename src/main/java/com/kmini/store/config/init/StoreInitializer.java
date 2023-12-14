@@ -2,13 +2,14 @@ package com.kmini.store.config.init;
 
 import com.kmini.store.aop.CategoryInterceptor;
 import com.kmini.store.config.auth.AccountContext;
+import com.kmini.store.domain.ItemBoard;
 import com.kmini.store.domain.User;
 import com.kmini.store.domain.type.UserRole;
 import com.kmini.store.domain.type.UserStatus;
-import com.kmini.store.dto.request.BoardDto.CommunityBoardFormSaveDto;
-import com.kmini.store.dto.request.BoardDto.ItemBoardFormSaveDto;
+import com.kmini.store.dto.request.BoardDto;
+import com.kmini.store.dto.request.BoardDto.CommunityBoardSaveReqDto;
+import com.kmini.store.dto.request.BoardDto.ItemBoardSaveReqDto;
 import com.kmini.store.dto.request.CommentDto.BoardCommentSaveReqDto;
-import com.kmini.store.dto.request.CommentDto.BoardReplySaveReqDto;
 import com.kmini.store.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -55,26 +56,32 @@ public class StoreInitializer implements ApplicationRunner {
 
         log.info("거래 게시판 샘플 게시물 넣기! ..");
         for (int i = 1; i < 156L ; i++) {
-            ItemBoardFormSaveDto saveFormDto =
-                    new ItemBoardFormSaveDto( "electronics", "title" + i, "content" + i, null, "item" + i);
-            itemBoardService.save(saveFormDto);
+            String title = "title" + i;
+            String content = "content" + i;
+            String itemName = "item" + i;
+            ItemBoard itemBoard = ItemBoard.builder()
+                    .title(title)
+                    .content(content)
+                    .itemName(itemName)
+                    .build();
+            itemBoardService.saveBoard(itemBoard, "electronics");
         }
         log.debug("커뮤니티 게사판 샘플 데이터 넣기! ...");
         for (int i = 1; i < 156L; i++) {
-            CommunityBoardFormSaveDto saveFormDto =
-                    new CommunityBoardFormSaveDto( "free", "comtitle" + i, "comcontent" + i, null);
+            CommunityBoardSaveReqDto saveFormDto =
+                    new CommunityBoardSaveReqDto( "free", "comtitle" + i, "comcontent" + i, null);
             communityBoardService.save(saveFormDto);
         }
 
         log.info("상위 댓글 넣기 !!..");
-        commentService.saveComment(new BoardCommentSaveReqDto(156L, "상위 댓글댓글1111"));
-        commentService.saveComment(new BoardCommentSaveReqDto(156L, "상위 댓글댓글2222"));
+        commentService.saveComment(new BoardCommentSaveReqDto(156L, null,"상위 댓글댓글1111"));
+        commentService.saveComment(new BoardCommentSaveReqDto(156L, null, "상위 댓글댓글2222"));
 
         log.info("대댓글 넣기!!");
-        commentService.saveReplyComment(new BoardReplySaveReqDto(156L, 1L, "댓글1의 대댓글1"));
-        commentService.saveReplyComment(new BoardReplySaveReqDto(156L, 1L, "댓글1의 대댓글2"));
-        commentService.saveReplyComment(new BoardReplySaveReqDto(156L, 2L, "댓글2의 대댓글1"));
-        commentService.saveReplyComment(new BoardReplySaveReqDto(156L, 2L, "댓글2의 대댓글2"));
+        commentService.saveComment(new BoardCommentSaveReqDto(156L, 1L, "댓글1의 대댓글1"));
+        commentService.saveComment(new BoardCommentSaveReqDto(156L, 1L, "댓글1의 대댓글2"));
+        commentService.saveComment(new BoardCommentSaveReqDto(156L, 2L, "댓글2의 대댓글1"));
+        commentService.saveComment(new BoardCommentSaveReqDto(156L, 2L, "댓글2의 대댓글2"));
 
         log.info("거래 넣기");
         tradeService.registerTrade(1L);

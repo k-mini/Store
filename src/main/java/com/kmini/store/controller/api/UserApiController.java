@@ -1,11 +1,14 @@
 package com.kmini.store.controller.api;
 
 
+import com.kmini.store.config.auth.AccountContext;
 import com.kmini.store.config.file.UserResourceManager;
 import com.kmini.store.domain.User;
+import com.kmini.store.domain.type.UserRole;
 import com.kmini.store.dto.CommonRespDto;
+import com.kmini.store.dto.request.UserDto;
 import com.kmini.store.dto.request.UserDto.UserSaveReqDto;
-import com.kmini.store.dto.request.UserDto.UserUpdateReqDto;
+import com.kmini.store.dto.request.UserDto.UserUpdateReqApiDto;
 import com.kmini.store.dto.response.UserDto.*;
 import com.kmini.store.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,21 +27,22 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserApiController {
 
     private final UserService userService;
-    private final UserResourceManager userResourceManager;
 
     // 회원가입
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> saveUser(@RequestPart UserSaveReqDto userSaveReqDto,
+    public ResponseEntity<?> saveUser(@RequestPart UserDto.UserSaveReqApiDto userSaveReqApiDto,
                                       @RequestPart(required = false) MultipartFile file) {
-        log.debug("userSaveReqDto = {}", userSaveReqDto);
+        log.debug("userSaveReqApiDto = {}", userSaveReqApiDto);
         log.debug("file = {}", file);
 
-        User user = userService.saveUser(User.builder()
-                .email(userSaveReqDto.getEmail())
-                .username(userSaveReqDto.getUsername())
-                .password(userSaveReqDto.getPassword())
-                .thumbnail(userResourceManager.storeFile(userSaveReqDto.getEmail(), file))
-                .build());
+        User newUser = User.builder()
+                            .email(userSaveReqApiDto.getEmail())
+                            .username(userSaveReqApiDto.getUsername())
+                            .password(userSaveReqApiDto.getPassword())
+                            .file(file)
+                            .build();
+
+        User user = userService.saveUser(newUser);
 
         UserSaveRespDto result = UserSaveRespDto.toDto(user);
 
@@ -55,46 +60,70 @@ public class UserApiController {
         UserSelectRespDto result = UserSelectRespDto.toDto(user);
 
         return ResponseEntity.ok()
-                .body(new CommonRespDto<>(1, "성공", result));
+                             .body(new CommonRespDto<>(1, "성공", result));
     }
 
     // 회원 수정
     @PatchMapping("/{userId}")
     public ResponseEntity<?> updateUser(@PathVariable Long userId,
-                                        @RequestPart UserUpdateReqDto userUpdateReqDto,
-                                        @RequestPart(required = false) MultipartFile file) {
-        log.debug("userId = {}, userUpdateReqDto = {}", userId, userUpdateReqDto);
+                                        @RequestPart UserUpdateReqApiDto userUpdateReqApiDto,
+                                        @RequestPart(required = false) MultipartFile file,
+                                        @AuthenticationPrincipal AccountContext accountContext) {
+        log.debug("userId = {}, userUpdateReqApiDto = {}", userId, userUpdateReqApiDto);
         log.debug("file = {}", file);
+        User user = accountContext.getUser();
 
-        User user = userService.updateUser(userId, userUpdateReqDto, file);
+        if ( user.getRole().equals(UserRole.ADMIN) && !user.getId().equals(userId) ) {
+            throw new IllegalStateException("수정 권한이 없습니다.");
+        }
 
-        UserUpdateRespDto result = UserUpdateRespDto.toDto(user);
+        User updatedUser = userService.updateUser(User.builder()
+                                                    .id(user.getId())
+                                                    .username(userUpdateReqApiDto.getUsername())
+                                                    .password(userUpdateReqApiDto.getPassword())
+                                                    .email(user.getEmail())
+                                                    .role(user.getRole())
+                                                    .userStatus(user.getUserStatus())
+                                                    .file(file)
+                                                    .build());
+
+        UserUpdateRespDto result = UserUpdateRespDto.toDto(updatedUser);
 
         return ResponseEntity.ok()
                              .body(new CommonRespDto<>(1, "성공", result));
     }
 
     // 회원 탈퇴
-    @PatchMapping("/withdraw/{id}")
-    public ResponseEntity<?> withdrawUser(@PathVariable Long id) {
+    @PatchMapping("/withdraw-{id}")
+    public ResponseEntity<?> withdrawUser(@PathVariable Long id, @AuthenticationPrincipal AccountContext accountContext) {
         log.debug("id = {}", id);
+        User user = accountContext.getUser();
 
-        User user = userService.withdrawUser(id);
+        if ( !user.getRole().equals(UserRole.MANAGER) ) {
+            throw new IllegalStateException("매니저 권한이 없습니다.");
+        }
 
-        UserWithDrawRespDto result = UserWithDrawRespDto.toDto(user);
+        User canceledUser = userService.withdrawUser(id);
+
+        UserWithDrawRespDto result = UserWithDrawRespDto.toDto(canceledUser);
 
         return ResponseEntity.ok()
                              .body(new CommonRespDto<>(1, "성공", result));
     }
 
     // 회원 삭제
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
-        log.debug("id = {}", id);
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long userId, @AuthenticationPrincipal AccountContext accountContext) {
+        log.debug("userId = {}", userId);
+        User user = accountContext.getUser();
 
-        User user = userService.deleteUser(id);
+        if ( !user.getRole().equals(UserRole.ADMIN) ) {
+            throw new IllegalStateException("권한이 없습니다.");
+        }
 
-        UserDeleteRespDto result = UserDeleteRespDto.toDto(user);
+        User deletedUser = userService.deleteUser(userId);
+
+        UserDeleteRespDto result = UserDeleteRespDto.toDto(deletedUser);
 
         return ResponseEntity.ok()
                              .body(new CommonRespDto<>(1, "성공", result));

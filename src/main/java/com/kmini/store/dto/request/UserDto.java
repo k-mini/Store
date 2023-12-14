@@ -26,14 +26,25 @@ public class UserDto {
 
         private String passwordCheck;
 
-//        public User toEntity(UserResourceManager userResourceManager) {
-//            return User.builder()
-//                    .username(username)
-//                    .password(password)
-//                    .email(email)
-//                    .thumbnail(userResourceManager.storeFile(email, file))
-//                    .build();
-//        }
+        private MultipartFile file;
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class UserSaveReqApiDto {
+
+        @NotBlank(message = "이메일을 입력해 주세요.")
+        @Email(message = "이메일 형식으로 입력해 주세요.")
+        private String email;
+
+        @NotBlank(message ="이름은 반드시 입력해야 합니다.")
+        private String username;
+
+        @NotBlank(message= "패스워드는 반드시 입력해야 합니다.")
+        private String password;
+
+        private String passwordCheck;
     }
 
     @Data
@@ -54,7 +65,33 @@ public class UserDto {
 
         private String passwordCheck;
 
-//        private MultipartFile file;
+        private MultipartFile file;
+
+        public static UserUpdateReqDto getUserUpdateForm(User user) {
+            return UserUpdateReqDto.builder()
+                    .username(user.getUsername())
+                    .password(user.getPassword())
+                    .build();
+        }
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class UserUpdateReqApiDto {
+
+        @NotBlank(message = "이메일을 입력해 주세요.")
+        @Email(message = "이메일 형식으로 입력해 주세요.")
+        private String email;
+
+        @NotBlank(message ="이름은 반드시 입력해야 합니다.")
+        private String username;
+
+        @NotBlank(message= "패스워드는 반드시 입력해야 합니다.")
+        private String password;
+
+        private String passwordCheck;
 
         public static UserUpdateReqDto getUserUpdateForm(User user) {
             return UserUpdateReqDto.builder()

@@ -28,6 +28,10 @@ include::{snippets}/comment/save-comment/request-fields.adoc[]
 
 include::{snippets}/comment/save-comment/response-fields.adoc[]
 
+==== data
+
+include::{snippets}/comment/save-comment/response-fields-beneath-data.adoc[]
+
 
 
 
@@ -53,25 +57,32 @@ include::{snippets}/comment/update-comment/request-fields.adoc[]
 
 include::{snippets}/comment/update-comment/response-fields.adoc[]
 
+==== data
+
+include::{snippets}/comment/update-comment/response-fields-beneath-data.adoc[]
 
 
 
 
-== 대댓글 저장
+
+== 댓글 삭제
 
 === 요청
 
-include::{snippets}/comment/save-reply/curl-request.adoc[]
+include::{snippets}/comment/delete-comment/curl-request.adoc[]
 
 === 응답
 
-include::{snippets}/comment/save-reply/http-response.adoc[]
+include::{snippets}/comment/delete-comment/http-response.adoc[]
 
-=== 요청 파라미터
+=== 경로 파라미터
 
-include::{snippets}/comment/save-reply/request-fields.adoc[]
+include::{snippets}/comment/delete-comment/path-parameters.adoc[]
 
 === 응답 파라미터
 
-include::{snippets}/comment/save-reply/response-fields.adoc[]
+include::{snippets}/comment/delete-comment/response-fields.adoc[]
+
+
+
 

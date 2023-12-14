@@ -2,10 +2,7 @@ package com.kmini.store.dto.request;
 
 import com.kmini.store.domain.CommunityBoard;
 import com.kmini.store.domain.ItemBoard;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotEmpty;
@@ -15,7 +12,7 @@ public class BoardDto {
     /**
      *  거래 게시판 수정
      */
-    @Data
+    @Getter
     @AllArgsConstructor
     @Builder
     public static class UpdateDto {
@@ -30,35 +27,26 @@ public class BoardDto {
     /**
      *  거래 게시판 업로드
      */
-    @Data
+    @Getter
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class ItemBoardFormSaveDto {
+    public static class ItemBoardSaveReqDto {
 
-        private String subCategory;
         @NotEmpty
         private String title;
         @NotEmpty
         private String content;
         private MultipartFile file;
         private String itemName;
-
-        public ItemBoard toEntity() {
-            return ItemBoard.builder()
-                    .title(title)
-                    .content(content)
-                    .itemName(itemName)
-                    .build();
-        }
     }
 
     /**
      *  커뮤니티 게시판 업로드
      */
-    @Data
+    @Getter
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class CommunityBoardFormSaveDto {
+    public static class CommunityBoardSaveReqDto {
 
         private String subCategory;
         private String title;
@@ -73,4 +61,15 @@ public class BoardDto {
         }
     }
 
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public class ItemBoardSaveReqApiDto {
+
+        @NotEmpty
+        private String title;
+        @NotEmpty
+        private String content;
+        private String itemName;
+    }
 }

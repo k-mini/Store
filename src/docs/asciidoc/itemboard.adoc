@@ -8,6 +8,42 @@ https://github.com/k-mini
 :source-highlighter: highlightjs
 :sectnums:
 
+
+
+== 게시판 수정
+
+=== 요청
+
+include::{snippets}/itemboard/select-itemboard/curl-request.adoc[]
+
+=== 응답
+
+include::{snippets}/itemboard/select-itemboard/http-response.adoc[]
+
+=== 경로 파라미터
+
+include::{snippets}/itemboard/select-itemboard/path-parameters.adoc[]
+
+=== 응답 필드
+
+include::{snippets}/itemboard/select-itemboard/response-fields.adoc[]
+
+==== data
+
+include::{snippets}/itemboard/select-itemboard/response-fields-beneath-data.adoc[]
+
+==== data.comments
+
+include::{snippets}/itemboard/select-itemboard/response-fields-beneath-data.comments.adoc[]
+
+==== data.comments.replies
+
+include::{snippets}/itemboard/select-itemboard/response-fields-replies.adoc[]
+
+
+
+
+
 == 게시판 수정
 
 === 요청
@@ -24,12 +60,19 @@ include::{snippets}/itemboard/update-itemboard/path-parameters.adoc[]
 
 === 요청 파라미터
 
-include::{snippets}/itemboard/update-itemboard/request-parameters.adoc[]
+include::{snippets}/itemboard/update-itemboard/request-parts.adoc[]
+
+==== itemBoardUpdateReqApiDto
+
+include::{snippets}/itemboard/update-itemboard/request-part-itemBoardUpdateReqApiDto-fields.adoc[]
 
 === 응답 필드
 
 include::{snippets}/itemboard/update-itemboard/response-fields.adoc[]
 
+==== data
+
+include::{snippets}/itemboard/update-itemboard/response-fields-beneath-data.adoc[]
 
 
 
@@ -50,4 +93,8 @@ include::{snippets}/itemboard/delete-itemboard/path-parameters.adoc[]
 === 응답 필드
 
 include::{snippets}/itemboard/delete-itemboard/response-fields.adoc[]
+
+==== data
+
+include::{snippets}/itemboard/delete-itemboard/response-fields-beneath-data.adoc[]
 

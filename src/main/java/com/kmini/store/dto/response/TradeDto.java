@@ -3,16 +3,13 @@ package com.kmini.store.dto.response;
 import com.kmini.store.config.util.CustomTimeUtils;
 import com.kmini.store.domain.Category;
 import com.kmini.store.domain.Trade;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Map;
 
 public class TradeDto {
 
-    @Data
+    @Getter
     @Builder
     @AllArgsConstructor @NoArgsConstructor
     public static class TradeRegisterRespDto {

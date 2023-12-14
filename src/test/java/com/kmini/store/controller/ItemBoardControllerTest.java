@@ -2,7 +2,9 @@ package com.kmini.store.controller;
 
 import com.kmini.store.config.WithMockCustomUser;
 import com.kmini.store.domain.ItemBoard;
-import com.kmini.store.dto.request.BoardDto.ItemBoardFormSaveDto;
+import com.kmini.store.dto.request.BoardDto.ItemBoardSaveReqDto;
+import com.kmini.store.dto.response.ItemBoardDto;
+import com.kmini.store.dto.response.ItemBoardDto.ItemBoardSaveRespDto;
 import com.kmini.store.service.ItemBoardService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,10 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -61,10 +61,16 @@ class ItemBoardControllerTest {
         // given
         String category = "trade";
         String subCategory = "electronics";
-        ItemBoardFormSaveDto formSaveDto = new ItemBoardFormSaveDto(subCategory, "Life is Good", "what is your favorite food?", null, null);
-        ItemBoard itemBoard = itemBoardService.save(formSaveDto);
+        ItemBoardSaveReqDto itemBoardSaveReqDto = new ItemBoardSaveReqDto("Life is Good", "what is your favorite food?", null, null);
+        ItemBoard itemBoard = ItemBoard.builder()
+                .title(itemBoardSaveReqDto.getTitle())
+                .content(itemBoardSaveReqDto.getContent())
+                .file(itemBoardSaveReqDto.getFile())
+                .itemName(itemBoardSaveReqDto.getItemName())
+                .build();
+        ItemBoardSaveRespDto itemBoardSaveRespDto = itemBoardService.saveBoard(itemBoard, subCategory);
         em.clear();
-        Long boardId = itemBoard.getId();
+        Long boardId = itemBoardSaveRespDto.getId();
 
         // when
         ResultActions resultActions = mockMvc.perform(
@@ -86,14 +92,20 @@ class ItemBoardControllerTest {
         // given
         String category = "trade";
         String subCategory = "electronics";
-        ItemBoardFormSaveDto formSaveDto = new ItemBoardFormSaveDto(subCategory, "Life is Good", "what is your favorite food?", null, null);
-        ItemBoard itemBoard = itemBoardService.save(formSaveDto);
+        ItemBoardSaveReqDto itemBoardSaveReqDto = new ItemBoardSaveReqDto("Life is Good", "what is your favorite food?", null, null);
+        ItemBoard itemBoard = ItemBoard.builder()
+                                        .title(itemBoardSaveReqDto.getTitle())
+                                        .content(itemBoardSaveReqDto.getContent())
+                                        .file(itemBoardSaveReqDto.getFile())
+                                        .itemName(itemBoardSaveReqDto.getItemName())
+                                        .build();
+        ItemBoardSaveRespDto itemBoardSaveRespDto = itemBoardService.saveBoard(itemBoard, subCategory);
         em.clear();
-        Long boardId = itemBoard.getId();
+        Long boardId = itemBoardSaveRespDto.getId();
 
         // when
         ResultActions resultActions = mockMvc.perform(
-                get("/board/{category}/{subCategory}/{boardId}/form",category, subCategory, boardId)
+                get("/board/{category}/{subCategory}/{boardId}/form", category, subCategory, boardId)
         );
 
         // then

@@ -26,9 +26,18 @@ public class UserService {
         userRepository.findByEmail(user.getEmail())
                 .ifPresent(existedUser-> {throw new IllegalArgumentException("이미 존재하는 이메일입니다. email : " + existedUser.getEmail());});
 
-        user.setRole(UserRole.USER);
-        user.setUserStatus(UserStatus.SIGNUP);
+        userResourceManager.storeFile(user.getEmail(), user.getFile());
+
+        if (user.getRole() == null) {
+            user.setRole(UserRole.USER);
+        }
+
+        if (user.getUserStatus() == null) {
+            user.setUserStatus(UserStatus.SIGNUP);
+        }
+
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+
         return userRepository.save(user);
     }
 
@@ -41,19 +50,17 @@ public class UserService {
 
     // 회원 수정
     @Transactional
-    public User updateUser(Long userId, UserUpdateReqDto userUpdateReqDto, MultipartFile thumbnail) {
+    public User updateUser(User mergingUser) {
 
-        User user = userRepository.findById(userId)
-                                  .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
+        String thumbnailUri = userResourceManager.updateFile(mergingUser.getThumbnail(), mergingUser.getFile());
+        mergingUser.setThumbnail(thumbnailUri);
+        mergingUser.setPassword(bCryptPasswordEncoder.encode(mergingUser.getPassword()));
 
-        user.setUsername(userUpdateReqDto.getUsername());
-        user.setPassword(bCryptPasswordEncoder.encode(userUpdateReqDto.getPassword()));
-        user.setThumbnail(userResourceManager.updateFile(user.getThumbnail(), thumbnail));
+        User updateUser = userRepository.save(mergingUser);
 
-        userRepository.save(user);
-        User.updateSecurityContext(user);
+        User.updateSecurityContext(updateUser);
 
-        return user;
+        return updateUser;
     }
 
     // 회원 탈퇴

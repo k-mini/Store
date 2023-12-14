@@ -1,9 +1,7 @@
 package com.kmini.store.controller;
 
 import com.kmini.store.config.auth.AccountContext;
-import com.kmini.store.config.file.UserResourceManager;
 import com.kmini.store.domain.User;
-import com.kmini.store.dto.request.UserDto;
 import com.kmini.store.dto.request.UserDto.UserSaveReqDto;
 import com.kmini.store.dto.request.UserDto.UserUpdateReqDto;
 import com.kmini.store.service.UserService;
@@ -26,7 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 public class UserController {
 
-    private final UserResourceManager userResourceManager;
     private final UserService userService;
 
     @GetMapping({"/", "/index"})
@@ -36,14 +33,14 @@ public class UserController {
     }
 
     @GetMapping("/auth/signup")
-    public String saveUserForm(Model model) {
+    public String getUserForm(Model model) {
         model.addAttribute("userSaveReqDto", new UserSaveReqDto());
         return "auth/signup";
     }
 
     @PostMapping("/auth/signup")
     public String saveUser(@Validated @ModelAttribute UserSaveReqDto userSaveReqDto,
-                                         @RequestPart MultipartFile file, BindingResult bindingResult) {
+                           @RequestPart MultipartFile file, BindingResult bindingResult) {
         log.debug("userSaveReqDto = {}", userSaveReqDto);
         log.debug("file = {}", file);
         if (!userSaveReqDto.getPassword().equals(userSaveReqDto.getPasswordCheck())) {
@@ -56,21 +53,22 @@ public class UserController {
         }
 
         userService.saveUser(User.builder()
-                             .email(userSaveReqDto.getEmail())
-                             .username(userSaveReqDto.getUsername())
-                             .password(userSaveReqDto.getPassword())
-                             .thumbnail(userResourceManager.storeFile(userSaveReqDto.getEmail(), file))
-                             .build());
+                                .email(userSaveReqDto.getEmail())
+                                .username(userSaveReqDto.getUsername())
+                                .password(userSaveReqDto.getPassword())
+                                .file(file)
+                                .build());
+
         return "redirect:/auth/signin";
     }
 
     @GetMapping("/auth/signin")
-    public String login() {
+    public String getLoginForm() {
         return "auth/signin";
     }
 
     @GetMapping("/auth/my-page")
-    public String myPage(@AuthenticationPrincipal AccountContext accountContext, Model model) {
+    public String getMyPage(@AuthenticationPrincipal AccountContext accountContext, Model model) {
         User user = accountContext.getUser();
         log.debug("user = {}", user);
         model.addAttribute("userUpdateReqDto", UserUpdateReqDto.getUserUpdateForm(user));
@@ -79,7 +77,6 @@ public class UserController {
 
     @PostMapping("/auth/my-page")
     public String updateUser(@Validated UserUpdateReqDto userUpdateReqDto, BindingResult bindingResult,
-                             @RequestPart(required = false) MultipartFile file,
                              @AuthenticationPrincipal AccountContext accountContext) {
         User user = accountContext.getUser();
         log.debug("userUpdateReqDto = {}", userUpdateReqDto);
@@ -93,7 +90,16 @@ public class UserController {
             return "/auth/mypage";
         }
 
-        userService.updateUser(user.getId(), userUpdateReqDto, file);
+//        userService.updateUser(user.getId(), userUpdateReqDto, file);
+        userService.updateUser(User.builder()
+                                .id(user.getId())
+                                .username(userUpdateReqDto.getUsername())
+                                .password(userUpdateReqDto.getPassword())
+                                .email(user.getEmail())
+                                .role(user.getRole())
+                                .userStatus(user.getUserStatus())
+                                .file(userUpdateReqDto.getFile())
+                                .build());
         return "redirect:/";
     }
 }

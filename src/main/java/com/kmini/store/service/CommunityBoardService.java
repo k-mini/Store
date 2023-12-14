@@ -3,8 +3,8 @@ package com.kmini.store.service;
 import com.kmini.store.config.auth.AccountContext;
 import com.kmini.store.config.file.UserFileTestingManager;
 import com.kmini.store.domain.*;
-import com.kmini.store.dto.request.BoardDto.CommunityBoardFormSaveDto;
-import com.kmini.store.dto.response.CommunityBoardDto.CommunityBoardRespDetailDto;
+import com.kmini.store.dto.request.BoardDto.CommunityBoardSaveReqDto;
+import com.kmini.store.dto.response.CommunityBoardDto.CommunityBoardViewRespDto;
 import com.kmini.store.repository.BoardCategoryRepository;
 import com.kmini.store.repository.CategoryRepository;
 import com.kmini.store.repository.CommentRepository;
@@ -30,12 +30,12 @@ public class CommunityBoardService {
     private final UserFileTestingManager userFileManager;
 
     @Transactional
-    public void save(CommunityBoardFormSaveDto communityBoardFormSaveDto) throws IOException {
+    public void save(CommunityBoardSaveReqDto communityBoardSaveReqDto) throws IOException {
 
         AccountContext accountContext = (AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         // 파일 시스템에 저장하고 랜덤 파일명 반환
-        MultipartFile file = communityBoardFormSaveDto.getFile();
+        MultipartFile file = communityBoardSaveReqDto.getFile();
         String uri = null;
         if (file != null) {
             uri = userFileManager.storeFileInUserDirectory(file);
@@ -44,10 +44,10 @@ public class CommunityBoardService {
         // 카테고리 조회
         Category category = categoryRepository.findByCategoryName("COMMUNITY")
                 .orElseThrow(()->new IllegalArgumentException("상위 카테고리가 존재하지 않습니다."));
-        Category subCategory = categoryRepository.findByCategoryName(communityBoardFormSaveDto.getSubCategory().toUpperCase())
+        Category subCategory = categoryRepository.findByCategoryName(communityBoardSaveReqDto.getSubCategory().toUpperCase())
                 .orElseThrow(()->new IllegalArgumentException("하위 카테고리가 존재하지 않습니다."));
 
-        CommunityBoard board = communityBoardFormSaveDto.toEntity();
+        CommunityBoard board = communityBoardSaveReqDto.toEntity();
         board.setThumbnail(uri);
         board.setUser(accountContext.getUser());
         communityBoardRepository.save(board);
@@ -62,7 +62,7 @@ public class CommunityBoardService {
     }
 
     @Transactional
-    public CommunityBoardRespDetailDto detail(Long id) {
+    public CommunityBoardViewRespDto viewBoard(Long id) {
 
         // 게시물 조회
         CommunityBoard board = communityBoardRepository.findByIdFetchJoin(id)
@@ -79,7 +79,7 @@ public class CommunityBoardService {
         // 조회수 증가 => 동시성 문제
         board.setViews(views + 1);
 
-        return CommunityBoardRespDetailDto.toDto(board, comments);
+        return CommunityBoardViewRespDto.toDto(board, comments);
     }
 
     // 게시물 삭제

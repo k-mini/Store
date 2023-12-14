@@ -5,9 +5,8 @@ import com.kmini.store.domain.Comment;
 import com.kmini.store.domain.User;
 import com.kmini.store.dto.request.CommentDto.BoardCommentSaveReqDto;
 import com.kmini.store.dto.request.CommentDto.BoardCommentUpdateReqDto;
-import com.kmini.store.dto.request.CommentDto.BoardReplySaveReqDto;
+import com.kmini.store.dto.response.CommentDto.BoardCommentSaveRespDto;
 import com.kmini.store.dto.response.CommentDto.BoardCommentUpdateRespDto;
-import com.kmini.store.dto.response.CommentDto.BoardReplySaveRespDto;
 import com.kmini.store.repository.CommentRepository;
 import com.kmini.store.repository.board.BoardRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,34 +23,24 @@ public class CommentService {
     private final BoardRepository boardRepository;
 
     @Transactional
-    public BoardCommentUpdateRespDto saveComment(BoardCommentSaveReqDto boardCommentSaveReqDto) {
+    public BoardCommentSaveRespDto saveComment(BoardCommentSaveReqDto boardCommentSaveReqDto) {
 
         User user = User.getSecurityContextUser();
 
         Board board = boardRepository.getReferenceById(boardCommentSaveReqDto.getBoardId());
+
+        Long topCommentId = boardCommentSaveReqDto.getTopCommentId();
+        Comment topComment = null;
+        if (topCommentId != null) {
+            topComment = commentRepository.getReferenceById(topCommentId);
+        }
         String content = boardCommentSaveReqDto.getContent();
 
         // 댓글 엔티티 생성
-        Comment comment = new Comment(user, board, null, content);
+        Comment comment = new Comment(user, board, topComment, content);
         // 댓글 저장
         Comment savedComment = commentRepository.save(comment);
-        return BoardCommentUpdateRespDto.toDto(savedComment);
-    }
-
-    @Transactional
-    public BoardReplySaveRespDto saveReplyComment(BoardReplySaveReqDto boardReplySaveReqDto) {
-
-        User user = User.getSecurityContextUser();
-
-        Board board = boardRepository.getReferenceById(boardReplySaveReqDto.getBoardId());
-        Comment topComment = commentRepository.getReferenceById(boardReplySaveReqDto.getTopCommentId());
-        String content = boardReplySaveReqDto.getContent();
-
-        // 대댓글 엔티티 생성
-        Comment reply = new Comment(user, board, topComment, content);
-        // 대댓글 저장
-        Comment savedReply = commentRepository.save(reply);
-        return BoardReplySaveRespDto.toDto(savedReply);
+        return BoardCommentSaveRespDto.toDto(savedComment);
     }
 
     @Transactional
@@ -61,6 +50,7 @@ public class CommentService {
                 .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
 
         comment.setContent(boardCommentUpdateReqDto.getContent());
+
         return BoardCommentUpdateRespDto.toDto(comment);
     }
 
@@ -70,7 +60,7 @@ public class CommentService {
         // 자식 댓글 삭제
         int result = commentRepository.deleteSubComments(commentId);
 
-        // 부모 댓글 삭제
+        // 댓글 삭제
         result += commentRepository.deleteCommentById(commentId);
 
         log.debug("result = {}", result);
@@ -79,4 +69,14 @@ public class CommentService {
         }
         return result;
     }
+
+    @Transactional
+    public void deleteAllCommentInBoard(Long boardId) {
+        // 자식 댓글 삭제 진행
+        commentRepository.deleteSubCommentsByBoardId(boardId);
+        // 부모 댓글 삭제 진행
+        commentRepository.deleteTopCommentsByBoardId(boardId);
+    }
+
+
 }

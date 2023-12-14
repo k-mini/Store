@@ -4,8 +4,6 @@ import com.kmini.store.dto.response.CategoryRespDto;
 import com.kmini.store.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.MultiValueMap;
@@ -32,11 +30,11 @@ public class CategoryInterceptor implements HandlerInterceptor {
     // 빈 초기화 시점에는 데이터가 없다.
     @PostConstruct
     public void init() {
-       this.categories = categoryService.retrieveCategories();
+       this.categories = categoryService.selectCategories();
     }
 
     public void reload() {
-        this.categories = categoryService.retrieveCategories();
+        this.categories = categoryService.selectCategories();
     }
 
     @Override

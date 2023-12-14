@@ -453,7 +453,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_요청">1.1. 요청</a></li>
 <li><a href="#_응답">1.2. 응답</a></li>
 <li><a href="#_경로_파라미터">1.3. 경로 파라미터</a></li>
-<li><a href="#_응답_필드">1.4. 응답 필드</a></li>
+<li><a href="#_응답_필드">1.4. 응답 필드</a>
+<ul class="sectlevel3">
+<li><a href="#_data">1.4.1. data</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#_거래_수락">2. 거래 수락</a>
@@ -461,7 +465,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_요청_2">2.1. 요청</a></li>
 <li><a href="#_응답_2">2.2. 응답</a></li>
 <li><a href="#_경로_파라미터_2">2.3. 경로 파라미터</a></li>
-<li><a href="#_응답_필드_2">2.4. 응답 필드</a></li>
+<li><a href="#_응답_필드_2">2.4. 응답 필드</a>
+<ul class="sectlevel3">
+<li><a href="#_data_2">2.4.1. data</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#_거래_거부">3. 거래 거부</a>
@@ -469,15 +477,23 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_요청_3">3.1. 요청</a></li>
 <li><a href="#_응답_3">3.2. 응답</a></li>
 <li><a href="#_경로_파라미터_3">3.3. 경로 파라미터</a></li>
-<li><a href="#_응답_필드_3">3.4. 응답 필드</a></li>
+<li><a href="#_응답_필드_3">3.4. 응답 필드</a>
+<ul class="sectlevel3">
+<li><a href="#_data_3">3.4.1. data</a></li>
 </ul>
 </li>
-<li><a href="#_거래_취소">4. 거래 취소</a>
+</ul>
+</li>
+<li><a href="#_거래_취소_구매자">4. 거래 취소 (구매자)</a>
 <ul class="sectlevel2">
 <li><a href="#_요청_4">4.1. 요청</a></li>
 <li><a href="#_응답_4">4.2. 응답</a></li>
 <li><a href="#_경로_파라미터_4">4.3. 경로 파라미터</a></li>
-<li><a href="#_응답_필드_4">4.4. 응답 필드</a></li>
+<li><a href="#_응답_필드_4">4.4. 응답 필드</a>
+<ul class="sectlevel3">
+<li><a href="#_data_4">4.4.1. data</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#_거래_완료_구매자">5. 거래 완료 (구매자)</a>
@@ -485,7 +501,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_요청_5">5.1. 요청</a></li>
 <li><a href="#_응답_5">5.2. 응답</a></li>
 <li><a href="#_경로_파라미터_5">5.3. 경로 파라미터</a></li>
-<li><a href="#_응답_필드_5">5.4. 응답 필드</a></li>
+<li><a href="#_응답_필드_5">5.4. 응답 필드</a>
+<ul class="sectlevel3">
+<li><a href="#_data_5">5.4.1. data</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#_거래_완료_판매자">6. 거래 완료 (판매자)</a>
@@ -493,7 +513,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_요청_6">6.1. 요청</a></li>
 <li><a href="#_응답_6">6.2. 응답</a></li>
 <li><a href="#_경로_파라미터_6">6.3. 경로 파라미터</a></li>
-<li><a href="#_응답_필드_6">6.4. 응답 필드</a></li>
+<li><a href="#_응답_필드_6">6.4. 응답 필드</a>
+<ul class="sectlevel3">
+<li><a href="#_data_6">6.4.1. data</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -597,43 +621,70 @@ Content-Length: 210
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.tradeId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Object</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">신청 처리된 거래정보 JSON</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+<div class="sect3">
+<h4 id="_data">1.4.1. data</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">필드명</th>
+<th class="tableblock halign-left valign-top">타입</th>
+<th class="tableblock halign-left valign-top">설명</th>
+<th class="tableblock halign-left valign-top">기타</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tradeId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">생성된 거래 Id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">신청된 거래 Id</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.sellerId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sellerId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">판매자 Id</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.sellerName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sellerName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">판매자 이름</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.buyerId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>buyerId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">구매자 Id</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.buyerName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>buyerName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">구매자 이름</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.tradeStatus</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tradeStatus</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">거래 상태값</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 </tbody>
 </table>
+</div>
 </div>
 </div>
 </div>
@@ -733,43 +784,70 @@ Content-Length: 213
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.tradeId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Object</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">수락 처리된 거래정보 JSON</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+<div class="sect3">
+<h4 id="_data_2">2.4.1. data</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">필드명</th>
+<th class="tableblock halign-left valign-top">타입</th>
+<th class="tableblock halign-left valign-top">설명</th>
+<th class="tableblock halign-left valign-top">기타</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tradeId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">수락한 거래 Id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">수락된 거래 Id</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.sellerId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sellerId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">판매자 Id</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.sellerName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sellerName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">판매자 이름</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.buyerId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>buyerId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">구매자 Id</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.buyerName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>buyerName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">구매자 이름</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.tradeStatus</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tradeStatus</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">거래 상태값</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 </tbody>
 </table>
+</div>
 </div>
 </div>
 </div>
@@ -869,37 +947,63 @@ Content-Length: 210
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.tradeId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Object</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">거절 처리된 거래정보 JSON</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+<div class="sect3">
+<h4 id="_data_3">3.4.1. data</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">필드명</th>
+<th class="tableblock halign-left valign-top">타입</th>
+<th class="tableblock halign-left valign-top">설명</th>
+<th class="tableblock halign-left valign-top">기타</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tradeId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">거절된 거래 Id</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.sellerId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sellerId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">판매자 Id</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.sellerName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sellerName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">판매자 이름</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.buyerId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>buyerId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">구매자 Id</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.buyerName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>buyerName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">구매자 이름</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.tradeStatus</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tradeStatus</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">거래 상태값</p></td>
 <td class="tableblock halign-left valign-top"></td>
@@ -909,8 +1013,9 @@ Content-Length: 210
 </div>
 </div>
 </div>
+</div>
 <div class="sect1">
-<h2 id="_거래_취소">4. 거래 취소</h2>
+<h2 id="_거래_취소_구매자">4. 거래 취소 (구매자)</h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_요청_4">4.1. 요청</h3>
@@ -971,7 +1076,7 @@ Content-Length: 305
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>tradeId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">완료할 거래 Id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">취소할 거래 Id</p></td>
 </tr>
 </tbody>
 </table>
@@ -1007,55 +1112,82 @@ Content-Length: 305
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.tradeId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Object</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">취소 처리된 거래정보 JSON</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+<div class="sect3">
+<h4 id="_data_4">4.4.1. data</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">필드명</th>
+<th class="tableblock halign-left valign-top">타입</th>
+<th class="tableblock halign-left valign-top">설명</th>
+<th class="tableblock halign-left valign-top">기타</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tradeId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">완료된 거래 Id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">취소된 거래 Id</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.sellerId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sellerId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">판매자 Id</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.sellerName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sellerName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">판매자 이름</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.buyerId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>buyerId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">구매자 Id</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.buyerName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>buyerName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">구매자 이름</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.tradeStatus</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tradeStatus</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">거래 상태값</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.buyerCompleteFlag</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>buyerCompleteFlag</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">구매자가 완료 버튼을 눌렀는지 확인하는 플래그</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.sellerCompleteFlag</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sellerCompleteFlag</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">판매자가 완료 버튼을 눌렀는지 확인하는 플래그</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 </tbody>
 </table>
+</div>
 </div>
 </div>
 </div>
@@ -1157,55 +1289,82 @@ Content-Length: 309
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.tradeId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Object</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">완료 처리된 거래정보 JSON</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+<div class="sect3">
+<h4 id="_data_5">5.4.1. data</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">필드명</th>
+<th class="tableblock halign-left valign-top">타입</th>
+<th class="tableblock halign-left valign-top">설명</th>
+<th class="tableblock halign-left valign-top">기타</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tradeId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">완료된 거래 Id</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.sellerId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sellerId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">판매자 Id</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.sellerName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sellerName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">판매자 이름</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.buyerId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>buyerId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">구매자 Id</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.buyerName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>buyerName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">구매자 이름</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.tradeStatus</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tradeStatus</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">거래 상태값</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.buyerCompleteFlag</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>buyerCompleteFlag</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">구매자가 완료 버튼을 눌렀는지 확인하는 플래그</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.sellerCompleteFlag</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sellerCompleteFlag</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">판매자가 완료 버튼을 눌렀는지 확인하는 플래그</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 </tbody>
 </table>
+</div>
 </div>
 </div>
 </div>
@@ -1307,49 +1466,75 @@ Content-Length: 308
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.tradeId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Object</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">완료 처리된 거래정보 JSON</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+<div class="sect3">
+<h4 id="_data_6">6.4.1. data</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">필드명</th>
+<th class="tableblock halign-left valign-top">타입</th>
+<th class="tableblock halign-left valign-top">설명</th>
+<th class="tableblock halign-left valign-top">기타</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tradeId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">완료된 거래 Id</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.sellerId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sellerId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">판매자 Id</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.sellerName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sellerName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">판매자 이름</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.buyerId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>buyerId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">구매자 Id</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.buyerName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>buyerName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">구매자 이름</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.tradeStatus</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tradeStatus</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">거래 상태값</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.buyerCompleteFlag</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>buyerCompleteFlag</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">구매자가 완료 버튼을 눌렀는지 확인하는 플래그</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.sellerCompleteFlag</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sellerCompleteFlag</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">판매자가 완료 버튼을 눌렀는지 확인하는 플래그</p></td>
 <td class="tableblock halign-left valign-top"></td>
@@ -1360,10 +1545,11 @@ Content-Length: 308
 </div>
 </div>
 </div>
+</div>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-12-12 23:30:20 +0900
+Last updated 2023-12-14 17:23:59 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

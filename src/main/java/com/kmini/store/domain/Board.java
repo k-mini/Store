@@ -3,6 +3,7 @@ package com.kmini.store.domain;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -36,6 +37,9 @@ public abstract class Board extends BaseTime {
 
     @Column(insertable = false, updatable = false)
     private String dtype;
+
+    @Transient
+    private MultipartFile file;
 
     public Board(User user, String content) {
         this.user = user;

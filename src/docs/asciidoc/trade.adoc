@@ -30,6 +30,9 @@ include::{snippets}/trade/register-trade/path-parameters.adoc[]
 
 include::{snippets}/trade/register-trade/response-fields.adoc[]
 
+==== data
+
+include::{snippets}/trade/register-trade/response-fields-beneath-data.adoc[]
 
 
 
@@ -55,6 +58,11 @@ include::{snippets}/trade/accept-trade/path-parameters.adoc[]
 
 include::{snippets}/trade/accept-trade/response-fields.adoc[]
 
+==== data
+
+include::{snippets}/trade/accept-trade/response-fields-beneath-data.adoc[]
+
+
 
 
 == 거래 거부
@@ -79,10 +87,14 @@ include::{snippets}/trade/deny-trade/path-parameters.adoc[]
 
 include::{snippets}/trade/deny-trade/response-fields.adoc[]
 
+==== data
+
+include::{snippets}/trade/deny-trade/response-fields-beneath-data.adoc[]
 
 
 
-== 거래 취소
+
+== 거래 취소 (구매자)
 
 === 요청
 
@@ -103,6 +115,10 @@ include::{snippets}/trade/cancel-trade-buyer/path-parameters.adoc[]
 === 응답 필드
 
 include::{snippets}/trade/cancel-trade-buyer/response-fields.adoc[]
+
+==== data
+
+include::{snippets}/trade/cancel-trade-buyer/response-fields-beneath-data.adoc[]
 
 
 
@@ -129,6 +145,10 @@ include::{snippets}/trade/complete-trade-buyer/path-parameters.adoc[]
 
 include::{snippets}/trade/complete-trade-buyer/response-fields.adoc[]
 
+==== data
+
+include::{snippets}/trade/complete-trade-buyer/response-fields-beneath-data.adoc[]
+
 
 
 
@@ -153,3 +173,7 @@ include::{snippets}/trade/complete-trade-seller/path-parameters.adoc[]
 === 응답 필드
 
 include::{snippets}/trade/complete-trade-seller/response-fields.adoc[]
+
+==== data
+
+include::{snippets}/trade/complete-trade-seller/response-fields-beneath-data.adoc[]
