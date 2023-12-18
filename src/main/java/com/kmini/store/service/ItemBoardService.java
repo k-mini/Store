@@ -54,7 +54,7 @@ public class ItemBoardService {
 
     // 게시물 저장
     @Transactional
-    public ItemBoardSaveRespDto saveBoard(ItemBoard savingItemBoard, String subCategoryName) {
+    public ItemBoardSaveRespDto saveBoard(ItemBoard savingItemBoard) {
 
         // 유저 정보 저장
         savingItemBoard.setUser(User.getSecurityContextUser());
@@ -63,13 +63,13 @@ public class ItemBoardService {
         MultipartFile file = savingItemBoard.getFile();
         String uri = null;
         if (file != null) {
-            uri = userResourceManager.storeFile(User.getSecurityContextUser().getEmail(), file);
+            uri = userResourceManager.storeFile(User.getSecurityContextUser().getUsername(), file);
         }
         savingItemBoard.setThumbnail(uri);
 
         // 카테고리 조회
         Category category = categoryService.selectCategory("TRADE");
-        Category subCategory = categoryService.selectCategory(subCategoryName.toUpperCase());
+        Category subCategory = categoryService.selectCategory(savingItemBoard.getSubCategoryName().toUpperCase());
 
         // 상위 카테고리 정보 저장
         boardCategoryService.saveBoardCategory(savingItemBoard, category);
@@ -111,10 +111,9 @@ public class ItemBoardService {
 
     // 게시물 수정 폼 로딩
     @Transactional
-    public ItemBoardUpdateReqDto getUpdateForm(Long boardId) {
+    public ItemBoardUpdateReqDto getUpdateForm(Long boardId)  {
         ItemBoard itemBoard = itemBoardRepository.findByIdFetchJoinUserAndComments(boardId)
                 .orElseThrow(() -> new IllegalArgumentException("게시물을 찾을 수 없습니다."));
-
         return ItemBoardUpdateReqDto.toDto(itemBoard);
     }
 

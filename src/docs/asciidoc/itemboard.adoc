@@ -8,9 +8,41 @@ https://github.com/k-mini
 :source-highlighter: highlightjs
 :sectnums:
 
+== 게시판 생성
+
+=== 요청
+
+include::{snippets}/itemboard/save-itemboard/curl-request.adoc[]
+
+=== 응답
+
+include::{snippets}/itemboard/save-itemboard/http-response.adoc[]
+
+=== 경로 파라미터
+
+include::{snippets}/itemboard/save-itemboard/path-parameters.adoc[]
+
+=== 요청 파라미터
+
+include::{snippets}/itemboard/save-itemboard/request-parts.adoc[]
+
+==== itemBoardSaveReqApiDto
+
+include::{snippets}/itemboard/save-itemboard/request-part-itemBoardSaveReqApiDto-fields.adoc[]
+
+=== 응답 필드
+
+include::{snippets}/itemboard/save-itemboard/response-fields.adoc[]
+
+==== data
+
+include::{snippets}/itemboard/save-itemboard/response-fields-beneath-data.adoc[]
 
 
-== 게시판 수정
+
+
+
+== 게시판 조회
 
 === 요청
 

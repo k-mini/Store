@@ -32,6 +32,7 @@ public class ItemBoardController {
     public String viewBoard(
             @PathVariable("subCategory") String subCategory,
             @PathVariable("boardId") Long boardId, Model model) {
+        log.debug("boardId = {}", boardId);
 
         ItemBoardViewRespDto result = itemBoardService.viewBoard(boardId);
 
@@ -56,7 +57,7 @@ public class ItemBoardController {
     public String getSaveForm(
             @ModelAttribute ItemBoardSaveReqDto itemBoardSaveReqDto, Model model) {
         // PathVariable 자동 modelAttribute 저장.
-        model.addAttribute("itemBoardFormSaveDto", new ItemBoardSaveReqDto());
+        model.addAttribute("itemBoardSaveReqDto", new ItemBoardSaveReqDto());
         return "board/form";
     }
 
@@ -73,9 +74,10 @@ public class ItemBoardController {
                                         .content(itemBoardSaveReqDto.getContent())
                                         .file(itemBoardSaveReqDto.getFile())
                                         .itemName(itemBoardSaveReqDto.getItemName())
+                .subCategoryName(subCategoryName)
                                         .build();
 
-        itemBoardService.saveBoard(itemBoard, subCategoryName);
+        itemBoardService.saveBoard(itemBoard);
 
         redirectAttributes.addAttribute("category", "trade");
         redirectAttributes.addAttribute("subCategory", subCategoryName);

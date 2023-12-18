@@ -1,5 +1,6 @@
 package com.kmini.store.controller;
 
+import com.kmini.store.domain.CommunityBoard;
 import com.kmini.store.dto.request.BoardDto.CommunityBoardSaveReqDto;
 import com.kmini.store.dto.request.BoardDto.ItemBoardSaveReqDto;
 import com.kmini.store.dto.response.CommunityBoardDto.CommunityBoardViewRespDto;
@@ -52,10 +53,16 @@ public class CommunityBoardController {
             RedirectAttributes redirectAttributes) throws IOException {
         log.debug("communityBoardFormSaveDto = {}", communityBoardSaveReqDto);
 
-        communityBoardService.save(communityBoardSaveReqDto);
+        CommunityBoard newCommunityBoard = CommunityBoard.builder()
+                                                        .subCategoryName(communityBoardSaveReqDto.getSubCategoryName())
+                                                        .title(communityBoardSaveReqDto.getTitle())
+                                                        .content(communityBoardSaveReqDto.getContent())
+                                                        .file(communityBoardSaveReqDto.getFile())
+                                                        .build();
+        communityBoardService.save(newCommunityBoard);
 
         redirectAttributes.addAttribute("category", "community");
-        redirectAttributes.addAttribute("subCategory", communityBoardSaveReqDto.getSubCategory());
+        redirectAttributes.addAttribute("subCategory", communityBoardSaveReqDto.getSubCategoryName());
         return "redirect:/boards/{category}/{subCategory}";
     }
 

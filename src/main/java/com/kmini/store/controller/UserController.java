@@ -53,11 +53,11 @@ public class UserController {
         }
 
         userService.saveUser(User.builder()
-                                .email(userSaveReqDto.getEmail())
-                                .username(userSaveReqDto.getUsername())
-                                .password(userSaveReqDto.getPassword())
-                                .file(file)
-                                .build());
+                .email(userSaveReqDto.getEmail())
+                .username(userSaveReqDto.getUsername())
+                .password(userSaveReqDto.getPassword())
+                .file(file)
+                .build());
 
         return "redirect:/auth/signin";
     }
@@ -92,14 +92,14 @@ public class UserController {
 
 //        userService.updateUser(user.getId(), userUpdateReqDto, file);
         userService.updateUser(User.builder()
-                                .id(user.getId())
-                                .username(userUpdateReqDto.getUsername())
-                                .password(userUpdateReqDto.getPassword())
-                                .email(user.getEmail())
-                                .role(user.getRole())
-                                .userStatus(user.getUserStatus())
-                                .file(userUpdateReqDto.getFile())
-                                .build());
+                .id(user.getId())
+                .username(userUpdateReqDto.getUsername())
+                .password(userUpdateReqDto.getPassword())
+                .email(user.getEmail())
+                .role(user.getRole())
+                .userStatus(user.getUserStatus())
+                .file(userUpdateReqDto.getFile())
+                .build());
         return "redirect:/";
     }
 }

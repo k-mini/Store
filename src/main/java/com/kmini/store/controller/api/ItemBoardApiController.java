@@ -4,6 +4,7 @@ package com.kmini.store.controller.api;
 import com.kmini.store.domain.Board;
 import com.kmini.store.domain.ItemBoard;
 import com.kmini.store.dto.CommonRespDto;
+import com.kmini.store.dto.request.BoardDto;
 import com.kmini.store.dto.request.BoardDto.ItemBoardSaveReqApiDto;
 import com.kmini.store.dto.request.ItemBoardDto.ItemBoardUpdateReqApiDto;
 import com.kmini.store.dto.response.ItemBoardDto.ItemBoardDeleteRespDto;
@@ -21,6 +22,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/board/trade/{subCategory}")
@@ -34,7 +38,7 @@ public class ItemBoardApiController {
     // 게시물 조회
     @GetMapping("/{boardId}")
     public ResponseEntity<?> viewBoard(
-            @PathVariable("subCategory") String subCategory,@PathVariable("boardId") Long boardId) {
+            @PathVariable("subCategory") String subCategory, @PathVariable("boardId") Long boardId) {
         log.debug("category = {} subCategory = {} boardId = {}", category, subCategory, boardId);
 
         ItemBoardViewRespDto result = itemBoardService.viewBoard(boardId);
@@ -50,27 +54,30 @@ public class ItemBoardApiController {
             @PathVariable("subCategory") String subCategory,
             @RequestPart ItemBoardSaveReqApiDto itemBoardSaveReqApiDto,
             @RequestPart(required = false) MultipartFile file) {
+        log.debug("itemBoardSaveReqApiDto = {}", itemBoardSaveReqApiDto);
+        log.debug("file = {}", file);
 
         ItemBoard savingBoard = ItemBoard.builder()
                 .title(itemBoardSaveReqApiDto.getTitle())
                 .content(itemBoardSaveReqApiDto.getContent())
                 .itemName(itemBoardSaveReqApiDto.getItemName())
+                .subCategoryName(subCategory)
                 .file(file)
                 .build();
 
-        ItemBoardSaveRespDto result = itemBoardService.saveBoard(savingBoard, subCategory);
+        ItemBoardSaveRespDto result = itemBoardService.saveBoard(savingBoard);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new CommonRespDto<>(1, "성공", result));
     }
 
-    
+
     // 게시물 삭제
     @DeleteMapping("/{boardId}")
     public ResponseEntity<?> deleteBoard(
-                       @PathVariable("subCategory") String subCategory,
-                       @PathVariable("boardId") Long boardId) {
+            @PathVariable("subCategory") String subCategory,
+            @PathVariable("boardId") Long boardId) {
         log.debug("category = {} subCategory = {} boardId = {}", category, subCategory, boardId);
 
         Board board = itemBoardService.deleteBoard(boardId);
@@ -84,8 +91,7 @@ public class ItemBoardApiController {
 
     // 게시물 수정
     @PatchMapping(value = "/{boardId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> updateBoard(@PathVariable String subCategory,
-                                         @PathVariable Long boardId,
+    public ResponseEntity<?> updateBoard(@PathVariable String subCategory, @PathVariable Long boardId,
                                          @Validated @RequestPart ItemBoardUpdateReqApiDto itemBoardUpdateReqApiDto, BindingResult bindingResult,
                                          @RequestPart(required = false) MultipartFile file,
                                          Model model) {

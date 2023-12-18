@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -30,12 +31,13 @@ public class CommunityBoardService {
     private final UserFileTestingManager userFileManager;
 
     @Transactional
-    public void save(CommunityBoardSaveReqDto communityBoardSaveReqDto) throws IOException {
+    public void save(CommunityBoard newCommunityBoard) throws IOException {
+        Assert.notNull(newCommunityBoard.getSubCategoryName(),"하위 카테고리가 존재하지 않습니다.");
 
         AccountContext accountContext = (AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         // 파일 시스템에 저장하고 랜덤 파일명 반환
-        MultipartFile file = communityBoardSaveReqDto.getFile();
+        MultipartFile file = newCommunityBoard.getFile();
         String uri = null;
         if (file != null) {
             uri = userFileManager.storeFileInUserDirectory(file);
@@ -44,20 +46,19 @@ public class CommunityBoardService {
         // 카테고리 조회
         Category category = categoryRepository.findByCategoryName("COMMUNITY")
                 .orElseThrow(()->new IllegalArgumentException("상위 카테고리가 존재하지 않습니다."));
-        Category subCategory = categoryRepository.findByCategoryName(communityBoardSaveReqDto.getSubCategory().toUpperCase())
+        Category subCategory = categoryRepository.findByCategoryName(newCommunityBoard.getSubCategoryName().toUpperCase())
                 .orElseThrow(()->new IllegalArgumentException("하위 카테고리가 존재하지 않습니다."));
 
-        CommunityBoard board = communityBoardSaveReqDto.toEntity();
-        board.setThumbnail(uri);
-        board.setUser(accountContext.getUser());
-        communityBoardRepository.save(board);
+        newCommunityBoard.setThumbnail(uri);
+        newCommunityBoard.setUser(accountContext.getUser());
+        communityBoardRepository.save(newCommunityBoard);
 
         // 상위 카테고리 정보 저장
-        BoardCategory boardCategory = new BoardCategory(board, category);
+        BoardCategory boardCategory = new BoardCategory(newCommunityBoard, category);
         boardCategoryRepository.save(boardCategory);
 
         // 하위 카테고리 정보 저장
-        BoardCategory boardSubCategory = new BoardCategory(board, subCategory);
+        BoardCategory boardSubCategory = new BoardCategory(newCommunityBoard, subCategory);
         boardCategoryRepository.save(boardSubCategory);
     }
 

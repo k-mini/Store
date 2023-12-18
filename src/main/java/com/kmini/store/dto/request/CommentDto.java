@@ -26,8 +26,6 @@ public class CommentDto {
     @AllArgsConstructor @Builder
     @NoArgsConstructor
     public static class BoardCommentUpdateReqDto {
-        // 게시물 id
-        private Long boardId;
         // 내용
         private String content;
     }

@@ -1,10 +1,7 @@
 package com.kmini.store.dto.request;
 
 import com.kmini.store.domain.ItemBoard;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
@@ -12,7 +9,7 @@ import javax.validation.constraints.NotNull;
 
 public class ItemBoardDto {
 
-    @Getter
+    @Data
     @AllArgsConstructor
     @Builder
     public static class ItemBoardUpdateReqDto {
@@ -28,12 +25,13 @@ public class ItemBoardDto {
         // 서브 카테고리
         private String subCategory;
 
+
         public static ItemBoardUpdateReqDto toDto(ItemBoard board) {
             return ItemBoardUpdateReqDto.builder()
 //                    .boardId(board.getId())
                     .title(board.getTitle())
                     .content(board.getContent())
-//                    .file(board.getThumbnail())
+                    .file(board.getFile())
                     .build();
         }
     }

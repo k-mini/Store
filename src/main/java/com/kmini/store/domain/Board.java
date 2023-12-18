@@ -41,6 +41,11 @@ public abstract class Board extends BaseTime {
     @Transient
     private MultipartFile file;
 
+    @Transient
+    private String categoryName;
+    @Transient
+    private String subCategoryName;
+
     public Board(User user, String content) {
         this.user = user;
         this.content = content;

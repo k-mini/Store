@@ -67,8 +67,9 @@ class ItemBoardControllerTest {
                 .content(itemBoardSaveReqDto.getContent())
                 .file(itemBoardSaveReqDto.getFile())
                 .itemName(itemBoardSaveReqDto.getItemName())
+                .subCategoryName(subCategory)
                 .build();
-        ItemBoardSaveRespDto itemBoardSaveRespDto = itemBoardService.saveBoard(itemBoard, subCategory);
+        ItemBoardSaveRespDto itemBoardSaveRespDto = itemBoardService.saveBoard(itemBoard);
         em.clear();
         Long boardId = itemBoardSaveRespDto.getId();
 
@@ -98,8 +99,9 @@ class ItemBoardControllerTest {
                                         .content(itemBoardSaveReqDto.getContent())
                                         .file(itemBoardSaveReqDto.getFile())
                                         .itemName(itemBoardSaveReqDto.getItemName())
+                                        .subCategoryName(subCategory)
                                         .build();
-        ItemBoardSaveRespDto itemBoardSaveRespDto = itemBoardService.saveBoard(itemBoard, subCategory);
+        ItemBoardSaveRespDto itemBoardSaveRespDto = itemBoardService.saveBoard(itemBoard);
         em.clear();
         Long boardId = itemBoardSaveRespDto.getId();
 

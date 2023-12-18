@@ -14,6 +14,10 @@ public class SearchDto {
         private String s;
         // 정렬
         private String order;
+        // 주 카테고리
+        private String category;
+        // 부 카테고리
+        private String subCategory;
     }
 
 }

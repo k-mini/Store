@@ -9,6 +9,7 @@ import javax.validation.constraints.*;
 @RequiredArgsConstructor
 public class UserDto {
 
+    @Builder
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
@@ -69,8 +70,8 @@ public class UserDto {
 
         public static UserUpdateReqDto getUserUpdateForm(User user) {
             return UserUpdateReqDto.builder()
+                    .email(user.getEmail())
                     .username(user.getUsername())
-                    .password(user.getPassword())
                     .build();
         }
     }

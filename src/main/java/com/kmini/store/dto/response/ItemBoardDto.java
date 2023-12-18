@@ -138,7 +138,8 @@ public class ItemBoardDto {
 
     // 게시물 저장
     @Getter
-    @AllArgsConstructor @Builder
+    @AllArgsConstructor @NoArgsConstructor
+    @Builder
     public static class ItemBoardSaveRespDto {
         // 게시물 ID
         private Long id;

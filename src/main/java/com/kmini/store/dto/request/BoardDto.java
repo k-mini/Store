@@ -27,7 +27,7 @@ public class BoardDto {
     /**
      *  거래 게시판 업로드
      */
-    @Getter
+    @Data
     @AllArgsConstructor
     @NoArgsConstructor
     public static class ItemBoardSaveReqDto {
@@ -41,35 +41,31 @@ public class BoardDto {
     }
 
     /**
-     *  커뮤니티 게시판 업로드
+     *  거래 게시판 업로드
      */
     @Getter
+    @AllArgsConstructor @NoArgsConstructor
+    public static class ItemBoardSaveReqApiDto {
+
+        @NotEmpty
+        private String title;
+        @NotEmpty
+        private String content;
+        @NotEmpty
+        private String itemName;
+    }
+
+    /**
+     *  커뮤니티 게시판 업로드
+     */
+    @Data
     @AllArgsConstructor
     @NoArgsConstructor
     public static class CommunityBoardSaveReqDto {
 
-        private String subCategory;
+        private String subCategoryName;
         private String title;
         private String content;
         private MultipartFile file;
-
-        public CommunityBoard toEntity() {
-            return CommunityBoard.builder()
-                    .title(title)
-                    .content(content)
-                    .build();
-        }
-    }
-
-    @Getter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public class ItemBoardSaveReqApiDto {
-
-        @NotEmpty
-        private String title;
-        @NotEmpty
-        private String content;
-        private String itemName;
     }
 }

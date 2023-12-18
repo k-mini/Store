@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,40 +28,40 @@ public class UserFileTestingManager implements UserResourceManager {
 
     // 파일을 저장하고 경로를 반환
     @Override
-    public String storeFile(String email, MultipartFile multipartFile) {
+    public String storeFile(String username, MultipartFile multipartFile) {
         if (multipartFile == null || multipartFile.isEmpty()) {
             return null;
         }
         String originalFilename = multipartFile.getOriginalFilename();
         String ext = extractExt(originalFilename);
         String randomName = createRandomFileName(ext);
-        log.trace("dirPath = {}" , email);
-        String realDirectoryPath = getRealDirectoryPath(email);
-        File directory = new File(realDirectoryPath);
+        log.trace("dirPath = {}" , username);
+        String realUserDirectoryPath = getRealPath(username);
+        File directory = new File(realUserDirectoryPath);
 
         if (!directory.exists()) {
             directory.mkdirs();
         }
 
-        File file= new File(plusPath(realDirectoryPath ,randomName));
+        File file= new File(plusPath(realUserDirectoryPath ,randomName));
 
         try {
             multipartFile.transferTo(file);
         } catch (Exception e) {
             throw new IllegalStateException("파일을 저장하는데에 실패했습니다", e);
         }
-        return randomName;
+        return plusPath(username, randomName);
     }
 
     @Override
     public String updateFile(String fileName, MultipartFile multipartFile) {
 
         if (!StringUtils.hasText(fileName)) {
-            return storeFile(User.getSecurityContextUser().getEmail(), multipartFile);
+            return storeFile(User.getSecurityContextUser().getUsername(), multipartFile);
         }
 
 //        File file = new File(fileDir + User.getSecurityContextUser().getEmail() +  fileName);
-        File file = new File(plusPaths(fileDir, User.getSecurityContextUser().getEmail(), fileName));
+        File file = new File(plusPath(fileDir, fileName));
 
         boolean deleted = false;
         if (file.exists()) {
@@ -87,26 +88,32 @@ public class UserFileTestingManager implements UserResourceManager {
         return file.delete();
     }
 
+    @Override
+    public File getFile(String uri) {
+        log.trace("uri = {}",uri);
+        return new File(getRealPath(uri)) ;
+    }
 
-    private String plusPath(String dirPath, String fileName) {
-        StringBuilder sb = new StringBuilder();
-        if (!fileName.startsWith("/") && !dirPath.endsWith("/")) {
-            fileName = "/" + fileName;
+    // ex1) abcd + eftg => abcd/eftg
+    // ex) abcd/ + /zxcv/ => abcd/zxcv/
+    private String plusPath(String path1, String path2) {
+        StringBuilder sb = new StringBuilder(path1);
+
+        if ( !path1.endsWith("/") && !path2.startsWith("/") ) {
+            sb.append("/");
         }
-        if (fileName.startsWith("/") && dirPath.endsWith("/")) {
-            fileName = fileName.substring(1);
+        if ( path1.endsWith("/") && path2.startsWith("/") ) {
+            path2 = path2.substring(1);
         }
-//        return sb.append(dirPath).append(fileName).toString();
-        return dirPath + fileName;
+        return sb.append(path2).toString();
     }
 
     private String plusPaths(String... paths) {
-        if (paths.length == 0) {
-            return null;
-        }
+        Assert.notEmpty(paths, "paths 값이 비어있습니다.");
         if (paths.length == 1) {
             return paths[0];
         }
+
         String answer = paths[0];
         for (int i=1;i<paths.length;i++) {
             answer = plusPath(answer, paths[i]);
@@ -114,15 +121,15 @@ public class UserFileTestingManager implements UserResourceManager {
         return answer;
     }
 
-    private String getRealDirectoryPath(String dirPath) {
-        if (dirPath.startsWith("/")) {
-            dirPath = dirPath.substring(1);
+    private String getRealPath(String path) {
+        if (path.startsWith("/")) {
+            path = path.substring(1);
         }
-        return fileDir + dirPath;
+        return fileDir + path;
     }
 
     private String getRealUserDirectoryPath() {
-        return getRealDirectoryPath(User.getSecurityContextUser().getEmail());
+        return getRealPath(User.getSecurityContextUser().getEmail());
     }
 
     private String createRandomFileName(String ext) {

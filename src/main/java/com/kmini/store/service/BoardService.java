@@ -19,14 +19,13 @@ public class BoardService {
 
     // 게시물 조회 ( 디폴트 : 최신 시간 순으로)
     @Transactional(readOnly = true)
-    public Page<BoardDto> viewPosts(Pageable pageable, String categoryName, String subCategoryName, SearchBoardDto searchBoardDto) {
+    public Page<Board> viewBoardList(Pageable pageable, SearchBoardDto searchBoardDto) {
 
         // 검색 조건 만들기
-        categoryName = categoryName.toUpperCase();
-        subCategoryName = subCategoryName.toUpperCase();
+        String categoryName = searchBoardDto.getCategory().toUpperCase();
+        String subCategoryName = searchBoardDto.getSubCategory().toUpperCase();
         BoardSearchCond boardSearchCond = new BoardSearchCond(categoryName, subCategoryName, searchBoardDto);
 
-        Page<Board> rawResult = boardRepository.findBoards(boardSearchCond, pageable);
-        return rawResult.map(BoardDto::toDto);
+        return boardRepository.findBoards(boardSearchCond, pageable);
     }
 }

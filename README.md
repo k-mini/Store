@@ -60,3 +60,12 @@
 
 <img src="./docs/flow/trade-flow-chart.png">
 
+
+## API Documentation
+
+- Spring Rest Docs를 사용하여 문서를 작성하였습니다.
+
+<a href="https://htmlpreview.github.io/?https://github.com/k-mini/Store/blob/dev/src/main/resources/static/docs/user.html" target="_blank">유저 API</a> <br>
+<a href="https://htmlpreview.github.io/?https://github.com/k-mini/Store/blob/dev/src/main/resources/static/docs/itemboard.html" target="_blank">거래 게시판 API</a> <br>
+<a href="https://htmlpreview.github.io/?https://github.com/k-mini/Store/blob/dev/src/main/resources/static/docs/trade.html" target="_blank">거래 API</a> <br>
+<a href="https://htmlpreview.github.io/?https://github.com/k-mini/Store/blob/dev/src/main/resources/static/docs/comment.html" target="_blank">댓글 API</a>

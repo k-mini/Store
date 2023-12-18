@@ -2,6 +2,8 @@ package com.kmini.store.config.init;
 
 import com.kmini.store.aop.CategoryInterceptor;
 import com.kmini.store.config.auth.AccountContext;
+import com.kmini.store.domain.Comment;
+import com.kmini.store.domain.CommunityBoard;
 import com.kmini.store.domain.ItemBoard;
 import com.kmini.store.domain.User;
 import com.kmini.store.domain.type.UserRole;
@@ -63,25 +65,38 @@ public class StoreInitializer implements ApplicationRunner {
                     .title(title)
                     .content(content)
                     .itemName(itemName)
+                    .subCategoryName("electronics")
                     .build();
-            itemBoardService.saveBoard(itemBoard, "electronics");
+            itemBoardService.saveBoard(itemBoard);
         }
         log.debug("커뮤니티 게사판 샘플 데이터 넣기! ...");
         for (int i = 1; i < 156L; i++) {
-            CommunityBoardSaveReqDto saveFormDto =
-                    new CommunityBoardSaveReqDto( "free", "comtitle" + i, "comcontent" + i, null);
-            communityBoardService.save(saveFormDto);
+            String subCategoryName = "free";
+            String title = "comtitle" + i;
+            String content = "comcontent" + i;
+            CommunityBoard newCommunityBoard = CommunityBoard.builder()
+                    .subCategoryName(subCategoryName)
+                    .title(title)
+                    .content(content)
+                    .build();
+            communityBoardService.save(newCommunityBoard);
         }
 
         log.info("상위 댓글 넣기 !!..");
-        commentService.saveComment(new BoardCommentSaveReqDto(156L, null,"상위 댓글댓글1111"));
-        commentService.saveComment(new BoardCommentSaveReqDto(156L, null, "상위 댓글댓글2222"));
+        Comment comment = new Comment(user, null, null, "상위 댓글댓글1111");
+        Comment comment2 = new Comment(user, null, null, "상위 댓글댓글2222");
+        commentService.saveComment(156L, null, comment);
+        commentService.saveComment(156L, null, comment2);
 
         log.info("대댓글 넣기!!");
-        commentService.saveComment(new BoardCommentSaveReqDto(156L, 1L, "댓글1의 대댓글1"));
-        commentService.saveComment(new BoardCommentSaveReqDto(156L, 1L, "댓글1의 대댓글2"));
-        commentService.saveComment(new BoardCommentSaveReqDto(156L, 2L, "댓글2의 대댓글1"));
-        commentService.saveComment(new BoardCommentSaveReqDto(156L, 2L, "댓글2의 대댓글2"));
+        Comment subComment1 = new Comment(user, null, null, "댓글1의 대댓글1");
+        Comment subComment2 = new Comment(user, null, null, "댓글1의 대댓글2");
+        Comment subComment3 = new Comment(user, null, null, "댓글2의 대댓글1");
+        Comment subComment4 = new Comment(user, null, null, "댓글2의 대댓글2");
+        commentService.saveComment(156L, 1L, subComment1);
+        commentService.saveComment(156L, 1L, subComment2);
+        commentService.saveComment(156L, 2L, subComment3);
+        commentService.saveComment(156L, 2L, subComment4);
 
         log.info("거래 넣기");
         tradeService.registerTrade(1L);

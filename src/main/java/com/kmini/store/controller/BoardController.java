@@ -34,13 +34,13 @@ public class BoardController {
 
     // 카테고리별 게시물 조회
     @GetMapping
-    public String viewPosts(
-            @PathVariable("category") String categoryName,
-            @PathVariable("subCategory") String subCategoryName,
+    public String viewBoardList(
+//            @PathVariable("category") String categoryName,
+//            @PathVariable("subCategory") String subCategoryName,
             @PageableDefault(sort = "createdDate", direction = DESC) Pageable pageable,
             @ModelAttribute SearchBoardDto searchBoardDto,
             Model model) {
-        log.debug("category = {}, subCategory = {}", categoryName, subCategoryName);
+        log.debug("category = {}, subCategory = {}", searchBoardDto.getCategory(), searchBoardDto.getSubCategory());
         log.debug("SearchBoardDto = {}", searchBoardDto);
 
         String order = searchBoardDto.getOrder();
@@ -50,7 +50,7 @@ public class BoardController {
             pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(DESC, "createdDate"));
         }
 
-        Page<BoardDto> results = boardService.viewPosts(pageable, categoryName, subCategoryName, searchBoardDto);
+        Page<BoardDto> results = boardService.viewBoardList(pageable, searchBoardDto).map(BoardDto::toDto);
         for (BoardDto result : results.getContent()) {
             log.trace("result = {}", result);
         }

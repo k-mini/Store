@@ -23,10 +23,17 @@ public class UserService {
     // 회원가입
     @Transactional
     public User saveUser(User user) {
-        userRepository.findByEmail(user.getEmail())
-                .ifPresent(existedUser-> {throw new IllegalArgumentException("이미 존재하는 이메일입니다. email : " + existedUser.getEmail());});
+        userRepository.findByEmailOrUsername(user.getEmail(), user.getUsername())
+                .ifPresent(existedUser-> {
+                    if (existedUser.getEmail().equals(user.getEmail())) {
+                        throw new IllegalArgumentException("이미 존재하는 이메일입니다. email : " + existedUser.getEmail());
+                    }
+                    if (existedUser.getUsername().equals(user.getUsername())) {
+                        throw new IllegalArgumentException("이미 존재하는 유저명입니다. username : " + existedUser.getUsername());
+                    }
+                });
 
-        userResourceManager.storeFile(user.getEmail(), user.getFile());
+        userResourceManager.storeFile(user.getUsername(), user.getFile());
 
         if (user.getRole() == null) {
             user.setRole(UserRole.USER);

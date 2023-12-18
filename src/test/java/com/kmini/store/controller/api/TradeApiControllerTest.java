@@ -102,8 +102,9 @@ class TradeApiControllerTest {
                 .content(itemBoardSaveReqDto.getContent())
                 .file(itemBoardSaveReqDto.getFile())
                 .itemName(itemBoardSaveReqDto.getItemName())
+                .subCategoryName(subCategory)
                 .build();
-        ItemBoardSaveRespDto itemBoardSaveRespDto = itemBoardService.saveBoard(itemBoard, subCategory);
+        ItemBoardSaveRespDto itemBoardSaveRespDto = itemBoardService.saveBoard(itemBoard);
         log.info("itemBoardSaveRespDto id = {}", itemBoardSaveRespDto.getId());
         em.clear();
     }

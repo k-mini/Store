@@ -14,6 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -23,35 +26,35 @@ public class CommentService {
     private final BoardRepository boardRepository;
 
     @Transactional
-    public BoardCommentSaveRespDto saveComment(BoardCommentSaveReqDto boardCommentSaveReqDto) {
+    public Comment saveComment(Long boardId, Long topCommentId, Comment newComment) {
 
         User user = User.getSecurityContextUser();
 
-        Board board = boardRepository.getReferenceById(boardCommentSaveReqDto.getBoardId());
+        Board board = boardRepository.getReferenceById(boardId);
 
-        Long topCommentId = boardCommentSaveReqDto.getTopCommentId();
         Comment topComment = null;
         if (topCommentId != null) {
             topComment = commentRepository.getReferenceById(topCommentId);
         }
-        String content = boardCommentSaveReqDto.getContent();
 
         // 댓글 엔티티 생성
-        Comment comment = new Comment(user, board, topComment, content);
+        newComment.setBoard(board);
+        newComment.setTopComment(topComment);
         // 댓글 저장
-        Comment savedComment = commentRepository.save(comment);
-        return BoardCommentSaveRespDto.toDto(savedComment);
+        Comment savedComment = commentRepository.save(newComment);
+
+        return savedComment;
     }
 
     @Transactional
-    public BoardCommentUpdateRespDto updateComment(BoardCommentUpdateReqDto boardCommentUpdateReqDto, Long commentId) {
+    public Comment updateComment(Long commentId, String content) {
 
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
 
-        comment.setContent(boardCommentUpdateReqDto.getContent());
+        comment.setContent(content);
 
-        return BoardCommentUpdateRespDto.toDto(comment);
+        return comment;
     }
 
     @Transactional
@@ -78,5 +81,12 @@ public class CommentService {
         commentRepository.deleteTopCommentsByBoardId(boardId);
     }
 
-
+    // 특정 게시물 댓글 조회
+    @Transactional
+    public List<Comment> selectTopCommentsInBoard(Long boardId) {
+        return commentRepository.findAllCommentsByBoardIdFetchJoin(boardId)
+                .stream()
+                .filter(comment -> comment.getTopComment() == null)
+                .collect(Collectors.toList());
+    }
 }

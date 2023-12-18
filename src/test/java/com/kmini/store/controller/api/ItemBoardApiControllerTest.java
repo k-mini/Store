@@ -2,13 +2,11 @@ package com.kmini.store.controller.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kmini.store.config.TestDataProvider;
 import com.kmini.store.config.WithMockCustomUser;
-import com.kmini.store.domain.ItemBoard;
-import com.kmini.store.dto.request.BoardDto.ItemBoardSaveReqDto;
-import com.kmini.store.dto.request.CommentDto;
-import com.kmini.store.dto.request.ItemBoardDto;
+import com.kmini.store.config.auth.AccountContext;
+import com.kmini.store.domain.User;
 import com.kmini.store.dto.request.ItemBoardDto.ItemBoardUpdateReqApiDto;
-import com.kmini.store.dto.request.ItemBoardDto.ItemBoardUpdateReqDto;
 import com.kmini.store.dto.response.CommentDto.BoardCommentSaveRespDto;
 import com.kmini.store.dto.response.CommentDto.BoardCommentUpdateRespDto;
 import com.kmini.store.dto.response.ItemBoardDto.ItemBoardDeleteRespDto;
@@ -24,11 +22,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.mock.web.MockPart;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,10 +40,15 @@ import javax.persistence.EntityManager;
 import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
 
 import static com.kmini.store.config.ApiDocumentUtils.getDocumentRequest;
 import static com.kmini.store.config.ApiDocumentUtils.getDocumentResponse;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.http.MediaType.MULTIPART_FORM_DATA;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
@@ -65,29 +72,97 @@ class ItemBoardApiControllerTest {
     ItemBoardService itemBoardService;
     @Autowired
     CommentService commentService;
+    @Autowired
+    TestDataProvider testDataProvider;
 
-    public ItemBoardSaveRespDto createTestItemBoard(String subCategory, String title, String content, String itemName) throws Exception {
+    @WithMockCustomUser
+    @DisplayName("거래 게시판 게시물 저장")
+    @Test
+    void savePost() throws Exception {
+
+        // given
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        User user = ((AccountContext) securityContext.getAuthentication().getPrincipal()).getUser();
+
+        // 테스트를 위한 게시물 작성
         String category = "trade";
+        String subCategory = "electronics";
+        String title = "Life is Good";
+        String content = "what is your favorite food?";
+        String itemName = "The Old Man and the Sea";
         String fileName = "testImage";
         String contentType = "png";
         FileInputStream inputStream = new FileInputStream(".\\docs\\test\\" + fileName + "." + contentType);
         MockMultipartFile existingFile = new MockMultipartFile("file", fileName + "." + contentType, contentType, inputStream);
-        ItemBoardSaveReqDto itemBoardSaveReqDto = new ItemBoardSaveReqDto(title, content, existingFile, itemName);
-        ItemBoard itemBoard = ItemBoard.builder()
-                .title(itemBoardSaveReqDto.getTitle())
-                .content(itemBoardSaveReqDto.getContent())
-                .file(itemBoardSaveReqDto.getFile())
-                .itemName(itemBoardSaveReqDto.getItemName())
-                .build();
-        ItemBoardSaveRespDto itemBoardSaveRespDto = itemBoardService.saveBoard(itemBoard, subCategory);
-        entityManager.clear();
-        return itemBoardSaveRespDto;
-    }
 
-    private BoardCommentSaveRespDto createTestComment(Long boardId, Long topCommentId, String commentContent) {
-        BoardCommentSaveRespDto boardCommentSaveRespDto = commentService.saveComment(new CommentDto.BoardCommentSaveReqDto(boardId, topCommentId, commentContent));
-        entityManager.clear();
-        return boardCommentSaveRespDto;
+        Map<String, String> map = Map.of("title", title, "content", content, "itemName", itemName);
+        String itemBoardSaveReqApiDto = objectMapper.writeValueAsString(map);
+
+        // part 생성
+        MockPart jsonPart = new MockPart("itemBoardSaveReqApiDto", itemBoardSaveReqApiDto.getBytes(StandardCharsets.UTF_8));
+        jsonPart.getHeaders().setContentType(MediaType.APPLICATION_JSON);
+        MockPart filePart = new MockPart("file", existingFile.getOriginalFilename(), existingFile.getBytes());
+        filePart.getHeaders().setContentType(MediaType.IMAGE_PNG);
+        // when
+        ResultActions resultActions = mockMvc.perform(
+                RestDocumentationRequestBuilders.multipart("/api/board/{category}/{subCategory}", category, subCategory)
+                        .part(filePart, jsonPart)
+        );
+
+        // then
+        String result = resultActions.andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andDo(document(
+                                "itemboard/save-itemboard",
+                                getDocumentRequest(), getDocumentResponse(),
+                                pathParameters(
+                                        parameterWithName("category").description("카테고리 이름"),
+                                        parameterWithName("subCategory").description("소 카테고리 이름")
+                                ),
+                                requestParts(
+                                        partWithName("itemBoardSaveReqApiDto").description("새롭게 저장할 게시물 정보 JSON"),
+                                        partWithName("file").description("게시물에 올릴 사진")
+                                ),
+                                requestPartFields(
+                                        "itemBoardSaveReqApiDto",
+                                        fieldWithPath("title").description("게시물 제목"),
+                                        fieldWithPath("content").description("게시물 내용"),
+                                        fieldWithPath("itemName").description("아이템 명")
+                                ),
+                                responseFields(
+                                        fieldWithPath("code").description("응답 코드"),
+                                        fieldWithPath("message").description("응답 메시지"),
+                                        subsectionWithPath("data").description("응답 데이터 JSON")
+                                ),
+                                responseFields(
+                                        beneathPath("data"),
+                                        fieldWithPath("id").description("저장된 게시물 ID"),
+                                        fieldWithPath("email").description("저장된 게시물의 작성자 이메일"),
+                                        fieldWithPath("writerId").description("저장된 게시물의 유저 ID"),
+                                        fieldWithPath("username").description("저장된 게시물의 유저명"),
+                                        fieldWithPath("userThumbnail").description("저장된 게시물의 유저 사진 URI"),
+                                        fieldWithPath("title").description("저장된 게시물의 제목"),
+                                        fieldWithPath("boardThumbnail").description("저장된 게시물 사진 URI"),
+                                        fieldWithPath("content").description("저장된 게시물의 내용"),
+                                        fieldWithPath("createdDate").description("저장된 게시물의 생성 날짜")
+                                ),
+                                requestHeaders(
+                                        headerWithName(HttpHeaders.CONTENT_TYPE).description(MULTIPART_FORM_DATA)
+                                )
+                        )
+                ).andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+        JsonNode jsonNode = objectMapper.readTree(result).get("data");
+        ItemBoardSaveRespDto itemBoardSaveRespDto = objectMapper.treeToValue(jsonNode, ItemBoardSaveRespDto.class);
+
+        assertThat(itemBoardSaveRespDto.getEmail()).isEqualTo(user.getEmail());
+        assertThat(itemBoardSaveRespDto.getWriterId()).isEqualTo(user.getId());
+        assertThat(itemBoardSaveRespDto.getUsername()).isEqualTo(user.getUsername());
+        assertThat(itemBoardSaveRespDto.getUserThumbnail()).isEqualTo(user.getThumbnail());
+        assertThat(itemBoardSaveRespDto.getTitle()).isEqualTo(title);
+        assertThat(itemBoardSaveRespDto.getBoardThumbnail()).isNotNull();
+        assertThat(itemBoardSaveRespDto.getContent()).isEqualTo(content);
     }
 
     @WithMockCustomUser
@@ -101,13 +176,13 @@ class ItemBoardApiControllerTest {
         String subCategory = "electronics";
         String title = "Life is Good";
         String content = "what is your favorite food?";
-        ItemBoardSaveRespDto itemBoardSaveRespDto = createTestItemBoard(category, title, content, null);
+        ItemBoardSaveRespDto itemBoardSaveRespDto = testDataProvider.createTestItemBoard(category, title, content, null);
         Long boardId = itemBoardSaveRespDto.getId();
         String topCommentContent = "부모 댓글 내용입니다.";
         String subCommentContent = "자식 댓글 내용입니다.";
 
-        BoardCommentSaveRespDto topComment = createTestComment(boardId, null, topCommentContent);
-        BoardCommentSaveRespDto subComment = createTestComment(boardId, topComment.getId(), subCommentContent);
+        BoardCommentSaveRespDto topComment = testDataProvider.createTestComment(boardId, null, topCommentContent);
+        BoardCommentSaveRespDto subComment = testDataProvider.createTestComment(boardId, topComment.getId(), subCommentContent);
 
         // when
         ResultActions resultActions = mockMvc.perform(
@@ -236,7 +311,7 @@ class ItemBoardApiControllerTest {
         String subCategory = "electronics";
         String title = "Life is Good";
         String content = "what is your favorite food?";
-        ItemBoardSaveRespDto itemBoardSaveRespDto = createTestItemBoard(category, title, content, null);
+        ItemBoardSaveRespDto itemBoardSaveRespDto = testDataProvider.createTestItemBoard(category, title, content, null);
 
         Long boardId = itemBoardSaveRespDto.getId();
         // when
@@ -301,7 +376,7 @@ class ItemBoardApiControllerTest {
         String subCategory = "electronics";
         String title = "Life is Good";
         String content = "what is your favorite food?";
-        ItemBoardSaveRespDto itemBoardSaveRespDto = createTestItemBoard(category, title, content, null);
+        ItemBoardSaveRespDto itemBoardSaveRespDto = testDataProvider.createTestItemBoard(category, title, content, null);
 
         // 수정 내용 작성
         String itemName = "book";
@@ -314,7 +389,7 @@ class ItemBoardApiControllerTest {
                 .itemName(itemName)
                 .title(modifiedTitle)
                 .content(modifiedContent).build();
-        FileInputStream inputStream = new FileInputStream("C:\\Users\\kmin\\images\\test\\" + fileName + "." + contentType);
+        FileInputStream inputStream = new FileInputStream(".\\docs\\test\\" + fileName + "." + contentType);
         MockMultipartFile file = new MockMultipartFile("file", fileName + "." + contentType, MediaType.IMAGE_JPEG_VALUE, inputStream);
         Long boardId = itemBoardSaveRespDto.getId();
 
@@ -374,6 +449,9 @@ class ItemBoardApiControllerTest {
                                         fieldWithPath("title").description("수정된 게시물의 제목"),
                                         fieldWithPath("content").description("수정된 게시물의 내용"),
                                         fieldWithPath("createdDate").description("수정된 게시물의 생성 날짜")
+                                ),
+                                requestHeaders(
+                                        headerWithName(HttpHeaders.CONTENT_TYPE).description(MULTIPART_FORM_DATA)
                                 )
                         )
                 ).andReturn().getResponse().getContentAsString();

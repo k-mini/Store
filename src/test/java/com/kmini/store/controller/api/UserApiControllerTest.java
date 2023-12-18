@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -46,6 +47,9 @@ import static com.kmini.store.config.ApiDocumentUtils.getDocumentResponse;
 import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.http.MediaType.MULTIPART_FORM_DATA;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
@@ -129,6 +133,9 @@ class UserApiControllerTest {
                                         fieldWithPath("id").description("가입 처리된 유저 ID"),
                                         fieldWithPath("email").description("가입 처리된 이메일"),
                                         fieldWithPath("username").description("가입 처리된 유저명")
+                                ),
+                                requestHeaders(
+                                        headerWithName(HttpHeaders.CONTENT_TYPE).description(MULTIPART_FORM_DATA)
                                 )
                         )
                 )
@@ -208,6 +215,9 @@ class UserApiControllerTest {
                                         fieldWithPath("id").description("회원 수정 처리된 유저 ID"),
                                         fieldWithPath("username").description("회원 수정 처리된 유저명"),
                                         fieldWithPath("email").description("회원 수정 처리된 이메일")
+                                ),
+                                requestHeaders(
+                                        headerWithName(HttpHeaders.CONTENT_TYPE).description(MULTIPART_FORM_DATA)
                                 )
                         )
                 )
@@ -229,7 +239,7 @@ class UserApiControllerTest {
 
         // given
         // 사전 회원가입
-        String username = "kmini";
+        String username = "kmini3333";
         String password = "1234";
         String email = "kmini22@gmail.com";
         UserRole userRole = UserRole.USER;
@@ -284,7 +294,7 @@ class UserApiControllerTest {
 
         // given
         // 사전 회원가입
-        String username = "kmini";
+        String username = "kmini1235";
         String password = "1234";
         String email = "kmini22@gmail.com";
         UserRole userRole = UserRole.USER;
@@ -296,7 +306,7 @@ class UserApiControllerTest {
         // when
         ResultActions resultActions = mockMvc.perform(
                 RestDocumentationRequestBuilders.patch("/api/user/withdraw-{userId}", userId)
-                );
+        );
 
         // then
         String result = resultActions.andExpect(status().isOk())
@@ -336,7 +346,7 @@ class UserApiControllerTest {
 
         // given
         // 사전 회원가입
-        String username = "kmini";
+        String username = "kmini56789";
         String password = "1234";
         String email = "kmini22@gmail.com";
         UserRole userRole = UserRole.USER;

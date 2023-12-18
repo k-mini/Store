@@ -7,6 +7,7 @@ import com.kmini.store.domain.User;
 import com.kmini.store.domain.type.UserRole;
 import com.kmini.store.dto.CommonRespDto;
 import com.kmini.store.dto.request.UserDto;
+import com.kmini.store.dto.request.UserDto.UserSaveReqApiDto;
 import com.kmini.store.dto.request.UserDto.UserSaveReqDto;
 import com.kmini.store.dto.request.UserDto.UserUpdateReqApiDto;
 import com.kmini.store.dto.response.UserDto.*;
@@ -20,6 +21,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Part;
+
 @RestController
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
@@ -30,9 +34,9 @@ public class UserApiController {
 
     // 회원가입
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> saveUser(@RequestPart UserDto.UserSaveReqApiDto userSaveReqApiDto,
+    public ResponseEntity<?> saveUser(@RequestPart UserSaveReqApiDto userSaveReqApiDto,
                                       @RequestPart(required = false) MultipartFile file) {
-        log.debug("userSaveReqApiDto = {}", userSaveReqApiDto);
+        log.debug("userSav  eReqApiDto = {}", userSaveReqApiDto);
         log.debug("file = {}", file);
 
         User newUser = User.builder()

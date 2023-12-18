@@ -448,45 +448,62 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toc" class="toc2">
 <div id="toctitle">목차</div>
 <ul class="sectlevel1">
-<li><a href="#_게시판_수정">1. 게시판 수정</a>
+<li><a href="#_게시판_생성">1. 게시판 생성</a>
 <ul class="sectlevel2">
 <li><a href="#_요청">1.1. 요청</a></li>
 <li><a href="#_응답">1.2. 응답</a></li>
 <li><a href="#_경로_파라미터">1.3. 경로 파라미터</a></li>
-<li><a href="#_응답_필드">1.4. 응답 필드</a>
+<li><a href="#_요청_파라미터">1.4. 요청 파라미터</a>
 <ul class="sectlevel3">
-<li><a href="#_data">1.4.1. data</a></li>
-<li><a href="#_data_comments">1.4.2. data.comments</a></li>
-<li><a href="#_data_comments_replies">1.4.3. data.comments.replies</a></li>
+<li><a href="#_itemboardsavereqapidto">1.4.1. itemBoardSaveReqApiDto</a></li>
+</ul>
+</li>
+<li><a href="#_응답_필드">1.5. 응답 필드</a>
+<ul class="sectlevel3">
+<li><a href="#_data">1.5.1. data</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#_게시판_수정_2">2. 게시판 수정</a>
+<li><a href="#_게시판_조회">2. 게시판 조회</a>
 <ul class="sectlevel2">
 <li><a href="#_요청_2">2.1. 요청</a></li>
 <li><a href="#_응답_2">2.2. 응답</a></li>
 <li><a href="#_경로_파라미터_2">2.3. 경로 파라미터</a></li>
-<li><a href="#_요청_파라미터">2.4. 요청 파라미터</a>
+<li><a href="#_응답_필드_2">2.4. 응답 필드</a>
 <ul class="sectlevel3">
-<li><a href="#_itemboardupdatereqapidto">2.4.1. itemBoardUpdateReqApiDto</a></li>
-</ul>
-</li>
-<li><a href="#_응답_필드_2">2.5. 응답 필드</a>
-<ul class="sectlevel3">
-<li><a href="#_data_2">2.5.1. data</a></li>
+<li><a href="#_data_2">2.4.1. data</a></li>
+<li><a href="#_data_comments">2.4.2. data.comments</a></li>
+<li><a href="#_data_comments_replies">2.4.3. data.comments.replies</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#_게시판_삭제">3. 게시판 삭제</a>
+<li><a href="#_게시판_수정">3. 게시판 수정</a>
 <ul class="sectlevel2">
 <li><a href="#_요청_3">3.1. 요청</a></li>
 <li><a href="#_응답_3">3.2. 응답</a></li>
 <li><a href="#_경로_파라미터_3">3.3. 경로 파라미터</a></li>
-<li><a href="#_응답_필드_3">3.4. 응답 필드</a>
+<li><a href="#_요청_파라미터_2">3.4. 요청 파라미터</a>
 <ul class="sectlevel3">
-<li><a href="#_data_3">3.4.1. data</a></li>
+<li><a href="#_itemboardupdatereqapidto">3.4.1. itemBoardUpdateReqApiDto</a></li>
+</ul>
+</li>
+<li><a href="#_응답_필드_3">3.5. 응답 필드</a>
+<ul class="sectlevel3">
+<li><a href="#_data_3">3.5.1. data</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_게시판_삭제">4. 게시판 삭제</a>
+<ul class="sectlevel2">
+<li><a href="#_요청_4">4.1. 요청</a></li>
+<li><a href="#_응답_4">4.2. 응답</a></li>
+<li><a href="#_경로_파라미터_4">4.3. 경로 파라미터</a></li>
+<li><a href="#_응답_필드_4">4.4. 응답 필드</a>
+<ul class="sectlevel3">
+<li><a href="#_data_4">4.4.1. data</a></li>
 </ul>
 </li>
 </ul>
@@ -496,13 +513,17 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_게시판_수정">1. 게시판 수정</h2>
+<h2 id="_게시판_생성">1. 게시판 생성</h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_요청">1.1. 요청</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/api/board/trade/electronics/1' -i -X GET</code></pre>
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/api/board/trade/electronics' -i -X POST \
+    -H 'Content-Type: multipart/form-data;charset=UTF-8' \
+    -F 'file=@testImage.png;type=image/png' \
+    -F 'itemBoardSaveReqApiDto={"itemName":"The Old Man and the Sea","title":"Life is Good","content":"what is your favorite food?"};type=application/json' \
+    -F 'file=@testImage.png;type=image/png'</code></pre>
 </div>
 </div>
 </div>
@@ -518,7 +539,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 970
+Content-Length: 377
 
 {
   "code" : 1,
@@ -530,29 +551,9 @@ Content-Length: 970
     "username" : "kmini",
     "userThumbnail" : null,
     "title" : "Life is Good",
-    "boardThumbnail" : "487819eb-6984-43a8-a13c-95bced46eadf.png",
+    "boardThumbnail" : "1b5daf6d-7e18-47ed-ba47-5e14dfa663ec.png",
     "content" : "what is your favorite food?",
-    "createdDate" : "2023.12.14  17:24",
-    "views" : 1,
-    "commentTotalCount" : 2,
-    "comments" : [ {
-      "id" : 1,
-      "topCommentId" : null,
-      "commentUserId" : 4,
-      "commentUserName" : "kmini",
-      "content" : "부모 댓글 내용입니다.",
-      "replies" : [ {
-        "id" : 2,
-        "topCommentId" : 1,
-        "commentUserId" : 4,
-        "commentUserName" : "kmini",
-        "content" : "자식 댓글 내용입니다.",
-        "replies" : [ ],
-        "createdDate" : "2023.12.14  17:24"
-      } ],
-      "createdDate" : "2023.12.14  17:24"
-    } ],
-    "tradePossible" : true
+    "createdDate" : "2023.12.14  19:30"
   }
 }</code></pre>
 </div>
@@ -561,7 +562,7 @@ Content-Length: 970
 <div class="sect2">
 <h3 id="_경로_파라미터">1.3. 경로 파라미터</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. /api/board/{category}/{subCategory}/{boardId}</caption>
+<caption class="title">Table 1. /api/board/{category}/{subCategory}</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -585,16 +586,79 @@ Content-Length: 970
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">소 카테고리 이름</p></td>
 </tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boardId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">게시물 Id</p></td>
-</tr>
 </tbody>
 </table>
 </div>
 <div class="sect2">
-<h3 id="_응답_필드">1.4. 응답 필드</h3>
+<h3 id="_요청_파라미터">1.4. 요청 파라미터</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">파라미터</th>
+<th class="tableblock halign-left valign-top">필수값</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>itemBoardSaveReqApiDto</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">새롭게 저장할 게시물 정보 JSON</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>file</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">게시물에 올릴 사진</p></td>
+</tr>
+</tbody>
+</table>
+<div class="sect3">
+<h4 id="_itemboardsavereqapidto">1.4.1. itemBoardSaveReqApiDto</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">필드명</th>
+<th class="tableblock halign-left valign-top">타입</th>
+<th class="tableblock halign-left valign-top">필수값</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>title</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">게시물 제목</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">게시물 내용</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>itemName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">아이템 명</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_응답_필드">1.5. 응답 필드</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 25%;">
@@ -632,7 +696,221 @@ Content-Length: 970
 </tbody>
 </table>
 <div class="sect3">
-<h4 id="_data">1.4.1. data</h4>
+<h4 id="_data">1.5.1. data</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">필드명</th>
+<th class="tableblock halign-left valign-top">타입</th>
+<th class="tableblock halign-left valign-top">설명</th>
+<th class="tableblock halign-left valign-top">기타</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">저장된 게시물 ID</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>email</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">저장된 게시물의 작성자 이메일</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>writerId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">저장된 게시물의 유저 ID</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>username</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">저장된 게시물의 유저명</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>userThumbnail</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">저장된 게시물의 유저 사진 URI</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>title</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">저장된 게시물의 제목</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boardThumbnail</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">저장된 게시물 사진 URI</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">저장된 게시물의 내용</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>createdDate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">저장된 게시물의 생성 날짜</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_게시판_조회">2. 게시판 조회</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_요청_2">2.1. 요청</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/api/board/trade/electronics/2' -i -X GET</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_응답_2">2.2. 응답</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 970
+
+{
+  "code" : 1,
+  "message" : "성공",
+  "data" : {
+    "id" : 2,
+    "email" : "kmini@gmail.com",
+    "writerId" : 5,
+    "username" : "kmini",
+    "userThumbnail" : null,
+    "title" : "Life is Good",
+    "boardThumbnail" : "231d67fd-216e-4565-a102-7fb992d9955c.png",
+    "content" : "what is your favorite food?",
+    "createdDate" : "2023.12.14  19:30",
+    "views" : 1,
+    "commentTotalCount" : 2,
+    "comments" : [ {
+      "id" : 1,
+      "topCommentId" : null,
+      "commentUserId" : 5,
+      "commentUserName" : "kmini",
+      "content" : "부모 댓글 내용입니다.",
+      "replies" : [ {
+        "id" : 2,
+        "topCommentId" : 1,
+        "commentUserId" : 5,
+        "commentUserName" : "kmini",
+        "content" : "자식 댓글 내용입니다.",
+        "replies" : [ ],
+        "createdDate" : "2023.12.14  19:30"
+      } ],
+      "createdDate" : "2023.12.14  19:30"
+    } ],
+    "tradePossible" : true
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_경로_파라미터_2">2.3. 경로 파라미터</h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. /api/board/{category}/{subCategory}/{boardId}</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">파라미터</th>
+<th class="tableblock halign-left valign-top">필수값</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>category</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">카테고리 이름</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subCategory</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">소 카테고리 이름</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boardId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">게시물 Id</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_응답_필드_2">2.4. 응답 필드</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">필드명</th>
+<th class="tableblock halign-left valign-top">타입</th>
+<th class="tableblock halign-left valign-top">설명</th>
+<th class="tableblock halign-left valign-top">기타</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>code</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">응답 코드</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>message</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">응답 메시지</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Object</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">응답 데이터 JSON</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+<div class="sect3">
+<h4 id="_data_2">2.4.1. data</h4>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 25%;">
@@ -731,7 +1009,7 @@ Content-Length: 970
 </table>
 </div>
 <div class="sect3">
-<h4 id="_data_comments">1.4.2. data.comments</h4>
+<h4 id="_data_comments">2.4.2. data.comments</h4>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 25%;">
@@ -794,7 +1072,7 @@ Content-Length: 970
 </table>
 </div>
 <div class="sect3">
-<h4 id="_data_comments_replies">1.4.3. data.comments.replies</h4>
+<h4 id="_data_comments_replies">2.4.3. data.comments.replies</h4>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 25%;">
@@ -860,13 +1138,13 @@ Content-Length: 970
 </div>
 </div>
 <div class="sect1">
-<h2 id="_게시판_수정_2">2. 게시판 수정</h2>
+<h2 id="_게시판_수정">3. 게시판 수정</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_요청_2">2.1. 요청</h3>
+<h3 id="_요청_3">3.1. 요청</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/api/board/trade/electronics/2' -i -X PATCH \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/api/board/trade/electronics/3' -i -X PATCH \
     -H 'Content-Type: multipart/form-data;charset=UTF-8' \
     -F 'file=@testImage2.jpg;type=image/jpeg' \
     -F 'itemBoardUpdateReqApiDto={"boardId":null,"itemName":"book","title":"Life is Good(Modified)","content":"what is your favorite food?(Modified)","subCategory":null};type=application/json' \
@@ -875,7 +1153,7 @@ Content-Length: 970
 </div>
 </div>
 <div class="sect2">
-<h3 id="_응답_2">2.2. 응답</h3>
+<h3 id="_응답_3">3.2. 응답</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
@@ -892,23 +1170,23 @@ Content-Length: 326
   "code" : 1,
   "message" : "성공",
   "data" : {
-    "id" : 2,
+    "id" : 3,
     "itemName" : "book",
     "email" : "kmini@gmail.com",
-    "writerId" : 5,
+    "writerId" : 6,
     "username" : "kmini",
     "title" : "Life is Good(Modified)",
     "content" : "what is your favorite food?(Modified)",
-    "createdDate" : "2023.12.14  17:24"
+    "createdDate" : "2023.12.14  19:30"
   }
 }</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_경로_파라미터_2">2.3. 경로 파라미터</h3>
+<h3 id="_경로_파라미터_3">3.3. 경로 파라미터</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 2. /api/board/{category}/{subCategory}/{boardId}</caption>
+<caption class="title">Table 3. /api/board/{category}/{subCategory}/{boardId}</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -941,7 +1219,7 @@ Content-Length: 326
 </table>
 </div>
 <div class="sect2">
-<h3 id="_요청_파라미터">2.4. 요청 파라미터</h3>
+<h3 id="_요청_파라미터_2">3.4. 요청 파라미터</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
@@ -969,7 +1247,7 @@ Content-Length: 326
 </tbody>
 </table>
 <div class="sect3">
-<h4 id="_itemboardupdatereqapidto">2.4.1. itemBoardUpdateReqApiDto</h4>
+<h4 id="_itemboardupdatereqapidto">3.4.1. itemBoardUpdateReqApiDto</h4>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 25%;">
@@ -1021,7 +1299,7 @@ Content-Length: 326
 </div>
 </div>
 <div class="sect2">
-<h3 id="_응답_필드_2">2.5. 응답 필드</h3>
+<h3 id="_응답_필드_3">3.5. 응답 필드</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 25%;">
@@ -1059,7 +1337,7 @@ Content-Length: 326
 </tbody>
 </table>
 <div class="sect3">
-<h4 id="_data_2">2.5.1. data</h4>
+<h4 id="_data_3">3.5.1. data</h4>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 25%;">
@@ -1131,18 +1409,18 @@ Content-Length: 326
 </div>
 </div>
 <div class="sect1">
-<h2 id="_게시판_삭제">3. 게시판 삭제</h2>
+<h2 id="_게시판_삭제">4. 게시판 삭제</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_요청_3">3.1. 요청</h3>
+<h3 id="_요청_4">4.1. 요청</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/api/board/trade/electronics/3' -i -X DELETE</code></pre>
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/api/board/trade/electronics/4' -i -X DELETE</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_응답_3">3.2. 응답</h3>
+<h3 id="_응답_4">4.2. 응답</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
@@ -1159,24 +1437,24 @@ Content-Length: 377
   "code" : 1,
   "message" : "성공",
   "data" : {
-    "id" : 3,
+    "id" : 4,
     "email" : "kmini@gmail.com",
-    "writerId" : 6,
+    "writerId" : 7,
     "username" : "kmini",
     "userThumbnail" : null,
     "title" : "Life is Good",
-    "boardThumbnail" : "1ab58cfd-2d03-43db-bb40-ab87803b9214.png",
+    "boardThumbnail" : "5dd74a3c-ef4c-4437-bc11-280bf92ebba6.png",
     "content" : "what is your favorite food?",
-    "createdDate" : "2023.12.14  17:24"
+    "createdDate" : "2023.12.14  19:30"
   }
 }</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_경로_파라미터_3">3.3. 경로 파라미터</h3>
+<h3 id="_경로_파라미터_4">4.3. 경로 파라미터</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 3. /api/board/{category}/{subCategory}/{boardId}</caption>
+<caption class="title">Table 4. /api/board/{category}/{subCategory}/{boardId}</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -1209,7 +1487,7 @@ Content-Length: 377
 </table>
 </div>
 <div class="sect2">
-<h3 id="_응답_필드_3">3.4. 응답 필드</h3>
+<h3 id="_응답_필드_4">4.4. 응답 필드</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 25%;">
@@ -1247,7 +1525,7 @@ Content-Length: 377
 </tbody>
 </table>
 <div class="sect3">
-<h4 id="_data_3">3.4.1. data</h4>
+<h4 id="_data_4">4.4.1. data</h4>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 25%;">
@@ -1328,7 +1606,7 @@ Content-Length: 377
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-12-14 17:13:53 +0900
+Last updated 2023-12-14 19:30:36 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
