@@ -1,21 +1,16 @@
 package com.kmini.store.service;
 
-import com.kmini.store.config.auth.AccountContext;
 import com.kmini.store.config.file.UserResourceManager;
 import com.kmini.store.domain.User;
 import com.kmini.store.domain.type.UserRole;
 import com.kmini.store.domain.type.UserStatus;
 import com.kmini.store.dto.request.UserDto.UserUpdateReqDto;
-import com.kmini.store.dto.response.UserDto.UserUpdateRespDto;
 import com.kmini.store.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -27,46 +22,67 @@ public class UserService {
 
     // 회원가입
     @Transactional
-    public User save(User user) {
-        userRepository.findByEmail(user.getEmail())
-                .ifPresent((existedUser)-> {throw new IllegalArgumentException("이미 존재하는 이메일입니다. email : " + existedUser.getEmail());});
+    public User saveUser(User user) {
+        userRepository.findByEmailOrUsername(user.getEmail(), user.getUsername())
+                .ifPresent(existedUser-> {
+                    if (existedUser.getEmail().equals(user.getEmail())) {
+                        throw new IllegalArgumentException("이미 존재하는 이메일입니다. email : " + existedUser.getEmail());
+                    }
+                    if (existedUser.getUsername().equals(user.getUsername())) {
+                        throw new IllegalArgumentException("이미 존재하는 유저명입니다. username : " + existedUser.getUsername());
+                    }
+                });
 
-        user.setRole(UserRole.USER);
-        user.setUserStatus(UserStatus.SIGNUP);
+        userResourceManager.storeFile(user.getUsername(), user.getFile());
+
+        if (user.getRole() == null) {
+            user.setRole(UserRole.USER);
+        }
+
+        if (user.getUserStatus() == null) {
+            user.setUserStatus(UserStatus.SIGNUP);
+        }
+
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+
         return userRepository.save(user);
+    }
+
+    // 회원 조회
+    @Transactional
+    public User selectUser(Long id) {
+        return userRepository.findById(id)
+                                  .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
     }
 
     // 회원 수정
     @Transactional
-    public UserUpdateRespDto updateUser(Long userId, UserUpdateReqDto userUpdateReqDto) {
+    public User updateUser(User mergingUser) {
 
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("유저가 발견되지 않았습니다."));
-        user.setUsername(userUpdateReqDto.getUsername());
-        user.setPassword(bCryptPasswordEncoder.encode(userUpdateReqDto.getPassword()));
-        user.setThumbnail(userResourceManager.updateFile(user.getThumbnail(), userUpdateReqDto.getFile()));
+        String thumbnailUri = userResourceManager.updateFile(mergingUser.getThumbnail(), mergingUser.getFile());
+        mergingUser.setThumbnail(thumbnailUri);
+        mergingUser.setPassword(bCryptPasswordEncoder.encode(mergingUser.getPassword()));
 
-        userRepository.save(user);
-        User.updateSecurityContext(user);
+        User updateUser = userRepository.save(mergingUser);
 
-        return UserUpdateRespDto.builder()
-                .id(user.getId())
-                .email(user.getEmail())
-                .username(user.getUsername())
-                .thumbnail(user.getThumbnail()).build();
+        User.updateSecurityContext(updateUser);
+
+        return updateUser;
     }
 
     // 회원 탈퇴
     @Transactional
-    public void withdraw(Long id) {
+    public User withdrawUser(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
         user.setUserStatus(UserStatus.WITHDREW);
+        return user;
     }
 
     // 회원 삭제
     @Transactional
-    public void delete(Long id) {
+    public User deleteUser(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
         userRepository.delete(user);
+        return user;
     }
 }

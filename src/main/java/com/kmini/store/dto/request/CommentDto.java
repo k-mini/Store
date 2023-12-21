@@ -15,6 +15,8 @@ public class CommentDto {
     public static class BoardCommentSaveReqDto {
         // 게시물 id
         private Long boardId;
+        // 상위 댓글 id
+        private Long topCommentId;
         // 내용
         @NotEmpty(message = "댓글을 입력해 주세요.")
         private String content;
@@ -24,23 +26,7 @@ public class CommentDto {
     @AllArgsConstructor @Builder
     @NoArgsConstructor
     public static class BoardCommentUpdateReqDto {
-        // 게시물 id
-        private Long boardId;
-        // 댓글 번호
-        private Long commentId;
         // 내용
-        private String content;
-    } 
-
-    @Data
-    @AllArgsConstructor @Builder
-    @NoArgsConstructor
-    public static class BoardReplySaveDto {
-        // 게시물 id
-        private Long boardId;
-        // 상위 댓글 id
-        private Long topCommentId;
-        // 답글 내용
         private String content;
     }
 }

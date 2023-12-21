@@ -1,4 +1,8 @@
+spring:
+  profiles:
+    active: "test"
 
+---
 spring:
   datasource:
     url: jdbc:h2:mem:test
@@ -39,8 +43,3 @@ decorator:
 file:
   dir:
     C:/Users/kmin/images/test/
-
-
-
-
-

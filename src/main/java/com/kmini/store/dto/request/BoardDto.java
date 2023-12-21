@@ -2,10 +2,7 @@ package com.kmini.store.dto.request;
 
 import com.kmini.store.domain.CommunityBoard;
 import com.kmini.store.domain.ItemBoard;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotEmpty;
@@ -15,7 +12,7 @@ public class BoardDto {
     /**
      *  거래 게시판 수정
      */
-    @Data
+    @Getter
     @AllArgsConstructor
     @Builder
     public static class UpdateDto {
@@ -33,23 +30,29 @@ public class BoardDto {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class ItemBoardFormSaveDto {
+    public static class ItemBoardSaveReqDto {
 
-        private String subCategory;
         @NotEmpty
         private String title;
         @NotEmpty
         private String content;
         private MultipartFile file;
         private String itemName;
+    }
 
-        public ItemBoard toEntity() {
-            return ItemBoard.builder()
-                    .title(title)
-                    .content(content)
-                    .itemName(itemName)
-                    .build();
-        }
+    /**
+     *  거래 게시판 업로드
+     */
+    @Getter
+    @AllArgsConstructor @NoArgsConstructor
+    public static class ItemBoardSaveReqApiDto {
+
+        @NotEmpty
+        private String title;
+        @NotEmpty
+        private String content;
+        @NotEmpty
+        private String itemName;
     }
 
     /**
@@ -58,19 +61,11 @@ public class BoardDto {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class CommunityBoardFormSaveDto {
+    public static class CommunityBoardSaveReqDto {
 
-        private String subCategory;
+        private String subCategoryName;
         private String title;
         private String content;
         private MultipartFile file;
-
-        public CommunityBoard toEntity() {
-            return CommunityBoard.builder()
-                    .title(title)
-                    .content(content)
-                    .build();
-        }
     }
-
 }

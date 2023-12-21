@@ -32,7 +32,8 @@ public class SecurityConfig {
         http.csrf().disable();
         // 인가 정책
         http.authorizeRequests()
-                .antMatchers("/auth/signin", "/auth/signup").anonymous()
+                .antMatchers("/docs/**").hasRole("MANAGER")
+                .antMatchers("/auth/signin", "/auth/signup","/api/user").anonymous()
                 .antMatchers("/api/**", "/boards/**", "/board/**", "/auth/my-page","/user/**").authenticated()
                 .anyRequest().permitAll();
 

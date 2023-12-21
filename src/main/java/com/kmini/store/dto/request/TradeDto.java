@@ -21,7 +21,7 @@ public class TradeDto {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class TradeHistoryReqDto {
+    public static class SelectUserTradeHistoryReqDto {
         // 유저 번호
         private Long userId;
         // 검색 조건

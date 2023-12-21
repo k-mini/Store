@@ -1,22 +1,17 @@
 package com.kmini.store.service;
 
-import com.kmini.store.config.auth.AccountContext;
 import com.kmini.store.config.file.UserResourceManager;
 import com.kmini.store.domain.*;
-import com.kmini.store.dto.request.BoardDto.ItemBoardFormSaveDto;
-import com.kmini.store.dto.request.ItemBoardDto.ItemBoardUpdateFormDto;
-import com.kmini.store.dto.response.ItemBoardDto.ItemBoardRespDetailDto;
-import com.kmini.store.repository.BoardCategoryRepository;
-import com.kmini.store.repository.CategoryRepository;
-import com.kmini.store.repository.CommentRepository;
+import com.kmini.store.dto.request.ItemBoardDto.ItemBoardUpdateReqDto;
+import com.kmini.store.dto.response.ItemBoardDto.ItemBoardSaveRespDto;
+import com.kmini.store.dto.response.ItemBoardDto.ItemBoardViewRespDto;
 import com.kmini.store.repository.board.ItemBoardRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,18 +20,18 @@ import java.util.stream.Collectors;
 public class ItemBoardService {
 
     private final ItemBoardRepository itemBoardRepository;
-    private final CommentRepository commentRepository;
-    private final CategoryRepository categoryRepository;
-    private final BoardCategoryRepository boardCategoryRepository;
     private final TradeService tradeService;
+    private final BoardCategoryService boardCategoryService;
+    private final CategoryService categoryService;
+    private final CommentService commentService;
     private final UserResourceManager userResourceManager;
 
     // 게시물 상세 조회
     @Transactional
-    public ItemBoardRespDetailDto viewBoard(Long id) {
+    public ItemBoardViewRespDto viewBoard(Long id) {
 
         // 게시물 조회
-        ItemBoard board = itemBoardRepository.findByIdWithUserAndComments(id)
+        ItemBoard board = itemBoardRepository.findByIdFetchJoinUserAndComments(id)
                 .orElseThrow(()-> new IllegalArgumentException("게시물을 찾을 수 없습니다."));
 
         // 상위 댓글 조회
@@ -54,89 +49,93 @@ public class ItemBoardService {
         // 조회수 증가 => 동시성 문제
         board.setViews(views + 1);
         
-        return ItemBoardRespDetailDto.toDto(board, comments, tradePossible);
+        return ItemBoardViewRespDto.toDto(board, comments, tradePossible);
     }
 
     // 게시물 저장
     @Transactional
-    public ItemBoard save(ItemBoardFormSaveDto itemBoardFormSaveDto) throws IOException {
+    public ItemBoardSaveRespDto saveBoard(ItemBoard savingItemBoard) {
 
-        AccountContext accountContext = (AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        
+        // 유저 정보 저장
+        savingItemBoard.setUser(User.getSecurityContextUser());
+
         // 파일 시스템에 저장하고 랜덤 파일명 반환
-        MultipartFile file = itemBoardFormSaveDto.getFile();
+        MultipartFile file = savingItemBoard.getFile();
         String uri = null;
         if (file != null) {
-            uri = userResourceManager.storeFile(accountContext.getUser().getEmail(), file);
+            uri = userResourceManager.storeFile(User.getSecurityContextUser().getUsername(), file);
         }
+        savingItemBoard.setThumbnail(uri);
 
         // 카테고리 조회
-        Category category = categoryRepository.findByCategoryName("TRADE")
-                .orElseThrow(()-> new IllegalArgumentException("상위 카테고리가 존재하지 않습니다."));
-        Category subCategory = categoryRepository.findByCategoryName(itemBoardFormSaveDto.getSubCategory().toUpperCase())
-                .orElseThrow(()-> new IllegalArgumentException("하위 카테고리가 존재하지 않습니다."));
-
-        // 게시물 저장
-        ItemBoard board = itemBoardFormSaveDto.toEntity();
-        board.setUser(accountContext.getUser());
-        board.setThumbnail(uri);
-        ItemBoard itemBoard = itemBoardRepository.save(board);
+        Category category = categoryService.selectCategory("TRADE");
+        Category subCategory = categoryService.selectCategory(savingItemBoard.getSubCategoryName().toUpperCase());
 
         // 상위 카테고리 정보 저장
-        BoardCategory boardCategory = new BoardCategory(board, category);
-        boardCategoryRepository.save(boardCategory);
+        boardCategoryService.saveBoardCategory(savingItemBoard, category);
 
         // 하위 카테고리 정보 저장
-        BoardCategory boardSubCategory = new BoardCategory(board, subCategory);
-        boardCategoryRepository.save(boardSubCategory);
+        boardCategoryService.saveBoardCategory(savingItemBoard, subCategory);
 
-        return itemBoard;
+        // 게시물 저장
+        ItemBoard savedItemBoard = itemBoardRepository.save(savingItemBoard);
+
+        return ItemBoardSaveRespDto.toDto(savedItemBoard);
     }
 
     // 게시물 수정
+    // 있는 내용만 수정
     @Transactional
-    public void updatePost(ItemBoardUpdateFormDto itemBoardUpdateFormDto) {
+    public ItemBoard patchBoard(ItemBoard editingItemBoard, String editingSubCategoryName) {
 
-        ItemBoard itemBoard = itemBoardRepository.findById(itemBoardUpdateFormDto.getBoardId())
+        ItemBoard itemBoard = itemBoardRepository.findByIdFetchJoinUser(editingItemBoard.getId())
                 .orElseThrow(() -> new IllegalStateException("게시물을 찾을 수 없습니다."));
 
-        MultipartFile submittedFile = itemBoardUpdateFormDto.getFile();
+        MultipartFile submittedFile = editingItemBoard.getFile();
         if (!submittedFile.isEmpty()) {
             userResourceManager.updateFile(itemBoard.getThumbnail(), submittedFile);
         }
 
-        itemBoard.setTitle(itemBoardUpdateFormDto.getTitle());
-        itemBoard.setContent(itemBoardUpdateFormDto.getContent());
-        itemBoard.setItemName(itemBoardUpdateFormDto.getItemName());
+        itemBoard.setTitle(editingItemBoard.getTitle());
+        itemBoard.setContent(editingItemBoard.getContent());
+        itemBoard.setItemName(editingItemBoard.getItemName());
+
+        if (StringUtils.hasText(editingSubCategoryName)) {
+            boardCategoryService.deleteSubCategoryInBoard(itemBoard);
+            Category editingCategory = categoryService.selectCategory(editingSubCategoryName);
+            boardCategoryService.saveBoardCategory(itemBoard, editingCategory);
+        }
+
+        return itemBoard;
     }
 
     // 게시물 수정 폼 로딩
     @Transactional
-    public ItemBoardUpdateFormDto getUpdateForm(Long boardId) {
-        ItemBoard itemBoard = itemBoardRepository.findByIdWithUserAndComments(boardId)
+    public ItemBoardUpdateReqDto getUpdateForm(Long boardId)  {
+        ItemBoard itemBoard = itemBoardRepository.findByIdFetchJoinUserAndComments(boardId)
                 .orElseThrow(() -> new IllegalArgumentException("게시물을 찾을 수 없습니다."));
-
-        return ItemBoardUpdateFormDto.toDto(itemBoard);
+        return ItemBoardUpdateReqDto.toDto(itemBoard);
     }
 
     // 게시물 삭제
     @Transactional
-    public void deletePost(Long boardId) {
-        ItemBoard itemBoard = itemBoardRepository.findByIdWithUserAndComments(boardId)
+    public Board deleteBoard(Long boardId) {
+        ItemBoard itemBoard = itemBoardRepository.findByIdFetchJoinUserAndComments(boardId)
                 .orElseThrow(() -> new IllegalArgumentException("게시물을 찾을 수 없습니다."));
         User user = itemBoard.getUser();
-        // 자식 댓글 삭제 진행
-        commentRepository.deleteSubCommentsByBoardId(boardId);
-        // 부모 댓글 삭제 진행
-        commentRepository.deleteTopCommentsByBoardId(boardId);
+
+        // 댓글 삭제 진행
+        commentService.deleteAllCommentInBoard(boardId);
 
         // 게시물-카테고리 삭제 진행
-        boardCategoryRepository.deleteByBoard(itemBoard);
+        boardCategoryService.deleteBoardCategory(itemBoard);
 
         // 게시물 삭제
         itemBoardRepository.delete(itemBoard);
 
         // 파일 삭제
         userResourceManager.deleteFile(itemBoard.getThumbnail());
+
+        return itemBoard;
     }
 }

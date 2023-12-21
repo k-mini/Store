@@ -5,15 +5,17 @@ import com.kmini.store.domain.Comment;
 import com.kmini.store.domain.User;
 import com.kmini.store.dto.request.CommentDto.BoardCommentSaveReqDto;
 import com.kmini.store.dto.request.CommentDto.BoardCommentUpdateReqDto;
-import com.kmini.store.dto.request.CommentDto.BoardReplySaveDto;
-import com.kmini.store.dto.response.CommentDto.BoardCommentRespDto;
-import com.kmini.store.dto.response.CommentDto.BoardReplyRespDto;
+import com.kmini.store.dto.response.CommentDto.BoardCommentSaveRespDto;
+import com.kmini.store.dto.response.CommentDto.BoardCommentUpdateRespDto;
 import com.kmini.store.repository.CommentRepository;
 import com.kmini.store.repository.board.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,43 +26,35 @@ public class CommentService {
     private final BoardRepository boardRepository;
 
     @Transactional
-    public BoardCommentRespDto saveComment(BoardCommentSaveReqDto boardCommentSaveReqDto) {
+    public Comment saveComment(Long boardId, Long topCommentId, Comment newComment) {
 
         User user = User.getSecurityContextUser();
 
-        Board board = boardRepository.getReferenceById(boardCommentSaveReqDto.getBoardId());
-        String content = boardCommentSaveReqDto.getContent();
+        Board board = boardRepository.getReferenceById(boardId);
+
+        Comment topComment = null;
+        if (topCommentId != null) {
+            topComment = commentRepository.getReferenceById(topCommentId);
+        }
 
         // 댓글 엔티티 생성
-        Comment comment = new Comment(user, board, null, content);
+        newComment.setBoard(board);
+        newComment.setTopComment(topComment);
         // 댓글 저장
-        Comment savedComment = commentRepository.save(comment);
-        return BoardCommentRespDto.toDto(savedComment);
+        Comment savedComment = commentRepository.save(newComment);
+
+        return savedComment;
     }
 
     @Transactional
-    public BoardReplyRespDto saveReplyComment(BoardReplySaveDto boardReplySaveDto) {
+    public Comment updateComment(Long commentId, String content) {
 
-        User user = User.getSecurityContextUser();
-
-        Board board = boardRepository.getReferenceById(boardReplySaveDto.getBoardId());
-        Comment topComment = commentRepository.getReferenceById(boardReplySaveDto.getTopCommentId());
-        String content = boardReplySaveDto.getContent();
-
-        // 대댓글 엔티티 생성
-        Comment reply = new Comment(user, board, topComment, content);
-        // 대댓글 저장
-        Comment savedReply = commentRepository.save(reply);
-        return BoardReplyRespDto.toDto(savedReply);
-    }
-    @Transactional
-    public BoardCommentRespDto updateComment(BoardCommentUpdateReqDto boardCommentUpdateReqDto) {
-
-        Comment comment = commentRepository.findById(boardCommentUpdateReqDto.getCommentId())
+        Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
 
-        comment.setContent(boardCommentUpdateReqDto.getContent());
-        return BoardCommentRespDto.toDto(comment);
+        comment.setContent(content);
+
+        return comment;
     }
 
     @Transactional
@@ -69,7 +63,7 @@ public class CommentService {
         // 자식 댓글 삭제
         int result = commentRepository.deleteSubComments(commentId);
 
-        // 부모 댓글 삭제
+        // 댓글 삭제
         result += commentRepository.deleteCommentById(commentId);
 
         log.debug("result = {}", result);
@@ -77,5 +71,22 @@ public class CommentService {
             throw new IllegalArgumentException("삭제 실패!");
         }
         return result;
+    }
+
+    @Transactional
+    public void deleteAllCommentInBoard(Long boardId) {
+        // 자식 댓글 삭제 진행
+        commentRepository.deleteSubCommentsByBoardId(boardId);
+        // 부모 댓글 삭제 진행
+        commentRepository.deleteTopCommentsByBoardId(boardId);
+    }
+
+    // 특정 게시물 댓글 조회
+    @Transactional
+    public List<Comment> selectTopCommentsInBoard(Long boardId) {
+        return commentRepository.findAllCommentsByBoardIdFetchJoin(boardId)
+                .stream()
+                .filter(comment -> comment.getTopComment() == null)
+                .collect(Collectors.toList());
     }
 }

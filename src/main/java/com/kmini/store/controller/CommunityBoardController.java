@@ -1,13 +1,12 @@
 package com.kmini.store.controller;
 
-import com.kmini.store.config.auth.AccountContext;
-import com.kmini.store.dto.request.BoardDto.CommunityBoardFormSaveDto;
-import com.kmini.store.dto.request.BoardDto.ItemBoardFormSaveDto;
-import com.kmini.store.dto.response.CommunityBoardDto.CommunityBoardRespDetailDto;
+import com.kmini.store.domain.CommunityBoard;
+import com.kmini.store.dto.request.BoardDto.CommunityBoardSaveReqDto;
+import com.kmini.store.dto.request.BoardDto.ItemBoardSaveReqDto;
+import com.kmini.store.dto.response.CommunityBoardDto.CommunityBoardViewRespDto;
 import com.kmini.store.service.CommunityBoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -30,32 +29,40 @@ public class CommunityBoardController {
 
     // 게시물 자세히 조회
     @GetMapping("/{boardId}")
-    public String detail(
+    public String viewBoard(
             @PathVariable("subCategory") String subCategory,
             @PathVariable("boardId") Long boardId, Model model) {
-        CommunityBoardRespDetailDto result = communityBoardService.detail(boardId);
+
+        CommunityBoardViewRespDto result = communityBoardService.viewBoard(boardId);
+
         model.addAttribute("result", result);
         log.debug("result = {}", result);
-        return "communitydetail";
+        return "board/communitydetail";
     }
 
     @GetMapping("/form")
     public String form(
-            @ModelAttribute ItemBoardFormSaveDto itemBoardFormSaveDto, Model model) {
+            @ModelAttribute ItemBoardSaveReqDto itemBoardSaveReqDto, Model model) {
         return "board/form";
     }
 
     // 게시물 저장
     @PostMapping("/form")
-    public String save(
-            @ModelAttribute CommunityBoardFormSaveDto communityBoardFormSaveDto,
-            @AuthenticationPrincipal AccountContext accountContext,
+    public String saveBoard(
+            @ModelAttribute CommunityBoardSaveReqDto communityBoardSaveReqDto,
             RedirectAttributes redirectAttributes) throws IOException {
-        log.debug("communityBoardFormSaveDto = {}", communityBoardFormSaveDto);
-        communityBoardService.save(communityBoardFormSaveDto);
+        log.debug("communityBoardFormSaveDto = {}", communityBoardSaveReqDto);
+
+        CommunityBoard newCommunityBoard = CommunityBoard.builder()
+                                                        .subCategoryName(communityBoardSaveReqDto.getSubCategoryName())
+                                                        .title(communityBoardSaveReqDto.getTitle())
+                                                        .content(communityBoardSaveReqDto.getContent())
+                                                        .file(communityBoardSaveReqDto.getFile())
+                                                        .build();
+        communityBoardService.save(newCommunityBoard);
 
         redirectAttributes.addAttribute("category", "community");
-        redirectAttributes.addAttribute("subCategory", communityBoardFormSaveDto.getSubCategory());
+        redirectAttributes.addAttribute("subCategory", communityBoardSaveReqDto.getSubCategoryName());
         return "redirect:/boards/{category}/{subCategory}";
     }
 

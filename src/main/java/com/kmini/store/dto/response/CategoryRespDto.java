@@ -4,13 +4,14 @@ import com.kmini.store.domain.Category;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Builder
-@Data
+@Getter
 public class CategoryRespDto {
 
     private String categoryName;

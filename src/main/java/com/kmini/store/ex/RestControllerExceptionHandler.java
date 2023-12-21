@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@RestControllerAdvice
+@RestControllerAdvice(basePackages = "com.kmini.store.controller.api")
 @Slf4j
 public class RestControllerExceptionHandler {
 
@@ -25,6 +25,6 @@ public class RestControllerExceptionHandler {
         log.warn("msg = " + ex.getMessage(), ex);
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new CommonRespDto<>(-1,ex.getMessage(),null));
+                .body(new CommonRespDto<>(-1, ex.getMessage(),null));
     }
 }

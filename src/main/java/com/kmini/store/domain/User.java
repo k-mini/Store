@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 
@@ -40,6 +41,9 @@ public class User {
     private UserStatus userStatus;
 
     private String thumbnail;
+
+    @Transient
+    private MultipartFile file;
 
     public User(String username, String password, String email, UserRole role, UserStatus userStatus, String thumbnail) {
         this.username = username;

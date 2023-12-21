@@ -1,0 +1,118 @@
+
+= 댓글 API
+https://github.com/k-mini
+:toc-title: 목차
+:toc: left
+:toclevels: 3
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:sectnums:
+:sectlinks:
+
+== 댓글 저장
+
+=== 요청
+
+include::{snippets}/comment/save-comment/curl-request.adoc[]
+
+=== 응답
+
+include::{snippets}/comment/save-comment/http-response.adoc[]
+
+=== 요청 파라미터
+
+include::{snippets}/comment/save-comment/request-fields.adoc[]
+
+=== 응답 파라미터
+
+include::{snippets}/comment/save-comment/response-fields.adoc[]
+
+==== data
+
+include::{snippets}/comment/save-comment/response-fields-beneath-data.adoc[]
+
+
+
+
+
+== 댓글 조회 (특정 게시물)
+
+=== 요청
+
+include::{snippets}/comment/select-comment/curl-request.adoc[]
+
+=== 응답
+
+include::{snippets}/comment/select-comment/http-response.adoc[]
+
+=== 경로 파라미터
+
+include::{snippets}/comment/select-comment/path-parameters.adoc[]
+
+=== 응답 파라미터
+
+include::{snippets}/comment/select-comment/response-fields.adoc[]
+
+==== data
+
+include::{snippets}/comment/select-comment/response-fields-beneath-data.adoc[]
+
+==== data.replies
+
+include::{snippets}/comment/select-comment/response-fields-replies.adoc[]
+
+
+
+
+== 댓글 수정 (대댓글 포함)
+
+=== 요청
+
+include::{snippets}/comment/update-comment/curl-request.adoc[]
+
+=== 응답
+
+include::{snippets}/comment/update-comment/http-response.adoc[]
+
+=== 경로 파라미터
+
+include::{snippets}/comment/update-comment/path-parameters.adoc[]
+
+=== 요청 파라미터
+
+include::{snippets}/comment/update-comment/request-fields.adoc[]
+
+=== 응답 파라미터
+
+include::{snippets}/comment/update-comment/response-fields.adoc[]
+
+==== data
+
+include::{snippets}/comment/update-comment/response-fields-beneath-data.adoc[]
+
+
+
+
+
+== 댓글 삭제
+
+=== 요청
+
+include::{snippets}/comment/delete-comment/curl-request.adoc[]
+
+=== 응답
+
+include::{snippets}/comment/delete-comment/http-response.adoc[]
+
+=== 경로 파라미터
+
+include::{snippets}/comment/delete-comment/path-parameters.adoc[]
+
+=== 응답 파라미터
+
+include::{snippets}/comment/delete-comment/response-fields.adoc[]
+
+
+
+

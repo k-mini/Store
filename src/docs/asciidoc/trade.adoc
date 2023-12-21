@@ -1,0 +1,179 @@
+= 거래 API
+https://github.com/k-mini
+:toc-title: 목차
+:toc: left
+:toclevels: 3
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:sectnums:
+
+== 거래 등록
+
+=== 요청
+
+include::{snippets}/trade/register-trade/curl-request.adoc[]
+
+=== 응답
+
+include::{snippets}/trade/register-trade/http-response.adoc[]
+
+=== 경로 파라미터
+
+include::{snippets}/trade/register-trade/path-parameters.adoc[]
+
+// === 요청 파라미터
+
+// include::{snippets}/trade/register-trade/request-parts.adoc[]
+
+=== 응답 필드
+
+include::{snippets}/trade/register-trade/response-fields.adoc[]
+
+==== data
+
+include::{snippets}/trade/register-trade/response-fields-beneath-data.adoc[]
+
+
+
+== 거래 수락
+
+=== 요청
+
+include::{snippets}/trade/accept-trade/curl-request.adoc[]
+
+=== 응답
+
+include::{snippets}/trade/accept-trade/http-response.adoc[]
+
+=== 경로 파라미터
+
+include::{snippets}/trade/accept-trade/path-parameters.adoc[]
+
+// === 요청 파라미터
+
+// include::{snippets}/trade/accept-trade/request-parts.adoc[]
+
+=== 응답 필드
+
+include::{snippets}/trade/accept-trade/response-fields.adoc[]
+
+==== data
+
+include::{snippets}/trade/accept-trade/response-fields-beneath-data.adoc[]
+
+
+
+
+== 거래 거부
+
+=== 요청
+
+include::{snippets}/trade/deny-trade/curl-request.adoc[]
+
+=== 응답
+
+include::{snippets}/trade/deny-trade/http-response.adoc[]
+
+=== 경로 파라미터
+
+include::{snippets}/trade/deny-trade/path-parameters.adoc[]
+
+// === 요청 파라미터
+
+// include::{snippets}/trade/deny-trade/request-parts.adoc[]
+
+=== 응답 필드
+
+include::{snippets}/trade/deny-trade/response-fields.adoc[]
+
+==== data
+
+include::{snippets}/trade/deny-trade/response-fields-beneath-data.adoc[]
+
+
+
+
+== 거래 취소 (구매자)
+
+=== 요청
+
+include::{snippets}/trade/cancel-trade-buyer/curl-request.adoc[]
+
+=== 응답
+
+include::{snippets}/trade/cancel-trade-buyer/http-response.adoc[]
+
+=== 경로 파라미터
+
+include::{snippets}/trade/cancel-trade-buyer/path-parameters.adoc[]
+
+// === 요청 파라미터
+
+// include::{snippets}/trade/cancel-trade-buyer/request-parts.adoc[]
+
+=== 응답 필드
+
+include::{snippets}/trade/cancel-trade-buyer/response-fields.adoc[]
+
+==== data
+
+include::{snippets}/trade/cancel-trade-buyer/response-fields-beneath-data.adoc[]
+
+
+
+
+== 거래 완료 (구매자)
+
+=== 요청
+
+include::{snippets}/trade/complete-trade-buyer/curl-request.adoc[]
+
+=== 응답
+
+include::{snippets}/trade/complete-trade-buyer/http-response.adoc[]
+
+=== 경로 파라미터
+
+include::{snippets}/trade/complete-trade-buyer/path-parameters.adoc[]
+
+// === 요청 파라미터
+
+// include::{snippets}/trade/complete-trade-buyer/request-parts.adoc[]
+
+=== 응답 필드
+
+include::{snippets}/trade/complete-trade-buyer/response-fields.adoc[]
+
+==== data
+
+include::{snippets}/trade/complete-trade-buyer/response-fields-beneath-data.adoc[]
+
+
+
+
+== 거래 완료 (판매자)
+
+=== 요청
+
+include::{snippets}/trade/complete-trade-seller/curl-request.adoc[]
+
+=== 응답
+
+include::{snippets}/trade/complete-trade-seller/http-response.adoc[]
+
+=== 경로 파라미터
+
+include::{snippets}/trade/complete-trade-seller/path-parameters.adoc[]
+
+// === 요청 파라미터
+
+// include::{snippets}/trade/complete-trade-seller/request-parts.adoc[]
+
+=== 응답 필드
+
+include::{snippets}/trade/complete-trade-seller/response-fields.adoc[]
+
+==== data
+
+include::{snippets}/trade/complete-trade-seller/response-fields-beneath-data.adoc[]

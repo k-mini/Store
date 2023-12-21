@@ -18,4 +18,7 @@ public interface BoardCategoryRepository extends JpaRepository<BoardCategory, Lo
 
     @Query("select b from BoardCategory b join fetch b.category where b.board.id in :boardIds")
     List<BoardCategory> findByBoardIds(@Param("boardIds") List<Long> boardIds);
+
+    @Query("delete from BoardCategory b where b.board = :board and b.category.superCategory = null")
+    void deleteSubCategoryByBoard(Board board);
 }

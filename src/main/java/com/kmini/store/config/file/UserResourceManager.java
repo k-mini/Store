@@ -2,6 +2,8 @@ package com.kmini.store.config.file;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+
 public interface UserResourceManager {
 
     // 각자 유저 디렉토리에 해당하는 경로에서
@@ -14,5 +16,8 @@ public interface UserResourceManager {
 
     // 해당 파일을 삭제한다.
     boolean deleteFile(String fileName);
+
+    // 해당 uri 찾기
+    File getFile(String uri);
 
 }

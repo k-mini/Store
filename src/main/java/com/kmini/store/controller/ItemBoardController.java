@@ -1,8 +1,9 @@
 package com.kmini.store.controller;
 
-import com.kmini.store.dto.request.BoardDto.ItemBoardFormSaveDto;
-import com.kmini.store.dto.request.ItemBoardDto.ItemBoardUpdateFormDto;
-import com.kmini.store.dto.response.ItemBoardDto.ItemBoardRespDetailDto;
+import com.kmini.store.domain.ItemBoard;
+import com.kmini.store.dto.request.BoardDto.ItemBoardSaveReqDto;
+import com.kmini.store.dto.request.ItemBoardDto.ItemBoardUpdateReqDto;
+import com.kmini.store.dto.response.ItemBoardDto.ItemBoardViewRespDto;
 import com.kmini.store.service.ItemBoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +32,10 @@ public class ItemBoardController {
     public String viewBoard(
             @PathVariable("subCategory") String subCategory,
             @PathVariable("boardId") Long boardId, Model model) {
-        ItemBoardRespDetailDto result = itemBoardService.viewBoard(boardId);
+        log.debug("boardId = {}", boardId);
+
+        ItemBoardViewRespDto result = itemBoardService.viewBoard(boardId);
+
         model.addAttribute("result", result);
         log.debug("result = {}", result);
         return "board/tradedetail";
@@ -41,30 +45,39 @@ public class ItemBoardController {
     @GetMapping("/{boardId}/form")
     public String getUpdateForm(@PathVariable Long boardId,
                               @PathVariable String subCategory, Model model) {
-        ItemBoardUpdateFormDto result = itemBoardService.getUpdateForm(boardId);
-        model.addAttribute("itemBoardUpdateFormDto", result);
-        log.debug("result = {}", result);
+
+        ItemBoardUpdateReqDto result = itemBoardService.getUpdateForm(boardId);
+
+        model.addAttribute("itemBoardUpdateReqDto", result);
         return "board/updateform";
     }
     
     // 게시물 생성
     @GetMapping("/form")
     public String getSaveForm(
-            @ModelAttribute ItemBoardFormSaveDto itemBoardFormSaveDto, Model model) {
+            @ModelAttribute ItemBoardSaveReqDto itemBoardSaveReqDto, Model model) {
         // PathVariable 자동 modelAttribute 저장.
-        model.addAttribute("itemBoardFormSaveDto", new ItemBoardFormSaveDto());
+        model.addAttribute("itemBoardSaveReqDto", new ItemBoardSaveReqDto());
         return "board/form";
     }
 
     // 게시물 등록
     @PostMapping("/form")
     public String saveBoard(
-            @ModelAttribute ItemBoardFormSaveDto itemBoardFormSaveDto,
+            @ModelAttribute ItemBoardSaveReqDto itemBoardSaveReqDto,
             @PathVariable("subCategory") String subCategoryName, RedirectAttributes redirectAttributes) throws IOException {
-        log.debug("formSaveDto = {}", itemBoardFormSaveDto);
+        log.debug("itemBoardSaveReqDto = {}", itemBoardSaveReqDto);
         log.debug("subCategory = {}", subCategoryName);
 
-        itemBoardService.save(itemBoardFormSaveDto);
+        ItemBoard itemBoard = ItemBoard.builder()
+                                        .title(itemBoardSaveReqDto.getTitle())
+                                        .content(itemBoardSaveReqDto.getContent())
+                                        .file(itemBoardSaveReqDto.getFile())
+                                        .itemName(itemBoardSaveReqDto.getItemName())
+                .subCategoryName(subCategoryName)
+                                        .build();
+
+        itemBoardService.saveBoard(itemBoard);
 
         redirectAttributes.addAttribute("category", "trade");
         redirectAttributes.addAttribute("subCategory", subCategoryName);

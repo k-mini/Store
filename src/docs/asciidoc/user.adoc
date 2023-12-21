@@ -1,0 +1,152 @@
+= 유저 API
+https://github.com/k-mini
+:toc-title: 목차
+:toc: left
+:toclevels: 3
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:sectnums:
+
+== 유저 생성
+
+=== 요청
+
+include::{snippets}/user/save-user-api/curl-request.adoc[]
+
+=== 응답
+
+include::{snippets}/user/save-user-api/http-response.adoc[]
+
+// === 경로 파라미터
+
+// include::{snippets}/user/save-user-api/path-parameters.adoc[]
+
+=== 요청 파라미터
+
+include::{snippets}/user/save-user-api/request-parts.adoc[]
+
+==== userSaveReqApiDto
+
+include::{snippets}/user/save-user-api/request-part-userSaveReqApiDto-fields.adoc[]
+
+=== 응답 필드
+
+include::{snippets}/user/save-user-api/response-fields.adoc[]
+
+==== data
+
+include::{snippets}/user/save-user-api/response-fields-beneath-data.adoc[]
+
+
+
+
+
+== 유저 수정
+
+=== 요청
+
+include::{snippets}/user/update-user-api/curl-request.adoc[]
+
+=== 응답
+
+include::{snippets}/user/update-user-api/http-response.adoc[]
+
+=== 경로 파라미터
+
+include::{snippets}/user/update-user-api/path-parameters.adoc[]
+
+=== 요청 파라미터
+
+include::{snippets}/user/update-user-api/request-parts.adoc[]
+
+==== userUpdateReqApiDto
+
+include::{snippets}/user/update-user-api/request-part-userUpdateReqApiDto-fields.adoc[]
+
+=== 응답 필드
+
+include::{snippets}/user/update-user-api/response-fields.adoc[]
+
+==== data
+
+include::{snippets}/user/update-user-api/response-fields-beneath-data.adoc[]
+
+
+
+
+
+== 유저 조회
+
+=== 요청
+
+include::{snippets}/user/select-user-api/curl-request.adoc[]
+
+=== 응답
+
+include::{snippets}/user/select-user-api/http-response.adoc[]
+
+=== 경로 파라미터
+
+include::{snippets}/user/select-user-api/path-parameters.adoc[]
+
+=== 응답 필드
+
+include::{snippets}/user/select-user-api/response-fields.adoc[]
+
+==== data
+
+include::{snippets}/user/select-user-api/response-fields-beneath-data.adoc[]
+
+
+
+
+
+== 유저 탈퇴
+
+=== 요청
+
+include::{snippets}/user/withdraw-user-api/curl-request.adoc[]
+
+=== 응답
+
+include::{snippets}/user/withdraw-user-api/http-response.adoc[]
+
+=== 경로 파라미터
+
+include::{snippets}/user/withdraw-user-api/path-parameters.adoc[]
+
+=== 응답 필드
+
+include::{snippets}/user/withdraw-user-api/response-fields.adoc[]
+
+==== data
+
+include::{snippets}/user/withdraw-user-api/response-fields-beneath-data.adoc[]
+
+
+
+
+
+== 유저 삭제 (DB 제거)
+
+=== 요청
+
+include::{snippets}/user/delete-user-api/curl-request.adoc[]
+
+=== 응답
+
+include::{snippets}/user/delete-user-api/http-response.adoc[]
+
+=== 경로 파라미터
+
+include::{snippets}/user/delete-user-api/path-parameters.adoc[]
+
+=== 응답 필드
+
+include::{snippets}/user/delete-user-api/response-fields.adoc[]
+
+==== data
+
+include::{snippets}/user/delete-user-api/response-fields-beneath-data.adoc[]
+

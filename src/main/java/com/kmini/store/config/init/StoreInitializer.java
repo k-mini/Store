@@ -2,13 +2,16 @@ package com.kmini.store.config.init;
 
 import com.kmini.store.aop.CategoryInterceptor;
 import com.kmini.store.config.auth.AccountContext;
+import com.kmini.store.domain.Comment;
+import com.kmini.store.domain.CommunityBoard;
+import com.kmini.store.domain.ItemBoard;
 import com.kmini.store.domain.User;
 import com.kmini.store.domain.type.UserRole;
 import com.kmini.store.domain.type.UserStatus;
-import com.kmini.store.dto.request.BoardDto.CommunityBoardFormSaveDto;
-import com.kmini.store.dto.request.BoardDto.ItemBoardFormSaveDto;
+import com.kmini.store.dto.request.BoardDto;
+import com.kmini.store.dto.request.BoardDto.CommunityBoardSaveReqDto;
+import com.kmini.store.dto.request.BoardDto.ItemBoardSaveReqDto;
 import com.kmini.store.dto.request.CommentDto.BoardCommentSaveReqDto;
-import com.kmini.store.dto.request.CommentDto.BoardReplySaveDto;
 import com.kmini.store.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -55,26 +58,45 @@ public class StoreInitializer implements ApplicationRunner {
 
         log.info("거래 게시판 샘플 게시물 넣기! ..");
         for (int i = 1; i < 156L ; i++) {
-            ItemBoardFormSaveDto saveFormDto =
-                    new ItemBoardFormSaveDto( "electronics", "title" + i, "content" + i, null, "item" + i);
-            itemBoardService.save(saveFormDto);
+            String title = "title" + i;
+            String content = "content" + i;
+            String itemName = "item" + i;
+            ItemBoard itemBoard = ItemBoard.builder()
+                    .title(title)
+                    .content(content)
+                    .itemName(itemName)
+                    .subCategoryName("electronics")
+                    .build();
+            itemBoardService.saveBoard(itemBoard);
         }
         log.debug("커뮤니티 게사판 샘플 데이터 넣기! ...");
         for (int i = 1; i < 156L; i++) {
-            CommunityBoardFormSaveDto saveFormDto =
-                    new CommunityBoardFormSaveDto( "free", "comtitle" + i, "comcontent" + i, null);
-            communityBoardService.save(saveFormDto);
+            String subCategoryName = "free";
+            String title = "comtitle" + i;
+            String content = "comcontent" + i;
+            CommunityBoard newCommunityBoard = CommunityBoard.builder()
+                    .subCategoryName(subCategoryName)
+                    .title(title)
+                    .content(content)
+                    .build();
+            communityBoardService.save(newCommunityBoard);
         }
 
         log.info("상위 댓글 넣기 !!..");
-        commentService.saveComment(new BoardCommentSaveReqDto(156L, "상위 댓글댓글1111"));
-        commentService.saveComment(new BoardCommentSaveReqDto(156L, "상위 댓글댓글2222"));
+        Comment comment = new Comment(user, null, null, "상위 댓글댓글1111");
+        Comment comment2 = new Comment(user, null, null, "상위 댓글댓글2222");
+        commentService.saveComment(156L, null, comment);
+        commentService.saveComment(156L, null, comment2);
 
         log.info("대댓글 넣기!!");
-        commentService.saveReplyComment(new BoardReplySaveDto(156L, 1L, "댓글1의 대댓글1"));
-        commentService.saveReplyComment(new BoardReplySaveDto(156L, 1L, "댓글1의 대댓글2"));
-        commentService.saveReplyComment(new BoardReplySaveDto(156L, 2L, "댓글2의 대댓글1"));
-        commentService.saveReplyComment(new BoardReplySaveDto(156L, 2L, "댓글2의 대댓글2"));
+        Comment subComment1 = new Comment(user, null, null, "댓글1의 대댓글1");
+        Comment subComment2 = new Comment(user, null, null, "댓글1의 대댓글2");
+        Comment subComment3 = new Comment(user, null, null, "댓글2의 대댓글1");
+        Comment subComment4 = new Comment(user, null, null, "댓글2의 대댓글2");
+        commentService.saveComment(156L, 1L, subComment1);
+        commentService.saveComment(156L, 1L, subComment2);
+        commentService.saveComment(156L, 2L, subComment3);
+        commentService.saveComment(156L, 2L, subComment4);
 
         log.info("거래 넣기");
         tradeService.registerTrade(1L);
@@ -105,10 +127,10 @@ public class StoreInitializer implements ApplicationRunner {
     }
 
     private User createAdmin(String username, String password, String email) {
-        return userService.save(new User(username, password, email, UserRole.ADMIN, UserStatus.SIGNUP, null));
+        return userService.saveUser(new User(username, password, email, UserRole.ADMIN, UserStatus.SIGNUP, null));
     }
 
     private User createUser(String username, String password, String email) {
-        return userService.save(new User(username, password, email, UserRole.USER, UserStatus.SIGNUP, null));
+        return userService.saveUser(new User(username, password, email, UserRole.USER, UserStatus.SIGNUP, null));
     }
 }
