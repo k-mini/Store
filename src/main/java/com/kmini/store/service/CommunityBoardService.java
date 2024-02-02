@@ -10,6 +10,8 @@ import com.kmini.store.repository.CategoryRepository;
 import com.kmini.store.repository.CommentRepository;
 import com.kmini.store.repository.board.CommunityBoardRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

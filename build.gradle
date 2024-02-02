@@ -39,8 +39,10 @@ dependencies {
 	// 타임리프에서 스프링시큐리티의 문법이나 형식을 지원하는 확장팩 라이브러리
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
 	implementation 'org.springframework.boot:spring-boot-devtools'
+	// 캐시
+	implementation 'org.springframework.boot:spring-boot-starter-cache'
 	implementation 'com.querydsl:querydsl-jpa'
-	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.1'
+//	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.1'
 
 	// Rest Docs documentation
 	asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'

@@ -522,7 +522,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/api/board/trade/electronics' -i -X POST \
     -H 'Content-Type: multipart/form-data;charset=UTF-8' \
     -F 'file=@testImage.png;type=image/png' \
-    -F 'itemBoardSaveReqApiDto={"itemName":"The Old Man and the Sea","title":"Life is Good","content":"what is your favorite food?"};type=application/json' \
+    -F 'itemBoardSaveReqApiDto={"title":"Life is Good","content":"what is your favorite food?","itemName":"The Old Man and the Sea"};type=application/json' \
     -F 'file=@testImage.png;type=image/png'</code></pre>
 </div>
 </div>
@@ -539,7 +539,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 377
+Content-Length: 383
 
 {
   "code" : 1,
@@ -551,9 +551,9 @@ Content-Length: 377
     "username" : "kmini",
     "userThumbnail" : null,
     "title" : "Life is Good",
-    "boardThumbnail" : "1b5daf6d-7e18-47ed-ba47-5e14dfa663ec.png",
+    "boardThumbnail" : "kmini/0bfc3ec5-be0d-4d4e-942b-75bfff26de42.png",
     "content" : "what is your favorite food?",
-    "createdDate" : "2023.12.14  19:30"
+    "createdDate" : "2023.12.21  17:30"
   }
 }</code></pre>
 </div>
@@ -630,7 +630,7 @@ Content-Length: 377
 <tr>
 <th class="tableblock halign-left valign-top">필드명</th>
 <th class="tableblock halign-left valign-top">타입</th>
-<th class="tableblock halign-left valign-top">필수값</th>
+<th class="tableblock halign-left valign-top">필수여부</th>
 <th class="tableblock halign-left valign-top">설명</th>
 </tr>
 </thead>
@@ -796,7 +796,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 970
+Content-Length: 976
 
 {
   "code" : 1,
@@ -808,9 +808,9 @@ Content-Length: 970
     "username" : "kmini",
     "userThumbnail" : null,
     "title" : "Life is Good",
-    "boardThumbnail" : "231d67fd-216e-4565-a102-7fb992d9955c.png",
+    "boardThumbnail" : "kmini/cb636683-4156-403e-be66-dcccc15b19e7.png",
     "content" : "what is your favorite food?",
-    "createdDate" : "2023.12.14  19:30",
+    "createdDate" : "2023.12.21  17:30",
     "views" : 1,
     "commentTotalCount" : 2,
     "comments" : [ {
@@ -826,9 +826,9 @@ Content-Length: 970
         "commentUserName" : "kmini",
         "content" : "자식 댓글 내용입니다.",
         "replies" : [ ],
-        "createdDate" : "2023.12.14  19:30"
+        "createdDate" : "2023.12.21  17:30"
       } ],
-      "createdDate" : "2023.12.14  19:30"
+      "createdDate" : "2023.12.21  17:30"
     } ],
     "tradePossible" : true
   }
@@ -1177,7 +1177,7 @@ Content-Length: 326
     "username" : "kmini",
     "title" : "Life is Good(Modified)",
     "content" : "what is your favorite food?(Modified)",
-    "createdDate" : "2023.12.14  19:30"
+    "createdDate" : "2023.12.21  17:30"
   }
 }</code></pre>
 </div>
@@ -1259,7 +1259,7 @@ Content-Length: 326
 <tr>
 <th class="tableblock halign-left valign-top">필드명</th>
 <th class="tableblock halign-left valign-top">타입</th>
-<th class="tableblock halign-left valign-top">필수값</th>
+<th class="tableblock halign-left valign-top">필수여부</th>
 <th class="tableblock halign-left valign-top">설명</th>
 </tr>
 </thead>
@@ -1431,7 +1431,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 377
+Content-Length: 383
 
 {
   "code" : 1,
@@ -1443,9 +1443,9 @@ Content-Length: 377
     "username" : "kmini",
     "userThumbnail" : null,
     "title" : "Life is Good",
-    "boardThumbnail" : "5dd74a3c-ef4c-4437-bc11-280bf92ebba6.png",
+    "boardThumbnail" : "kmini/6af5115a-0b0f-460a-8762-c186837a8ee1.png",
     "content" : "what is your favorite food?",
-    "createdDate" : "2023.12.14  19:30"
+    "createdDate" : "2023.12.21  17:30"
   }
 }</code></pre>
 </div>

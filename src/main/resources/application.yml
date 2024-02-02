@@ -26,8 +26,10 @@ spring:
 
 logging:
   level:
-    org.hibernate.SQL: debug
-    com.kmini.store: debug
+#    org.hibernate.SQL: debug
+    com.kmini.store: info
+#    com.zaxxer.hikari: TRACE
+#    com.zaxxer.hikari.HikariConfig: DEBUG
 #    org.hibernate.type.descriptor.sql: trace
 #    org.hibernate.type: trace
 

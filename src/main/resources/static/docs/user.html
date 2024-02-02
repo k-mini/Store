@@ -602,7 +602,7 @@ Content-Length: 138
 <tr>
 <th class="tableblock halign-left valign-top">필드명</th>
 <th class="tableblock halign-left valign-top">타입</th>
-<th class="tableblock halign-left valign-top">필수값</th>
+<th class="tableblock halign-left valign-top">필수여부</th>
 <th class="tableblock halign-left valign-top">설명</th>
 </tr>
 </thead>
@@ -725,7 +725,7 @@ Content-Length: 138
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/api/user/1' -i -X PATCH \
     -H 'Content-Type: multipart/form-data;charset=UTF-8' \
     -F 'file=@testImage.png;type=image/png' \
-    -F 'userUpdateReqApiDto={"password":"abcd","email":"kmini@gmail.com","passwordCheck":"abcd","username":"kmini2"};type=application/json' \
+    -F 'userUpdateReqApiDto={"passwordCheck":"abcd","username":"kmini2","password":"abcd","email":"kmini@gmail.com"};type=application/json' \
     -F 'file=@testImage.png;type=image/png'</code></pre>
 </div>
 </div>
@@ -822,7 +822,7 @@ Content-Length: 139
 <tr>
 <th class="tableblock halign-left valign-top">필드명</th>
 <th class="tableblock halign-left valign-top">타입</th>
-<th class="tableblock halign-left valign-top">필수값</th>
+<th class="tableblock halign-left valign-top">필수여부</th>
 <th class="tableblock halign-left valign-top">설명</th>
 </tr>
 </thead>
@@ -958,14 +958,14 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 140
+Content-Length: 144
 
 {
   "code" : 1,
   "message" : "성공",
   "data" : {
     "id" : 2,
-    "username" : "kmini",
+    "username" : "kmini3333",
     "email" : "kmini22@gmail.com"
   }
 }</code></pre>
@@ -1100,14 +1100,14 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 140
+Content-Length: 144
 
 {
   "code" : 1,
   "message" : "성공",
   "data" : {
     "id" : 2,
-    "username" : "kmini",
+    "username" : "kmini1235",
     "email" : "kmini22@gmail.com"
   }
 }</code></pre>
@@ -1242,14 +1242,14 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 140
+Content-Length: 145
 
 {
   "code" : 1,
   "message" : "성공",
   "data" : {
     "id" : 2,
-    "username" : "kmini",
+    "username" : "kmini56789",
     "email" : "kmini22@gmail.com"
   }
 }</code></pre>
