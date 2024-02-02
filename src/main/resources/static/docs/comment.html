@@ -539,7 +539,7 @@ Content-Length: 273
     "commentUserName" : "kmini",
     "content" : "댓글 내용입니다~",
     "replies" : [ ],
-    "createdDate" : "2023.12.14  19:30"
+    "createdDate" : "2023.12.21  17:30"
   }
 }</code></pre>
 </div>
@@ -729,9 +729,9 @@ Content-Length: 521
       "commentUserName" : "kmini",
       "content" : "자식 댓글 내용입니다.",
       "replies" : [ ],
-      "createdDate" : "2023.12.14  19:30"
+      "createdDate" : "2023.12.21  17:30"
     } ],
-    "createdDate" : "2023.12.14  19:30"
+    "createdDate" : "2023.12.21  17:30"
   } ]
 }</code></pre>
 </div>
@@ -939,7 +939,6 @@ Content-Length: 521
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/api/comment/1' -i -X PATCH \
     -H 'Content-Type: application/json;charset=UTF-8' \
     -d '{
-  "boardId" : 1,
   "content" : "수정내용내용"
 }'</code></pre>
 </div>
@@ -969,7 +968,7 @@ Content-Length: 268
     "commentUserName" : "kmini",
     "content" : "수정내용내용",
     "replies" : [ ],
-    "createdDate" : "2023.12.14  19:30"
+    "createdDate" : "2023.12.21  17:30"
   }
 }</code></pre>
 </div>
@@ -1018,12 +1017,6 @@ Content-Length: 268
 </tr>
 </thead>
 <tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boardId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">수정할 댓글의 게시판 ID</p></td>
-</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>content</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>

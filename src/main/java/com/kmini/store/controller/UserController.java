@@ -7,6 +7,7 @@ import com.kmini.store.dto.request.UserDto.UserUpdateReqDto;
 import com.kmini.store.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,7 +29,7 @@ public class UserController {
 
     @GetMapping({"/", "/index"})
     public String home() {
-        log.info("메인화면");
+        log.debug("메인화면");
         return "index";
     }
 

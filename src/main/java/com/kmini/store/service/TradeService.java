@@ -151,15 +151,14 @@ public class TradeService {
 
         TradeStatus latestStatus = latestTrade.getTradeStatus();
 //         WAIT(수락 대기중) 이거나 DEALING(거래 중), COMPLETE(거래 완료)면  거래 불가
-        if (latestStatus == WAIT || latestStatus == DEALING || latestStatus == COMPLETE) {
-            return false;
+        switch (latestStatus) {
+            case WAIT: case DEALING: case COMPLETE:
+                return false;
+            case CANCEL:
+                return true;
+            default:
+                throw new IllegalStateException("등록되지 않은 거래 상태입니다.");
         }
-        // 거래 취소된 상태면 거래 가능
-        if (latestStatus == CANCEL) {
-            return true;
-        }
-
-        throw new IllegalStateException("등록되지 않은 거래 상태입니다.");
     }
     private void checkCompleteAvailable(Trade trade) {
         TradeStatus status = trade.getTradeStatus();

@@ -8,6 +8,7 @@
 - [사용 기술](#사용-기술)
 - [요구사항](#요구사항)
 - [ER 다이어그램](#ER-다이어그램)
+- [API 문서](#api-문서)
 
 
 ## 사용 기술
@@ -24,6 +25,7 @@
 - SpringBoot 2.7
 - Spring Data JPA 
 - Spring Security 5.7
+- Spring Rest Docs
 - QueryDsl
 
 ### 데이터베이스
@@ -51,6 +53,10 @@
 - 관리자가 회원 탈퇴처리 (미구현)
 - url 기반의 db연동 인가처리 (미구현)
 
+## 아키텍처
+
+<img src="./docs/architecture/store-architecture.jpg">
+
 ## ER 다이어그램
 
 <img src="./docs/erd/erd-image.png">
@@ -61,9 +67,9 @@
 <img src="./docs/flow/trade-flow-chart.png">
 
 
-## API Documentation
+## API 문서
 
-- Spring Rest Docs를 사용하여 문서를 작성하였습니다.
+- API 문서는 Spring Rest Docs를 사용하여 문서를 작성하였습니다.
 
 <a href="https://htmlpreview.github.io/?https://github.com/k-mini/Store/blob/dev/src/main/resources/static/docs/user.html" target="_blank">유저 API</a> <br>
 <a href="https://htmlpreview.github.io/?https://github.com/k-mini/Store/blob/dev/src/main/resources/static/docs/itemboard.html" target="_blank">거래 게시판 API</a> <br>

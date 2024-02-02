@@ -25,7 +25,7 @@ public class CategoryInterceptor implements HandlerInterceptor {
     private MultiValueMap<CategoryRespDto, CategoryRespDto> categories;
     private final CategoryService categoryService;
 
-    // 원래 빈 초기화 시점에 하려고 했으나
+    // 원래 빈(bean) 초기화 시점에 하려고 했으나
     // h2 데이터 베이스에서 applicationRunner 시점에 데이터가 들어가기 때문에
     // 빈 초기화 시점에는 데이터가 없다.
     @PostConstruct
