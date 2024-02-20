@@ -30,7 +30,7 @@ public class TradeController {
         Page<TradeHistoryRespDto> results = tradeService.selectUserTradeHistory(selectUserTradeHistoryReqDto, pageable);
 
         log.debug("results = {}", results);
-        CustomPageUtils.configure(results, 5, model);
+        CustomPageUtils.getPageAttr(results, 5);
         model.addAttribute("sType", selectUserTradeHistoryReqDto.getSType());
         model.addAttribute("s", selectUserTradeHistoryReqDto.getS());
         model.addAttribute("results", results);

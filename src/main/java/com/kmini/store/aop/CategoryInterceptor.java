@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class CategoryInterceptor implements HandlerInterceptor {
 
-    private MultiValueMap<CategoryRespDto, CategoryRespDto> categories;
+    private List<CategoryRespDto> categories;
     private final CategoryService categoryService;
 
     // 원래 빈(bean) 초기화 시점에 하려고 했으나
@@ -63,17 +63,16 @@ public class CategoryInterceptor implements HandlerInterceptor {
 
     private CategoryRespDto findCategory(String keyword) {
 
-        for (Map.Entry<CategoryRespDto, List<CategoryRespDto>> categoryRespDtoListEntry : categories.entrySet()) {
-            CategoryRespDto key = categoryRespDtoListEntry.getKey();
-            CategoryRespDto[] value = categoryRespDtoListEntry.getValue().toArray(CategoryRespDto[]::new);
+        for (CategoryRespDto categoryRespDto : categories) {
+            if (categoryRespDto.getCategoryName().equals(keyword.toUpperCase())) {
+                return categoryRespDto;
+            }
+            for (CategoryRespDto childCategory : categoryRespDto.getSubCategories()) {
+                if (childCategory.getCategoryName().equals(keyword.toUpperCase())) {
+                    return childCategory;
+                }
+            }
         }
-
-        return categories.entrySet()
-                .stream()
-                .flatMap(entry ->
-                        Stream.concat(Stream.of(entry.getKey()), Stream.of(entry.getValue().toArray(CategoryRespDto[]::new)))
-                )
-                .filter(categoryRespDto -> categoryRespDto.getCategoryName().equals(keyword.toUpperCase()))
-                .findFirst().orElseThrow(() -> new IllegalArgumentException("잘못된 카테고리 정보입니다."));
+        throw new IllegalArgumentException("잘못된 카테고리 정보입니다.");
     }
 }
