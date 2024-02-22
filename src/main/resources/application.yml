@@ -6,8 +6,8 @@ spring:
 #    password:
 #    driver-class-name: org.h2.Driver
     url: jdbc:mysql://localhost:3306/store
-    username: root
-    password: 1234
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
