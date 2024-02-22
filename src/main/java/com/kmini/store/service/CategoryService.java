@@ -11,7 +11,9 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.groupingBy;
@@ -41,8 +43,9 @@ public class CategoryService {
                 .orElseThrow(()-> new IllegalArgumentException(categoryName + " 카테고리가 존재하지 않습니다."));
     }
 
+    // 카테고리 조회
     @Transactional
-    public MultiValueMap<CategoryRespDto, CategoryRespDto> selectCategories() {
+    public List<CategoryRespDto> selectCategories() {
 
         // 방법 1
 //        Map<String, List<String>> result = categoryRepository.findAll()
@@ -53,13 +56,9 @@ public class CategoryService {
         // 방법 2
         List<Category> superCategories = categoryRepository.findAll()
                                         .stream()
-                                        .filter(category -> category.getSuperCategory() == null).collect(Collectors.toList());
-        MultiValueMap<CategoryRespDto, CategoryRespDto> map = new LinkedMultiValueMap<>();
+                                        .filter(category -> category.getSuperCategory() == null)
+                                        .collect(Collectors.toList());
 
-        for (Category category : superCategories) {
-            CategoryRespDto categoryRespDto = CategoryRespDto.toDto(category);
-            map.put(categoryRespDto, categoryRespDto.getSubCategories());
-        }
-        return map;
+        return CategoryRespDto.toDtos(superCategories);
     }
 }

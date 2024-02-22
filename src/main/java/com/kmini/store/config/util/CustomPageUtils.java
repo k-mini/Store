@@ -18,7 +18,7 @@ public class CustomPageUtils {
     private static final Set<String> orders = new HashSet<>(Arrays.asList("views","createdDate"));
 
     // gap: 구간
-    public static void configure(Page<?> page, int gap, Model model) {
+    public static PageAttr getPageAttr(Page<?> page, int gap) {
         int pageNum = page.getNumber() + 1;
 
         // 현재 페이지 기준 마지막 페이지
@@ -45,11 +45,7 @@ public class CustomPageUtils {
         log.debug("endPage={}",endPage);
         log.debug("prev={}",prev);
         log.debug("next={}",next);
-
-        model.addAttribute("startPage",startPage);
-        model.addAttribute("endPage",endPage);
-        model.addAttribute("prev",prev);
-        model.addAttribute("next",next);
+        return new PageAttr(startPage, endPage, prev, next);
     }
 
     public static OrderSpecifier<?>[] getOrderSpecifiers(Pageable pageable, Path<?> path) {

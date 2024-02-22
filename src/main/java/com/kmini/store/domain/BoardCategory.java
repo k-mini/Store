@@ -15,10 +15,12 @@ public class BoardCategory {
     @Column(name = "BOARD_CATEGORY_ID")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name = "BOARD_ID")
     private Board board;
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name = "CATEGORY_ID")
     private Category category;
 
     public BoardCategory(Board board, Category category) {

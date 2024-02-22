@@ -32,9 +32,9 @@ public class SecurityConfig {
         http.csrf().disable();
         // 인가 정책
         http.authorizeRequests()
-                .antMatchers("/docs/**").hasRole("MANAGER")
-                .antMatchers("/auth/signin", "/auth/signup","/api/user").anonymous()
-                .antMatchers("/api/**", "/boards/**", "/board/**", "/auth/my-page","/user/**").authenticated()
+//                .antMatchers("/docs/**").hasRole("MANAGER")
+//                .antMatchers("/auth/signin", "/auth/signup","/api/user").anonymous()
+//                .antMatchers("/api/**", "/boards/**", "/board/**", "/auth/my-page","/user/**").authenticated()
                 .anyRequest().permitAll();
 
         // 로그인 방식
@@ -67,7 +67,7 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
+//    @Bean
     public WebSecurityCustomizer configure() {
         return web -> web.ignoring()
                 .requestMatchers(PathRequest.toH2Console())

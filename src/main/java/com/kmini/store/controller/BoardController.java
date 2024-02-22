@@ -1,6 +1,7 @@
 package com.kmini.store.controller;
 
 import com.kmini.store.config.util.CustomPageUtils;
+import com.kmini.store.config.util.PageAttr;
 import com.kmini.store.dto.request.SearchDto.SearchBoardDto;
 import com.kmini.store.dto.response.BoardDto;
 import com.kmini.store.service.BoardService;
@@ -55,9 +56,13 @@ public class BoardController {
             log.trace("result = {}", result);
         }
 
-        CustomPageUtils.configure(results, 5, model);
-        model.addAttribute("sType", searchBoardDto.getSType());
-        model.addAttribute("s", searchBoardDto.getS());
+        PageAttr pageAttr = CustomPageUtils.getPageAttr(results, 5);
+        model.addAttribute("startPage", pageAttr.getStartPage());
+        model.addAttribute("endPage", pageAttr.getEndPage());
+        model.addAttribute("prev", pageAttr.isPrev());
+        model.addAttribute("next", pageAttr.isNext());
+        model.addAttribute("searchType", searchBoardDto.getSearchType());
+        model.addAttribute("searchKeyword", searchBoardDto.getSearchKeyword());
         model.addAttribute("results", results);
         return "board/boardList";
     }
