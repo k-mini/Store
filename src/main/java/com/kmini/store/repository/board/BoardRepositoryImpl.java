@@ -5,15 +5,19 @@ import com.kmini.store.domain.Board;
 import com.kmini.store.dto.request.SearchDto;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.util.StringUtils;
+
+import java.lang.reflect.Field;
 
 import static com.kmini.store.domain.QBoard.board;
 import static com.kmini.store.domain.QBoardCategory.boardCategory;
@@ -21,6 +25,7 @@ import static com.kmini.store.domain.QCategory.category;
 import static com.kmini.store.domain.QUser.user;
 
 @RequiredArgsConstructor
+@Slf4j
 public class BoardRepositoryImpl implements BoardRepositoryQsdl {
 
     private final JPAQueryFactory queryFactory;
@@ -30,6 +35,8 @@ public class BoardRepositoryImpl implements BoardRepositoryQsdl {
     public Page<Board> findBoards(BoardSearchCond cond, Pageable pageable) {
 
         String categoryName = cond.getCategoryName();
+        String subCategoryName = cond.getSubCategoryName();
+
         // order 지시자 만들기
         OrderSpecifier<?>[] orderSpecifiers = CustomPageUtils.getOrderSpecifiers(pageable, board);
 
@@ -40,13 +47,15 @@ public class BoardRepositoryImpl implements BoardRepositoryQsdl {
                                 JPAExpressions.select(boardCategory.board)
                                         .from(boardCategory)
                                         .where(boardCategory.category.eq(
-                                                        JPAExpressions.selectFrom(category)
-                                                                .where(category.categoryName.eq(categoryName))
+                                                        subCategoryName.equals("all") ?
+                                                                JPAExpressions.selectFrom(category)
+                                                                        .where(category.categoryName.eq(categoryName)) :
+                                                                JPAExpressions.selectFrom(category)
+                                                                        .where(category.categoryName.eq(subCategoryName))
                                                 )
                                         )
                         ),
-                        titleLike(cond.getTitle()),
-                        contentLike(cond.getContent())
+                        searchTypeLike(cond.getSearchType(),cond.getSearchKeyword())
                 )
                 .join(board.user, user).fetchJoin()
                 .offset(pageable.getOffset())
@@ -61,24 +70,35 @@ public class BoardRepositoryImpl implements BoardRepositoryQsdl {
                                 JPAExpressions.select(boardCategory.board)
                                         .from(boardCategory)
                                         .where(boardCategory.category.eq(
+                                                subCategoryName.equals("all") ?
                                                         JPAExpressions.selectFrom(category)
-                                                                .where(category.categoryName.eq(categoryName))
+                                                                .where(category.categoryName.eq(categoryName)) :
+                                                        JPAExpressions.selectFrom(category)
+                                                                .where(category.categoryName.eq(subCategoryName))
                                                 )
                                         )
                         ),
-                        titleLike(cond.getTitle()),
-                        contentLike(cond.getContent())
+                        searchTypeLike(cond.getSearchType(),cond.getSearchKeyword())
                 );
 
         return PageableExecutionUtils.getPage(query.fetch(), pageable, countQuery::fetchOne);
     }
 
-    private BooleanExpression titleLike(String title) {
-        return StringUtils.hasText(title) ? board.title.like("%" + title + "%") : null;
-    }
+    private BooleanExpression searchTypeLike(String searchType, String searchKeyword) {
+        if (searchType == null || searchKeyword == null) {
+            return null;
+        }
 
-    private BooleanExpression contentLike(String content) {
-        return StringUtils.hasText(content) ? board.content.like("%" + content + "%") : null;
+        try {
+            Field searchTypeField = Class.forName("com.kmini.store.domain.QBoard")
+                    .getDeclaredField(searchType);
+            StringPath typePath = (StringPath) searchTypeField.get(board);
+            return StringUtils.hasText(searchType) ? typePath.like("%" + searchKeyword + "%") : null;
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException("해당하는 변수명이 없습니다. ", e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("해당 클래스를 찾을 수 없습니다. ", e);
+        }
     }
 
     @Data
@@ -92,12 +112,17 @@ public class BoardRepositoryImpl implements BoardRepositoryQsdl {
         private String title;
         // 내용
         private String content;
+        // 검색 타입
+        private String searchType;
+        private String searchKeyword;
 
         public BoardSearchCond(String categoryName, String subCategoryName, SearchDto.SearchBoardDto searchBoardDto) {
             this.categoryName = categoryName;
             this.subCategoryName = subCategoryName;
-            this.title = "title".equals(searchBoardDto.getSType()) ? searchBoardDto.getS() : null ;
-            this.content = "content".equals(searchBoardDto.getSType()) ? searchBoardDto.getS() : null ;
+//            this.title = "title".equals(searchBoardDto.getSearchType()) ? searchBoardDto.getSearchKeyword() : null;
+//            this.content = "content".equals(searchBoardDto.getSearchType()) ? searchBoardDto.getSearchKeyword() : null;
+            this.searchType = searchBoardDto.getSearchType();
+            this.searchKeyword = searchBoardDto.getSearchKeyword();
         }
     }
 }

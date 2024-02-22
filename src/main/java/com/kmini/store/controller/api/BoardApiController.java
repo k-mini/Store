@@ -42,8 +42,8 @@ public class BoardApiController {
             @PageableDefault(sort = "createdDate", direction = DESC) Pageable pageable,
             @ModelAttribute SearchDto.SearchBoardDto searchBoardDto,
             Model model) {
-        log.debug("category = {}, subCategory = {}", searchBoardDto.getCategory(), searchBoardDto.getSubCategory());
-        log.debug("SearchBoardDto = {}", searchBoardDto);
+        log.info("category = {}, subCategory = {}", searchBoardDto.getCategory(), searchBoardDto.getSubCategory());
+        log.info("SearchBoardDto = {}", searchBoardDto);
 
         String order = searchBoardDto.getOrder();
         if (StringUtils.hasText(order) && CustomPageUtils.isValid(order)) {
@@ -58,8 +58,8 @@ public class BoardApiController {
         BoardListApiResponseDto result = BoardListApiResponseDto.builder()
                 .page(page)
                 .pageAttr(pageAttr)
-                .searchType(searchBoardDto.getSType())
-                .searchKeyword(searchBoardDto.getS())
+                .searchType(searchBoardDto.getSearchType())
+                .searchKeyword(searchBoardDto.getSearchKeyword())
                 .build();
         return ResponseEntity
                 .ok(result);

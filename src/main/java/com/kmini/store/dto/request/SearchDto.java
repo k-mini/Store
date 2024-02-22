@@ -9,9 +9,9 @@ public class SearchDto {
     @AllArgsConstructor
     public static class SearchBoardDto {
         // 타입
-        private String sType;
+        private String searchType;
         // 값
-        private String s;
+        private String searchKeyword;
         // 정렬
         private String order;
         // 주 카테고리

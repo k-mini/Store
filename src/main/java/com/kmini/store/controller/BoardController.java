@@ -61,8 +61,8 @@ public class BoardController {
         model.addAttribute("endPage", pageAttr.getEndPage());
         model.addAttribute("prev", pageAttr.isPrev());
         model.addAttribute("next", pageAttr.isNext());
-        model.addAttribute("sType", searchBoardDto.getSType());
-        model.addAttribute("s", searchBoardDto.getS());
+        model.addAttribute("searchType", searchBoardDto.getSearchType());
+        model.addAttribute("searchKeyword", searchBoardDto.getSearchKeyword());
         model.addAttribute("results", results);
         return "board/boardList";
     }
