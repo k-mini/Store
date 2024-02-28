@@ -192,6 +192,44 @@
                                 내용
                             </p>
 
+
+                            <div id="default-carousel" class="relative w-full" data-carousel="slide">
+                                <!-- Carousel wrapper -->
+                                <div class="relative h-56 overflow-hidden rounded-lg md:h-96">
+                                    <!-- Item 1 -->
+                                    <div class="hidden duration-700 ease-in-out" data-carousel-item>
+                                        <img src="/docs/images/carousel/carousel-1.svg"
+                                             class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
+                                             alt="...">
+                                    </div>
+                                    <!-- Item 2 -->
+                                    <div class="hidden duration-700 ease-in-out" data-carousel-item>
+                                        <img src="/docs/images/carousel/carousel-2.svg"
+                                             class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
+                                             alt="...">
+                                    </div>
+                                    <!-- Item 3 -->
+                                    <div class="hidden duration-700 ease-in-out" data-carousel-item>
+                                        <img src="/docs/images/carousel/carousel-3.svg"
+                                             class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
+                                             alt="...">
+                                    </div>
+                                    <!-- Item 4 -->
+                                    <div class="hidden duration-700 ease-in-out" data-carousel-item>
+                                        <img src="/docs/images/carousel/carousel-4.svg"
+                                             class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
+                                             alt="...">
+                                    </div>
+                                    <!-- Item 5 -->
+                                    <div class="hidden duration-700 ease-in-out" data-carousel-item>
+                                        <img src="/docs/images/carousel/carousel-5.svg"
+                                             class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
+                                             alt="...">
+                                    </div>
+                                </div>
+
+                                </div>
+
                             <!-- 댓글 영역 시작 -->
                             <div id="comment-box" class="max-w-2xl mx-auto px-4">
                                 <div class="flex justify-between items-center mb-6">
@@ -206,17 +244,17 @@
                                             거래 신청
                                         </button>
                                         <a id="board-update"
-                                                th:href="@{/board/trade/{subCategory}/{id}/form(subCategory=${subCategory},id=${result.id})}"
-                                                th:if="${result.writerId == #authentication.principal.user.id}"
-                                                type="button"
-                                                class="mb-5 inline-block rounded bg-primary py-1 px-4 text-center text-xs font-semibold leading-loose text-white">
+                                           th:href="@{/board/trade/{subCategory}/{id}/form(subCategory=${subCategory},id=${result.id})}"
+                                           th:if="${result.writerId == #authentication.principal.user.id}"
+                                           type="button"
+                                           class="mb-5 inline-block rounded bg-primary py-1 px-4 text-center text-xs font-semibold leading-loose text-white">
                                             게시물 수정
                                         </a>
                                         <button id="board-delete"
                                                 th:if="${result.writerId == #authentication.principal.user.id}"
                                                 type="button"
                                                 class="mb-5 inline-block rounded bg-primary py-1 px-4 text-center text-xs font-semibold leading-loose text-white">
-                                                게시물 삭제
+                                            게시물 삭제
                                         </button>
                                         <button type="button"
                                                 class="mb-5 inline-block rounded bg-primary py-1 px-4 text-center text-xs font-semibold leading-loose text-white">
@@ -267,7 +305,8 @@
                                         </div>
                                     </div>
 
-                                    <p th:id="|content-${comment.id}|" class="text-gray-500 py-4 dark:text-gray-400">[[${comment.content}]]</p>
+                                    <p th:id="|content-${comment.id}|" class="text-gray-500 py-4 dark:text-gray-400">
+                                        [[${comment.content}]]</p>
 
                                     <div class="flex items-center py-4">
                                         <button th:onclick="replyToggle([[${comment.id}]])" type="button"
@@ -319,9 +358,11 @@
                                                 </button>
                                             </div>
                                         </div>
-                                        <p th:id="|content-${comment.id}|" class="text-gray-500 py-4 dark:text-gray-400">[[${reply.content}]]</p>
+                                        <p th:id="|content-${comment.id}|"
+                                           class="text-gray-500 py-4 dark:text-gray-400">[[${reply.content}]]</p>
                                         <!-- 대댓글 수정 바 -->
-                                        <div th:id="|update-bar-${reply.replyId}|" class="mb-6 lg:ml-6" style="display: none;">
+                                        <div th:id="|update-bar-${reply.replyId}|" class="mb-6 lg:ml-6"
+                                             style="display: none;">
                                             <div class="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
                                             <textarea th:id="|update-content-${reply.replyId}|" rows="3"
                                                       class="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none dark:text-white dark:placeholder-gray-400 dark:bg-gray-800"
@@ -578,6 +619,8 @@
 <!-- ====== Footer Section Start -->
 <div th:replace="~{template/fragment/footer :: frag1}"></div>
 <!-- ====== Footer Section End -->
+
+<!-- carousel 시작 -->
 
 <!-- ====== Back To Top Start -->
 <a

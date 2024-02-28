@@ -18,7 +18,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @ToString
-public class User {
+public class User extends BaseTime {
 
     public User() {
     }

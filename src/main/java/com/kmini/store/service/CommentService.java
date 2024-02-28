@@ -7,12 +7,16 @@ import com.kmini.store.dto.request.CommentDto.BoardCommentSaveReqDto;
 import com.kmini.store.dto.request.CommentDto.BoardCommentUpdateReqDto;
 import com.kmini.store.dto.response.CommentDto.BoardCommentSaveRespDto;
 import com.kmini.store.dto.response.CommentDto.BoardCommentUpdateRespDto;
+import com.kmini.store.dto.response.admin.AdminCommentResponseDto;
+import com.kmini.store.dto.response.admin.AdminCommentResponseDto.AdminCommentDto;
 import com.kmini.store.repository.CommentRepository;
 import com.kmini.store.repository.board.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +30,12 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final BoardRepository boardRepository;
+
+    @Transactional
+    public Page<AdminCommentDto> selectAllComments(Pageable pageable) {
+
+        return commentRepository.findAll(pageable).map(AdminCommentDto::toDto);
+    }
 
     @Transactional
     public Comment saveComment(Long boardId, Long topCommentId, Comment newComment) {

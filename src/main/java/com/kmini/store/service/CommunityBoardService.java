@@ -3,15 +3,12 @@ package com.kmini.store.service;
 import com.kmini.store.config.auth.AccountContext;
 import com.kmini.store.config.file.UserFileTestingManager;
 import com.kmini.store.domain.*;
-import com.kmini.store.dto.request.BoardDto.CommunityBoardSaveReqDto;
 import com.kmini.store.dto.response.CommunityBoardDto.CommunityBoardViewRespDto;
 import com.kmini.store.repository.BoardCategoryRepository;
 import com.kmini.store.repository.CategoryRepository;
 import com.kmini.store.repository.CommentRepository;
 import com.kmini.store.repository.board.CommunityBoardRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -87,7 +84,7 @@ public class CommunityBoardService {
 
     // 게시물 삭제
     @Transactional
-    public void delete(Long boardId) {
+    public void deleteBoard(Long boardId) {
         CommunityBoard communityBoard = communityBoardRepository.findByIdFetchJoin(boardId)
                 .orElseThrow(() -> new IllegalArgumentException("게시물을 찾을 수 없습니다."));
         User user = communityBoard.getUser();

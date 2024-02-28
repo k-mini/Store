@@ -95,10 +95,12 @@ public class ItemBoardService {
                 .orElseThrow(() -> new IllegalStateException("게시물을 찾을 수 없습니다."));
 
         MultipartFile submittedFile = editingItemBoard.getFile();
-        if (!submittedFile.isEmpty()) {
-            userResourceManager.updateFile(itemBoard.getThumbnail(), submittedFile);
+        String filePath = null;
+        if (submittedFile != null && !submittedFile.isEmpty()) {
+            filePath = userResourceManager.updateFile(itemBoard.getThumbnail(), submittedFile);
         }
 
+        itemBoard.setThumbnail(filePath);
         itemBoard.setTitle(editingItemBoard.getTitle());
         itemBoard.setContent(editingItemBoard.getContent());
         itemBoard.setItemName(editingItemBoard.getItemName());

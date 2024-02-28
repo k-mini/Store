@@ -34,8 +34,8 @@ public class TradeApiController {
 
         Page<TradeHistoryRespDto> results = tradeService.selectUserTradeHistory(selectUserTradeHistoryReqDto, pageable);
 
-        return ResponseEntity.ok()
-                             .body(new CommonRespDto<>(1,"성공", results));
+//        return ResponseEntity.ok().body(new CommonRespDto<>(1,"성공", results));
+        return ResponseEntity.ok(null);
     }
 
     // 거래 신청

@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/user")

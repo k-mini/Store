@@ -26,7 +26,7 @@ public class UserFileTestingManager implements UserResourceManager {
         return storeFile(User.getSecurityContextUser().getEmail(), multipartFile);
     }
 
-    // 파일을 저장하고 경로를 반환
+    // 파일을 저장하고 파일명 반환
     @Override
     public String storeFile(String username, MultipartFile multipartFile) {
         if (multipartFile == null || multipartFile.isEmpty()) {

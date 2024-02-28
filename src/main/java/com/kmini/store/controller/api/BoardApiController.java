@@ -4,6 +4,7 @@ import com.kmini.store.config.util.CustomPageUtils;
 import com.kmini.store.config.util.PageAttr;
 import com.kmini.store.dto.request.SearchDto;
 import com.kmini.store.dto.response.BoardDto;
+import com.kmini.store.dto.response.BoardListApiResponseDto;
 import com.kmini.store.service.BoardService;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,10 +19,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
@@ -41,7 +39,7 @@ public class BoardApiController {
 //            @PathVariable("subCategory") String subCategoryName,
             @PageableDefault(sort = "createdDate", direction = DESC) Pageable pageable,
             @ModelAttribute SearchDto.SearchBoardDto searchBoardDto,
-            Model model) {
+            @RequestParam(value = "draw", required = false) Integer draw) {
         log.info("category = {}, subCategory = {}", searchBoardDto.getCategory(), searchBoardDto.getSubCategory());
         log.info("SearchBoardDto = {}", searchBoardDto);
 
@@ -56,23 +54,15 @@ public class BoardApiController {
         PageAttr pageAttr = CustomPageUtils.getPageAttr(page, 5);
 
         BoardListApiResponseDto result = BoardListApiResponseDto.builder()
+                .draw(draw == null ? -1 : draw)
                 .page(page)
                 .pageAttr(pageAttr)
                 .searchType(searchBoardDto.getSearchType())
                 .searchKeyword(searchBoardDto.getSearchKeyword())
                 .build();
+
         return ResponseEntity
                 .ok(result);
-    }
-
-    @Getter
-    @Setter
-    @Builder
-    public static class BoardListApiResponseDto {
-        private Page<BoardDto> page;
-        private PageAttr pageAttr;
-        private String searchType;
-        private String searchKeyword;
     }
 }
 
