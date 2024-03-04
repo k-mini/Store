@@ -13,6 +13,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.data.domain.Sort.Direction.DESC;
@@ -36,6 +37,16 @@ public class CommentAdminApiController {
         Page<AdminCommentDto> page = commentService.selectAllComments(pageable);
 
         AdminBoardResponseDto<AdminCommentDto> result = new AdminBoardResponseDto<>(draw.orElse(0), page);
+
+        return ResponseEntity
+                .ok(new CommonRespDto<>(1, "성공", result));
+    }
+
+    // 댓글 여러 개 삭제
+    @DeleteMapping("/comments")
+    public ResponseEntity<?> deleteComments(@RequestParam("commentIds") List<Long> commentIds) {
+        log.debug("commentIds = {}", commentIds);
+        int result = commentService.deleteComments(commentIds);
 
         return ResponseEntity
                 .ok(new CommonRespDto<>(1, "성공", result));

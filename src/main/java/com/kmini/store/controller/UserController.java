@@ -57,6 +57,8 @@ public class UserController {
                 .email(userSaveReqDto.getEmail())
                 .username(userSaveReqDto.getUsername())
                 .password(userSaveReqDto.getPassword())
+                .gender(userSaveReqDto.getGender())
+                .birthdate(userSaveReqDto.getBirthdate())
                 .file(file)
                 .build());
 
@@ -99,6 +101,8 @@ public class UserController {
                 .email(user.getEmail())
                 .role(user.getRole())
                 .userStatus(user.getUserStatus())
+                .gender(userUpdateReqDto.getGender())
+                .birthdate(userUpdateReqDto.getBirthdate())
                 .file(userUpdateReqDto.getFile())
                 .build());
         return "redirect:/";

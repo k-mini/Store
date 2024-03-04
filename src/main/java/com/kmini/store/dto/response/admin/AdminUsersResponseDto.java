@@ -26,6 +26,8 @@ public class AdminUsersResponseDto<T> {
         private String role;
         private String userStatus;
         private String username;
+        private String gender;
+        private String birthdate;
         private String createdDate;
         private String lastModifiedDate;
 
@@ -36,6 +38,8 @@ public class AdminUsersResponseDto<T> {
                     .role(user.getRole().toString())
                     .userStatus(user.getUserStatus().toString())
                     .username(user.getUsername())
+                    .gender(user.getGender().toString())
+                    .birthdate(CustomTimeUtils.convertTime(user.getBirthdate()))
                     .createdDate(CustomTimeUtils.convertTime(user.getCreatedDate()))
                     .lastModifiedDate(CustomTimeUtils.convertTime(user.getLastModifiedDate()))
                     .build();

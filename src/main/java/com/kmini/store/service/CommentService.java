@@ -69,6 +69,27 @@ public class CommentService {
         return comment;
     }
 
+    // 댓글 여러 개 삭제
+    @Transactional
+    public int deleteComments(List<Long> commentIds) {
+
+        int result = 0;
+
+        // 자식 댓글 삭제
+        result = commentRepository.deleteSubCommentsFromMultiCommentId(commentIds);
+
+        // 댓글 삭제
+        result += commentRepository.deleteCommentsFromMultiCommentId(commentIds);
+
+        log.debug("result = {}", result);
+        if (result == 0) {
+            throw new IllegalArgumentException("삭제 실패!");
+        }
+
+        return result;
+    }
+
+    // 특정 댓글 삭제
     @Transactional
     public int deleteComment(Long commentId) {
 

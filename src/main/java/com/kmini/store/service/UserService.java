@@ -4,20 +4,13 @@ import com.kmini.store.config.file.UserResourceManager;
 import com.kmini.store.domain.User;
 import com.kmini.store.domain.type.UserRole;
 import com.kmini.store.domain.type.UserStatus;
-import com.kmini.store.dto.request.UserDto.UserUpdateReqDto;
 import com.kmini.store.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -40,8 +33,10 @@ public class UserService {
                     }
                 });
 
-        userResourceManager.storeFile(user.getUsername(), user.getFile());
-
+        // 유저 프로필 설정
+        String userProfilePath = userResourceManager.storeFile(user.getUsername(), user.getFile());
+        user.setThumbnail(userProfilePath);
+        
         if (user.getRole() == null) {
             user.setRole(UserRole.USER);
         }
