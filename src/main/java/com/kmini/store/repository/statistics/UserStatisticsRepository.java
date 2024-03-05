@@ -52,7 +52,7 @@ public class UserStatisticsRepository {
 
         MapSqlParameterSource params = new MapSqlParameterSource("year", year);
 
-        return jdbcTemplate.query(sql, params, new YearRowMapper());
+        return jdbcTemplate.query(sql, params, new MonthRowMapper());
     }
 
     public Map<Gender, Integer> selectUserGenderCntStatisticsAnnual(Integer year) {
@@ -107,7 +107,7 @@ public class UserStatisticsRepository {
         return jdbcTemplate.query(sql, params, new GenerationCntRowMapper());
     }
 
-    public static class YearRowMapper implements RowMapper<Integer> {
+    public static class MonthRowMapper implements RowMapper<Integer> {
         @Override
         public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
             return rs.getInt("joinNumber");
