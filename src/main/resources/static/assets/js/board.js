@@ -45,16 +45,30 @@ let board_index = {
         let data = {
             boardId : boardId,
             title : $("#title").val(),
-            file : $("#file").val(),
+            file : $("#file")[0].files[0],
             content : $("#content").val()
         }
-        let form = $("#itemBoardUpdateFormDto")[0];
-        let formData = new FormData(form);
-        console.log(data);
+        // let form = $("#itemBoardUpdateFormDto")[0];
+        let formData = new FormData();
+        let itemBoardUpdateReqApiDto = {};
+        itemBoardUpdateReqApiDto.boardId = data.boardId;
+        itemBoardUpdateReqApiDto.title = data.title;
+        itemBoardUpdateReqApiDto.content = data.content;
+
+        formData.append(
+            "itemBoardUpdateReqApiDto",
+            new Blob([JSON.stringify(itemBoardUpdateReqApiDto)], { type: "application/json",} )
+        );
+        formData.append("file", data.file);
+        // for (const [key, value] of Object.entries(data)) {
+        //     formData.append(key, value);
+        // }
+
         $.ajax({
             type : "PATCH",
             url : `/api/board/${category}/${subCategory}/${boardId}`,
             data : formData,
+            enctype : 'multipart/form-data',
             contentType : false,
             processData : false
         }).done(res =>{

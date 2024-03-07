@@ -6,6 +6,7 @@ import com.kmini.store.domain.Comment;
 import com.kmini.store.domain.CommunityBoard;
 import com.kmini.store.domain.ItemBoard;
 import com.kmini.store.domain.User;
+import com.kmini.store.domain.type.Gender;
 import com.kmini.store.domain.type.UserRole;
 import com.kmini.store.domain.type.UserStatus;
 import com.kmini.store.dto.request.BoardDto;
@@ -23,7 +24,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.List;
+
+import static com.kmini.store.domain.type.Gender.MAN;
+import static com.kmini.store.domain.type.Gender.WOMAN;
 
 //@Component
 @Profile({"default", "dev", "local"})
@@ -127,10 +132,12 @@ public class StoreInitializer implements ApplicationRunner {
     }
 
     private User createAdmin(String username, String password, String email) {
-        return userService.saveUser(new User(username, password, email, UserRole.ADMIN, UserStatus.SIGNUP, null));
+        return userService.saveUser(new User(username, password, email,
+                UserRole.ADMIN, UserStatus.SIGNUP, null, MAN, LocalDate.of(1995,5,31)));
     }
 
     private User createUser(String username, String password, String email) {
-        return userService.saveUser(new User(username, password, email, UserRole.USER, UserStatus.SIGNUP, null));
+        return userService.saveUser(new User(username, password, email,
+                UserRole.USER, UserStatus.SIGNUP, null, WOMAN, LocalDate.of(1992,3,05)));
     }
 }

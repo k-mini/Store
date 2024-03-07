@@ -7,6 +7,7 @@ import com.kmini.store.config.WithMockCustomUser;
 import com.kmini.store.config.WithMockCustomUserSecurityContextFactory;
 import com.kmini.store.config.auth.AccountContext;
 import com.kmini.store.domain.User;
+import com.kmini.store.domain.type.Gender;
 import com.kmini.store.domain.type.UserRole;
 import com.kmini.store.domain.type.UserStatus;
 import com.kmini.store.dto.request.UserDto.UserSaveReqApiDto;
@@ -40,10 +41,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.util.Map;
 
 import static com.kmini.store.config.ApiDocumentUtils.getDocumentRequest;
 import static com.kmini.store.config.ApiDocumentUtils.getDocumentResponse;
+import static com.kmini.store.domain.type.Gender.MAN;
+import static com.kmini.store.domain.type.Gender.WOMAN;
 import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -85,7 +89,8 @@ class UserApiControllerTest {
         String email = "kmini@gmail.com";
         String password = "1234";
         String passwordCheck = "1234";
-        UserSaveReqApiDto userSaveReqApiDto = new UserSaveReqApiDto(username, email, password, passwordCheck);
+        UserSaveReqApiDto userSaveReqApiDto =
+                new UserSaveReqApiDto(username, email, password, passwordCheck, MAN, LocalDate.of(1987,7,19));
         String requestBody = objectMapper.writeValueAsString(userSaveReqApiDto);
         log.info("requestBody = {}", requestBody);
 
@@ -227,7 +232,7 @@ class UserApiControllerTest {
         UserUpdateRespDto userUpdateRespDto = objectMapper.treeToValue(jsonNode, UserUpdateRespDto.class);
 
         // 데이터베이스의 객체와 비교
-        assertThat(userUpdateRespDto.getId()).isEqualTo(user.getId());
+        assertThat(userUpdateRespDto.getUserId()).isEqualTo(user.getId());
         assertThat(userUpdateRespDto.getUsername()).isEqualTo(user.getUsername());
         assertThat(userUpdateRespDto.getEmail()).isEqualTo(user.getEmail());
     }
@@ -245,7 +250,8 @@ class UserApiControllerTest {
         UserRole userRole = UserRole.USER;
         UserStatus userStatus = UserStatus.SIGNUP;
         User user = userService.saveUser(
-                new User(username, password, email, userRole, userStatus, null));
+                new User(username, password, email, userRole, userStatus, null,
+                        WOMAN, LocalDate.of(1993,4,5)));
         Long userId = user.getId();
 
 
@@ -300,7 +306,8 @@ class UserApiControllerTest {
         UserRole userRole = UserRole.USER;
         UserStatus userStatus = UserStatus.SIGNUP;
         User user = userService.saveUser(
-                new User(username, password, email, userRole, userStatus, null));
+                new User(username, password, email, userRole, userStatus, null
+                , WOMAN, LocalDate.of(1997,11,23)));
         Long userId = user.getId();
 
         // when
@@ -352,7 +359,8 @@ class UserApiControllerTest {
         UserRole userRole = UserRole.USER;
         UserStatus userStatus = UserStatus.SIGNUP;
         User user = userService.saveUser(
-                new User(username, password, email, userRole, userStatus, null));
+                new User(username, password, email, userRole, userStatus, null,
+                        MAN, LocalDate.of(2002, 10, 23)));
         Long userId = user.getId();
 
         // when

@@ -35,6 +35,9 @@ public abstract class Board extends BaseTime {
     private String content;
     private long views;
 
+    @OneToMany(mappedBy = "board")
+    public List<BoardCategory> boardCategories= new ArrayList<>();
+
     @Column(insertable = false, updatable = false)
     private String dtype;
 
@@ -49,5 +52,21 @@ public abstract class Board extends BaseTime {
     public Board(User user, String content) {
         this.user = user;
         this.content = content;
+    }
+
+    public Category getCategory() {
+        return getBoardCategories()
+                .stream()
+                .map(BoardCategory::getCategory)
+                .filter(Category::isSuperCategory)
+                .findAny().get();
+    }
+
+    public Category getSubCategory() {
+        return getBoardCategories()
+                .stream()
+                .map(BoardCategory::getCategory)
+                .filter(Category::isSubCategory)
+                .findAny().get();
     }
 }

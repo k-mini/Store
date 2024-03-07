@@ -47,7 +47,7 @@ public class BoardRepositoryImpl implements BoardRepositoryQsdl {
                                 JPAExpressions.select(boardCategory.board)
                                         .from(boardCategory)
                                         .where(boardCategory.category.eq(
-                                                        subCategoryName.equals("all") ?
+                                                        subCategoryName.equals("ALL") ?
                                                                 JPAExpressions.selectFrom(category)
                                                                         .where(category.categoryName.eq(categoryName)) :
                                                                 JPAExpressions.selectFrom(category)

@@ -92,7 +92,7 @@ public class ItemBoardApiController {
     // 게시물 수정
     @PatchMapping(value = "/{boardId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> updateBoard(@PathVariable String subCategory, @PathVariable Long boardId,
-                                         @Validated @RequestPart ItemBoardUpdateReqApiDto itemBoardUpdateReqApiDto, BindingResult bindingResult,
+                                         @RequestPart @Validated ItemBoardUpdateReqApiDto itemBoardUpdateReqApiDto, BindingResult bindingResult,
                                          @RequestPart(required = false) MultipartFile file,
                                          Model model) {
         log.debug("itemBoardUpdateReqApiDto = {}", itemBoardUpdateReqApiDto);

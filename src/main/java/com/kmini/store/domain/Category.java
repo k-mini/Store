@@ -46,4 +46,8 @@ public class Category extends BaseTime {
     public boolean isSuperCategory() {
         return this.superCategory == null;
     }
+
+    public boolean isSubCategory() {
+        return this.superCategory != null;
+    }
 }

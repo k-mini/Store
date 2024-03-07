@@ -2,6 +2,7 @@ package com.kmini.store.config;
 
 import com.kmini.store.aop.CategoryInterceptor;
 import com.kmini.store.domain.User;
+import com.kmini.store.domain.type.Gender;
 import com.kmini.store.domain.type.UserRole;
 import com.kmini.store.domain.type.UserStatus;
 import com.kmini.store.repository.UserRepository;
@@ -13,6 +14,11 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
+
+import static com.kmini.store.domain.type.Gender.MAN;
+import static com.kmini.store.domain.type.Gender.WOMAN;
 
 @Component
 @Profile({"test"})
@@ -57,10 +63,12 @@ public class StoreTestInitializer implements ApplicationRunner {
     }
 
     private User createAdmin(String username, String password, String email) {
-        return userRepository.save(new User(username, passwordEncoder.encode(password), email, UserRole.ADMIN, UserStatus.SIGNUP, null));
+        return userRepository.save(new User(username, passwordEncoder.encode(password), email, UserRole.ADMIN, UserStatus.SIGNUP, null
+                , MAN, LocalDate.of(2001,6,24)));
     }
 
     private User createUser(String username, String password, String email) {
-        return userRepository.save(new User(username, passwordEncoder.encode(password), email, UserRole.USER, UserStatus.SIGNUP, null));
+        return userRepository.save(new User(username, passwordEncoder.encode(password), email, UserRole.USER,
+                UserStatus.SIGNUP, null, WOMAN, LocalDate.of(1999,11,13)));
     }
 }

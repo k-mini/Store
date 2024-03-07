@@ -41,9 +41,6 @@ public class ItemBoardDto {
     @Builder
     public static class ItemBoardUpdateReqApiDto {
 
-        // 게시물 ID
-        @NotNull
-        private Long boardId;
         // 상품명
         @NotBlank
         private String itemName;
@@ -58,7 +55,6 @@ public class ItemBoardDto {
 
         public static ItemBoardUpdateReqApiDto toDto(ItemBoard board) {
             return ItemBoardUpdateReqApiDto.builder()
-                    .boardId(board.getId())
                     .itemName(board.getItemName())
                     .title(board.getTitle())
                     .content(board.getContent())

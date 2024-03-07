@@ -40,6 +40,7 @@ public class CommunityBoardController {
         return "board/communitydetail";
     }
 
+    // 게시물 작성 화면
     @GetMapping("/form")
     public String form(
             @ModelAttribute ItemBoardSaveReqDto itemBoardSaveReqDto, Model model) {

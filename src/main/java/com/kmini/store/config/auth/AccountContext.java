@@ -3,6 +3,7 @@ package com.kmini.store.config.auth;
 import com.kmini.store.domain.User;
 import com.kmini.store.domain.type.UserRole;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 

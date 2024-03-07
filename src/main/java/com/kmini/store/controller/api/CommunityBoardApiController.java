@@ -24,7 +24,7 @@ public class CommunityBoardApiController {
                        @PathVariable("subCategory") String subCategory,@PathVariable("boardId") Long boardId,
                        RedirectAttributes redirectAttributes) {
         log.debug("category = {} subCategory = {} boardId = {}", category, subCategory, boardId);
-        communityBoardService.delete(boardId);
+        communityBoardService.deleteBoard(boardId);
 
         redirectAttributes.addAttribute("subCategory", subCategory);
         return "redirect:/boards/trade/{subCategory}";

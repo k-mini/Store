@@ -1,13 +1,24 @@
 package com.kmini.store.dto.request;
 
 import com.kmini.store.domain.User;
+import com.kmini.store.domain.type.Gender;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.*;
+import java.time.LocalDate;
 
 @RequiredArgsConstructor
 public class UserDto {
+
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter @Setter
+    public static class UserAPILoginDto {
+        private String email;
+        private String password;
+    }
 
     @Builder
     @Data
@@ -26,6 +37,10 @@ public class UserDto {
         private String password;
 
         private String passwordCheck;
+
+        private Gender gender;
+
+        private LocalDate birthdate;
 
         private MultipartFile file;
     }
@@ -46,6 +61,10 @@ public class UserDto {
         private String password;
 
         private String passwordCheck;
+
+        private Gender gender;
+
+        private LocalDate birthdate;
     }
 
     @Data
@@ -66,12 +85,18 @@ public class UserDto {
 
         private String passwordCheck;
 
+        private Gender gender;
+
+        private LocalDate birthdate;
+
         private MultipartFile file;
 
         public static UserUpdateReqDto getUserUpdateForm(User user) {
             return UserUpdateReqDto.builder()
                     .email(user.getEmail())
                     .username(user.getUsername())
+                    .gender(user.getGender())
+                    .birthdate(user.getBirthdate())
                     .build();
         }
     }
@@ -94,11 +119,8 @@ public class UserDto {
 
         private String passwordCheck;
 
-        public static UserUpdateReqDto getUserUpdateForm(User user) {
-            return UserUpdateReqDto.builder()
-                    .username(user.getUsername())
-                    .password(user.getPassword())
-                    .build();
-        }
+        private Gender gender;
+
+        private LocalDate birthdate;
     }
 }
