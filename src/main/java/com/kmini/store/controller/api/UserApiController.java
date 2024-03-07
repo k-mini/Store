@@ -1,6 +1,8 @@
 package com.kmini.store.controller.api;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kmini.store.config.auth.AccountContext;
 import com.kmini.store.domain.User;
 import com.kmini.store.domain.type.UserRole;
@@ -14,7 +16,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserApiController {
 
     private final UserService userService;
+    private final ObjectMapper om;
 
     // 회원가입
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
@@ -130,5 +135,22 @@ public class UserApiController {
 
         return ResponseEntity.ok()
                 .body(new CommonRespDto<>(1, "성공", result));
+    }
+
+    // 인증 정보 얻기
+    @GetMapping("/authentication")
+    public ResponseEntity<?> getAuthentication() throws JsonProcessingException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        AccountContext accountContext = (AccountContext) authentication.getPrincipal();
+        clearPassword(accountContext);
+
+        UserAPILoginSuccessDto userAPILoginSuccessDto = new UserAPILoginSuccessDto(accountContext);
+
+        return ResponseEntity.ok(om.writeValueAsString(userAPILoginSuccessDto));
+    }
+
+    private void clearPassword(AccountContext accountContext) {
+        accountContext.getUser().setPassword(null);
+        accountContext.eraseCredentials();
     }
 }

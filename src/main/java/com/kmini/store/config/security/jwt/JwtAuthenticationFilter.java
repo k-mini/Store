@@ -1,13 +1,7 @@
 package com.kmini.store.config.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kmini.store.config.auth.AccountContext;
-import com.kmini.store.domain.User;
 import com.kmini.store.dto.request.UserDto.UserAPILoginDto;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import org.springframework.http.HttpHeaders;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

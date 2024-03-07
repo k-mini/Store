@@ -8,6 +8,7 @@ import com.kmini.store.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +19,7 @@ public class UserService {
 
     private final UserResourceManager userResourceManager;
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     // 회원가입
     @Transactional
@@ -93,4 +94,15 @@ public class UserService {
 
         return userRepository.findAll(pageable);
     }
+
+    @Transactional
+    public User selectUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(()->new UsernameNotFoundException("이메일이 존재하지 않습니다."));
+    }
+
+//    @Transactional
+//    public User saveOrUpdate(User user) {
+//        return
+//    }
 }

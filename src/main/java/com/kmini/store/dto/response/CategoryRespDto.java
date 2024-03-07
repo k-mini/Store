@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,7 +30,7 @@ public class CategoryRespDto {
                 .categoryKoName(category.getCategoryKoName())
                 .categoryName(category.getCategoryName())
                 .subCategories(
-                        category.getChildCategories().size() > 0 ? CategoryRespDto.toDtos(category.getChildCategories()) : null
+                        category.getChildCategories().size() > 0 ? CategoryRespDto.toDtos(category.getChildCategories()) : new ArrayList<>()
                 )
                 .build();
     }

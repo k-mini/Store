@@ -1,10 +1,11 @@
 package com.kmini.store.config.security.jwt;
 
-import com.kmini.store.config.security.ajax.AjaxAuthenticationFilter;
 import com.kmini.store.config.security.jwt.handler.JwtAccessDeniedHandler;
 import com.kmini.store.config.security.jwt.handler.JwtAuthenticationEntryPoint;
 import com.kmini.store.config.security.jwt.handler.JwtAuthenticationFailureHandler;
 import com.kmini.store.config.security.jwt.handler.JwtAuthenticationSuccessHandler;
+import com.kmini.store.config.security.oauth.OauthAuthenticationSuccessHandler;
+import com.kmini.store.config.security.oauth.OauthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -24,6 +25,7 @@ public class JwtSecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtTokenUtil jwtTokenUtil;
+    private final OauthService oauthService;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -36,6 +38,7 @@ public class JwtSecurityConfig {
         http.csrf().disable();
         // 인가 정책
         http.authorizeRequests()
+                .antMatchers("/api/user/authentication").authenticated()
                 .anyRequest().permitAll();
 
         // 로그인 방식
@@ -58,6 +61,13 @@ public class JwtSecurityConfig {
 
         // 세션 정책
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+        // oauth2
+        http.oauth2Login()
+//                .defaultSuccessUrl("http://localhost:9090", true)
+                .successHandler(oauthAuthenticationSuccessHandler())
+                .userInfoEndpoint()
+                .userService(oauthService);
         return http.build();
     }
 
@@ -89,5 +99,9 @@ public class JwtSecurityConfig {
     @Bean
     public JwtAuthenticationFailureHandler jwtAuthenticationFailureHandler() {
         return new JwtAuthenticationFailureHandler();
+    }
+    @Bean
+    public OauthAuthenticationSuccessHandler oauthAuthenticationSuccessHandler() {
+        return new OauthAuthenticationSuccessHandler(jwtTokenUtil);
     }
 }

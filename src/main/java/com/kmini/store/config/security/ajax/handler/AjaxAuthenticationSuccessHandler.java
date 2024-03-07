@@ -1,4 +1,4 @@
-package com.kmini.store.config.security.ajax;
+package com.kmini.store.config.security.ajax.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kmini.store.config.auth.AccountContext;

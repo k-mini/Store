@@ -28,6 +28,31 @@ spring:
       schema:
   messages:
     basename: errors
+  
+  # oauth2 설정
+  security:
+    oauth2:
+      client:
+        registration:
+          # registrationId
+          kakao:
+            client-id: 5dbb71fb43b106cae5d359edb655cb4a
+            client-secret: ${CLIENT_SECRET}
+#            redirect-uri: http://localhost:9090/oauth2/callback # 해당 경로로 하려면 oauth2 authentication filter의 match 경로를 수정해 줘야함
+            redirect-uri: http://localhost:9090/login/oauth2/code/kakao # 해당 경로로 타야 authenticationFilter 가 적용
+            client-authentication-method: POST
+            authorization-grant-type: authorization_code
+            client-name: Kakao
+#            scope:
+#              - account_email
+
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id  # 고유 식별자 kakao는 json 루트경로에 id가 있다 (id:회원번호)
+
 
 logging:
   level:
@@ -41,3 +66,11 @@ logging:
 file:
   dir:
     C:/Users/kmin/images/
+
+# jwt 비밀키
+token:
+  secret: kmini
+
+# 서버 주소
+server:
+  front: localhost:9090

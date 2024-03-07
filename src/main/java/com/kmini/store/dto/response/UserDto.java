@@ -7,6 +7,7 @@ import com.kmini.store.domain.type.Gender;
 import com.kmini.store.domain.type.UserStatus;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Email;
@@ -14,6 +15,7 @@ import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 
 public class UserDto {
 

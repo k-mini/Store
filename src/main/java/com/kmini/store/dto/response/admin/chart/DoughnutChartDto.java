@@ -29,7 +29,7 @@ public class DoughnutChartDto {
         public static class DoughnutChartDataSet {
             // 데이터셋 제목
             private String label;
-            private List<Long> data = new ArrayList<>();
+            private List<Integer> data = new ArrayList<>();
         }
     }
 
@@ -39,7 +39,7 @@ public class DoughnutChartDto {
     }
 
     public static DoughnutChartDto toDto(
-            List<String> labels, String titleLabel, List<Long> data, DoughnutChartOption options) {
+            List<String> labels, String titleLabel, List<Integer> data, DoughnutChartOption options) {
         DoughnutChartDataSet doughnutChartDataSet = new DoughnutChartDataSet();
         doughnutChartDataSet.setLabel(titleLabel);
         doughnutChartDataSet.setData(data);

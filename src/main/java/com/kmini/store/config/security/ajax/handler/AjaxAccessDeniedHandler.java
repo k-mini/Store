@@ -1,4 +1,4 @@
-package com.kmini.store.config.security.ajax;
+package com.kmini.store.config.security.ajax.handler;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
