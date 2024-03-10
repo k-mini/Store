@@ -11,6 +11,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Profile({"default","local","test"})
@@ -22,16 +24,14 @@ public class UserFileTestingManager implements UserResourceManager {
     @Value("${file.dir}")
     private String fileDir;
 
-    public String storeFileInUserDirectory(MultipartFile multipartFile) {
-        return storeFile(User.getSecurityContextUser().getEmail(), multipartFile);
-    }
-
     // 파일을 저장하고 파일명 반환
     @Override
     public String storeFile(String username, MultipartFile multipartFile) {
+
         if (multipartFile == null || multipartFile.isEmpty()) {
             return null;
         }
+
         String originalFilename = multipartFile.getOriginalFilename();
         String ext = extractExt(originalFilename);
         String randomName = createRandomFileName(ext);
@@ -54,7 +54,25 @@ public class UserFileTestingManager implements UserResourceManager {
     }
 
     @Override
+    public String storeFiles(String username, List<MultipartFile> multipartFiles) {
+        StringBuilder itemImageURLBuilder = new StringBuilder();
+
+        multipartFiles.stream()
+                .filter(Objects::nonNull)
+                .forEach((multipartFile) -> {
+                    String imageUri = storeFile(username, multipartFile);
+                    itemImageURLBuilder.append(imageUri).append(",");
+                });
+
+        return itemImageURLBuilder.toString();
+    }
+
+    @Override
     public String updateFile(String fileName, MultipartFile multipartFile) {
+
+        if (multipartFile == null || multipartFile.isEmpty()) {
+            return null;
+        }
 
         if (!StringUtils.hasText(fileName)) {
             return storeFile(User.getSecurityContextUser().getUsername(), multipartFile);
