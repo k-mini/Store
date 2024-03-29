@@ -7,8 +7,7 @@ import com.kmini.store.config.WithMockCustomUserSecurityContextFactory;
 import com.kmini.store.config.auth.AccountContext;
 import com.kmini.store.domain.ItemBoard;
 import com.kmini.store.domain.User;
-import com.kmini.store.dto.request.BoardDto.ItemBoardSaveReqDto;
-import com.kmini.store.dto.response.ItemBoardDto;
+import com.kmini.store.dto.request.ItemBoardDto.ItemBoardSaveReqDto;
 import com.kmini.store.dto.response.TradeDto.*;
 import com.kmini.store.service.ItemBoardService;
 import com.kmini.store.service.TradeService;
@@ -39,7 +38,7 @@ import static com.kmini.store.config.ApiDocumentUtils.getDocumentResponse;
 import static com.kmini.store.domain.type.CompleteFlag.COMPLETE_ABSTAIN;
 import static com.kmini.store.domain.type.CompleteFlag.COMPLETE_CONFIRM;
 import static com.kmini.store.domain.type.TradeStatus.*;
-import static com.kmini.store.dto.response.ItemBoardDto.*;
+import static com.kmini.store.dto.response.ItemBoardDto.ItemBoardSaveRespDto;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
@@ -47,7 +46,6 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.securityContext;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -96,7 +94,7 @@ class TradeApiControllerTest {
         String contentType = "png";
         FileInputStream inputStream = new FileInputStream(".\\docs\\test\\" + fileName + "." + contentType);
         MockMultipartFile existingFile = new MockMultipartFile("file", fileName + "." + contentType, contentType, inputStream);
-        ItemBoardSaveReqDto itemBoardSaveReqDto = new ItemBoardSaveReqDto("Life is Good", "what is your favorite food?", existingFile, null);
+        ItemBoardSaveReqDto itemBoardSaveReqDto = new ItemBoardSaveReqDto("Life is Good", "what is your favorite food?", existingFile, null, null, null);
         ItemBoard itemBoard = ItemBoard.builder()
                 .title(itemBoardSaveReqDto.getTitle())
                 .content(itemBoardSaveReqDto.getContent())

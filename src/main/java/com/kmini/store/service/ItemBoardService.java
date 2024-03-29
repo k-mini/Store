@@ -16,6 +16,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -63,12 +64,16 @@ public class ItemBoardService {
         savingItemBoard.setUser(User.getSecurityContextUser());
 
         // 파일 시스템에 저장하고 랜덤 파일명 반환
+        String username = User.getSecurityContextUser().getUsername();
         MultipartFile file = savingItemBoard.getFile();
-        String uri = null;
-        if (file != null) {
-            uri = userResourceManager.storeFile(User.getSecurityContextUser().getUsername(), file);
-        }
-        savingItemBoard.setThumbnail(uri);
+        String thumbnail = null;
+        thumbnail = userResourceManager.storeFile(username, file);
+        savingItemBoard.setThumbnail(thumbnail);
+
+        // 게시물 이미지들 저장
+        List<MultipartFile> itemImageFiles = savingItemBoard.getItemImageFiles();
+        String itemImageURLs = userResourceManager.storeFiles(username, itemImageFiles);
+        savingItemBoard.setItemImageURLs(itemImageURLs);
 
         // 카테고리 조회
         Category category = categoryService.selectCategory("TRADE");
@@ -96,14 +101,19 @@ public class ItemBoardService {
 
         MultipartFile submittedFile = editingItemBoard.getFile();
         String filePath = null;
-        if (submittedFile != null && !submittedFile.isEmpty()) {
-            filePath = userResourceManager.updateFile(itemBoard.getThumbnail(), submittedFile);
-        }
+        filePath = userResourceManager.updateFile(itemBoard.getThumbnail(), submittedFile);
+
+        String username = User.getSecurityContextUser().getUsername();
+        List<MultipartFile> itemImageFiles = editingItemBoard.getItemImageFiles();
+        String itemImageURLs = userResourceManager.storeFiles(username, itemImageFiles);
 
         itemBoard.setThumbnail(filePath);
+        itemBoard.setItemImageURLs(itemImageURLs);
         itemBoard.setTitle(editingItemBoard.getTitle());
         itemBoard.setContent(editingItemBoard.getContent());
         itemBoard.setItemName(editingItemBoard.getItemName());
+        itemBoard.setLatitude(editingItemBoard.getLatitude());
+        itemBoard.setLongitude(editingItemBoard.getLongitude());
 
         if (StringUtils.hasText(editingSubCategoryName)) {
             boardCategoryService.deleteSubCategoryInBoard(itemBoard);

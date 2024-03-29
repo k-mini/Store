@@ -37,7 +37,7 @@ spring:
           # registrationId
           kakao:
             client-id: 5dbb71fb43b106cae5d359edb655cb4a
-            client-secret: ${CLIENT_SECRET}
+            client-secret: ${KAKAO_CLIENT_SECRET}
 #            redirect-uri: http://localhost:9090/oauth2/callback # 해당 경로로 하려면 oauth2 authentication filter의 match 경로를 수정해 줘야함
             redirect-uri: http://localhost:9090/login/oauth2/code/kakao # 해당 경로로 타야 authenticationFilter 가 적용
             client-authentication-method: POST
@@ -45,6 +45,18 @@ spring:
             client-name: Kakao
 #            scope:
 #              - account_email
+          google:
+            client-id: 532070916614-5e3839beit4kgvj0mpf40ao7qsctanbc.apps.googleusercontent.com
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            client-name: Google
+            scope:
+              - email
+              - profile
+
+          github:
+            client-id: 54a2e6c20ea2a1198e8d
+            client-secret: ${GITHUB_CLIENT_SECRET}
+            client-name: Github
 
         provider:
           kakao:
@@ -74,3 +86,29 @@ token:
 # 서버 주소
 server:
   front: localhost:9090
+
+# reCAPTCHA
+google:
+  recaptcha:
+    site-key: ${GOOGLE_RECAPTCHA_SITE_KEY}
+    secret-key: ${GOOGLE_RECAPTCHA_SECRET_KEY}
+    project-id: ${GOOGLE_RECAPTCHA_PROJECT_ID}
+
+---
+spring:
+  config:
+    activate:
+      on-profile: aws
+
+cloud:
+  aws:
+    s3:
+      bucket: ${AWS_BUCKET}
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false

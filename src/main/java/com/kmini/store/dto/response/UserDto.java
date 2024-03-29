@@ -34,22 +34,33 @@ public class UserDto {
         private String userRole;
         private String gender;
         private String birthdate;
+        private Integer zonecode;
+        private String roadAddress;
+        private String jibunAddress;
+        private String detailAddress;
         private String createdDate;
         private String lastModifiedDate;
 
         public UserAPILoginSuccessDto(AccountContext accountContext) {
-            this.userId = accountContext.getUser().getId();
-            this.email = accountContext.getUser().getEmail();
+            User user = accountContext.getUser();
+            this.userId = user.getId();
+            this.email = user.getEmail();
             this.username = accountContext.getUsername();
             this.password = accountContext.getPassword();
             this.authorities = accountContext.getAuthorities();
-            this.userStatus = accountContext.getUser().getUserStatus().toString();
-            this.thumbnail = accountContext.getUser().getThumbnail();
-            this.userRole = accountContext.getUser().getRole().toString();
-            this.gender = accountContext.getUser().getGender().toString();
-            this.birthdate = CustomTimeUtils.convertTime(accountContext.getUser().getBirthdate());
-            this.createdDate = CustomTimeUtils.convertTime(accountContext.getUser().getCreatedDate());
-            this.lastModifiedDate = CustomTimeUtils.convertTime(accountContext.getUser().getLastModifiedDate());
+            this.userStatus = user.getUserStatus().toString();
+            this.thumbnail = user.getThumbnail();
+            this.userRole = user.getRole().toString();
+            this.gender = user.getGender() != null ? user.getGender().toString() : null;
+            this.birthdate = user.getBirthdate() != null ? CustomTimeUtils.convertTime(user.getBirthdate()) : null;
+            this.zonecode = user.getZonecode();
+            this.roadAddress = user.getRoadAddress();
+            this.jibunAddress = user.getJibunAddress();
+            this.detailAddress = user.getDetailAddress();
+            this.createdDate = CustomTimeUtils.convertTime(user.getCreatedDate());
+            this.lastModifiedDate = CustomTimeUtils.convertTime(user.getLastModifiedDate());
+            this.roadAddress = user.getRoadAddress();
+            this.jibunAddress = user.getJibunAddress();
         }
     }
 
@@ -105,6 +116,10 @@ public class UserDto {
         private String userRole;
         private String gender;
         private String birthdate;
+        private Integer zonecode;
+        private String roadAddress;
+        private String jibunAddress;
+        private String detailAddress;
         private String createdDate;
         private String lastModifiedDate;
 
@@ -118,6 +133,10 @@ public class UserDto {
                     .userRole(user.getRole().toString())
                     .gender(user.getGender().toString())
                     .birthdate(CustomTimeUtils.convertTime(user.getBirthdate()))
+                    .zonecode(user.getZonecode())
+                    .roadAddress(user.getRoadAddress())
+                    .jibunAddress(user.getJibunAddress())
+                    .detailAddress(user.getDetailAddress())
                     .createdDate(CustomTimeUtils.convertTime(user.getCreatedDate()))
                     .lastModifiedDate(CustomTimeUtils.convertTime(user.getLastModifiedDate()))
                     .build();

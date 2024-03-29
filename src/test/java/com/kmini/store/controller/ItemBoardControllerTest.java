@@ -2,8 +2,7 @@ package com.kmini.store.controller;
 
 import com.kmini.store.config.WithMockCustomUser;
 import com.kmini.store.domain.ItemBoard;
-import com.kmini.store.dto.request.BoardDto.ItemBoardSaveReqDto;
-import com.kmini.store.dto.response.ItemBoardDto;
+import com.kmini.store.dto.request.ItemBoardDto.ItemBoardSaveReqDto;
 import com.kmini.store.dto.response.ItemBoardDto.ItemBoardSaveRespDto;
 import com.kmini.store.service.ItemBoardService;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +21,6 @@ import javax.persistence.EntityManager;
 import javax.servlet.ServletException;
 import java.io.FileInputStream;
 
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -61,7 +59,7 @@ class ItemBoardControllerTest {
         // given
         String category = "trade";
         String subCategory = "electronics";
-        ItemBoardSaveReqDto itemBoardSaveReqDto = new ItemBoardSaveReqDto("Life is Good", "what is your favorite food?", null, null);
+        ItemBoardSaveReqDto itemBoardSaveReqDto = new ItemBoardSaveReqDto("Life is Good", "what is your favorite food?", null, null, null, null);
         ItemBoard itemBoard = ItemBoard.builder()
                 .title(itemBoardSaveReqDto.getTitle())
                 .content(itemBoardSaveReqDto.getContent())
@@ -93,7 +91,7 @@ class ItemBoardControllerTest {
         // given
         String category = "trade";
         String subCategory = "electronics";
-        ItemBoardSaveReqDto itemBoardSaveReqDto = new ItemBoardSaveReqDto("Life is Good", "what is your favorite food?", null, null);
+        ItemBoardSaveReqDto itemBoardSaveReqDto = new ItemBoardSaveReqDto("Life is Good", "what is your favorite food?", null, null, null, null);
         ItemBoard itemBoard = ItemBoard.builder()
                                         .title(itemBoardSaveReqDto.getTitle())
                                         .content(itemBoardSaveReqDto.getContent())

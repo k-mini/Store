@@ -1,7 +1,7 @@
 package com.kmini.store.controller;
 
 import com.kmini.store.domain.ItemBoard;
-import com.kmini.store.dto.request.BoardDto.ItemBoardSaveReqDto;
+import com.kmini.store.dto.request.ItemBoardDto.ItemBoardSaveReqDto;
 import com.kmini.store.dto.request.ItemBoardDto.ItemBoardUpdateReqDto;
 import com.kmini.store.dto.response.ItemBoardDto.ItemBoardViewRespDto;
 import com.kmini.store.service.ItemBoardService;

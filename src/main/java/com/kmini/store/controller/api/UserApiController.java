@@ -11,6 +11,7 @@ import com.kmini.store.dto.request.UserDto.UserSaveReqApiDto;
 import com.kmini.store.dto.request.UserDto.UserUpdateReqApiDto;
 import com.kmini.store.dto.response.UserDto.*;
 import com.kmini.store.service.UserService;
+import com.kmini.store.service.recaptcha.ReCaptChaService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserApiController {
 
     private final UserService userService;
+    private final ReCaptChaService reCaptChaService;
     private final ObjectMapper om;
 
     // 회원가입
@@ -38,14 +40,8 @@ public class UserApiController {
         log.debug("userSav  eReqApiDto = {}", userSaveReqApiDto);
         log.debug("file = {}", file);
 
-        User newUser = User.builder()
-                .email(userSaveReqApiDto.getEmail())
-                .username(userSaveReqApiDto.getUsername())
-                .password(userSaveReqApiDto.getPassword())
-                .gender(userSaveReqApiDto.getGender())
-                .birthdate(userSaveReqApiDto.getBirthdate())
-                .file(file)
-                .build();
+        reCaptChaService.resolveReCaptCahToken(userSaveReqApiDto.getReCaptChaToken());
+        User newUser = UserSaveReqApiDto.toUser(userSaveReqApiDto, file);
 
         User user = userService.saveUser(newUser);
 
@@ -82,18 +78,7 @@ public class UserApiController {
             throw new IllegalStateException("수정 권한이 없습니다.");
         }
 
-        User updatedUser = userService.updateUser(User.builder()
-                .id(user.getId())
-                .username(userUpdateReqApiDto.getUsername())
-                .password(userUpdateReqApiDto.getPassword())
-                .email(user.getEmail())
-                .role(user.getRole())
-                .userStatus(user.getUserStatus())
-                .file(file)
-                .createdDate(user.getCreatedDate())
-                .gender(userUpdateReqApiDto.getGender())
-                .birthdate(userUpdateReqApiDto.getBirthdate())
-                .build());
+        User updatedUser = userService.updateUser(UserUpdateReqApiDto.toUser(userUpdateReqApiDto, user, file));
 
         UserUpdateRespDto result = UserUpdateRespDto.toDto(updatedUser);
 

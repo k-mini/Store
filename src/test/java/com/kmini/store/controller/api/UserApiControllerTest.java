@@ -89,8 +89,13 @@ class UserApiControllerTest {
         String email = "kmini@gmail.com";
         String password = "1234";
         String passwordCheck = "1234";
+        String roadAddress = "서울 강남구 가로수길 5";
+        String jibunAddress = "서울 강남구 신사동 537-5";
+        String detailAddress = "3층";
         UserSaveReqApiDto userSaveReqApiDto =
-                new UserSaveReqApiDto(username, email, password, passwordCheck, MAN, LocalDate.of(1987,7,19));
+                new UserSaveReqApiDto(username, email, password, passwordCheck,
+                        MAN, LocalDate.of(1987,7,19),
+                        20333,roadAddress, jibunAddress, detailAddress, null);
         String requestBody = objectMapper.writeValueAsString(userSaveReqApiDto);
         log.info("requestBody = {}", requestBody);
 

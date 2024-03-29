@@ -6,10 +6,9 @@ import com.kmini.store.config.TestDataProvider;
 import com.kmini.store.config.WithMockCustomUser;
 import com.kmini.store.domain.ItemBoard;
 import com.kmini.store.domain.User;
-import com.kmini.store.dto.request.BoardDto.ItemBoardSaveReqDto;
 import com.kmini.store.dto.request.CommentDto.BoardCommentSaveReqDto;
 import com.kmini.store.dto.request.CommentDto.BoardCommentUpdateReqDto;
-import com.kmini.store.dto.response.CommentDto;
+import com.kmini.store.dto.request.ItemBoardDto.ItemBoardSaveReqDto;
 import com.kmini.store.dto.response.CommentDto.BoardCommentSaveRespDto;
 import com.kmini.store.dto.response.CommentDto.BoardCommentSelectRespDto;
 import com.kmini.store.dto.response.CommentDto.BoardCommentUpdateRespDto;
@@ -29,7 +28,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.RestDocumentationExtension;
-import org.springframework.restdocs.headers.HeaderDocumentation;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
@@ -88,7 +86,7 @@ class CommentApiControllerTest {
         String contentType = "png";
         FileInputStream inputStream = new FileInputStream(".\\docs\\test\\" + fileName + "." + contentType);
         MockMultipartFile existingFile = new MockMultipartFile("file", fileName + "." + contentType, contentType, inputStream);
-        ItemBoardSaveReqDto itemBoardSaveReqDto = new ItemBoardSaveReqDto("Life is Good", "what is your favorite food?", existingFile, null);
+        ItemBoardSaveReqDto itemBoardSaveReqDto = new ItemBoardSaveReqDto("Life is Good", "what is your favorite food?", existingFile, null, null, null);
         ItemBoard itemBoard = ItemBoard.builder()
                 .title(itemBoardSaveReqDto.getTitle())
                 .content(itemBoardSaveReqDto.getContent())

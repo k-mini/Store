@@ -2,6 +2,7 @@ package com.kmini.store.service;
 
 import com.kmini.store.config.auth.AccountContext;
 import com.kmini.store.config.file.UserFileTestingManager;
+import com.kmini.store.config.file.UserResourceManager;
 import com.kmini.store.domain.*;
 import com.kmini.store.dto.response.CommunityBoardDto.CommunityBoardViewRespDto;
 import com.kmini.store.repository.BoardCategoryRepository;
@@ -27,20 +28,18 @@ public class CommunityBoardService {
     private final BoardCategoryRepository boardCategoryRepository;
     private final CommentRepository commentRepository;
     private final CategoryRepository categoryRepository;
-    private final UserFileTestingManager userFileManager;
+    private final UserResourceManager userFileManager;
 
     @Transactional
     public void save(CommunityBoard newCommunityBoard) throws IOException {
         Assert.notNull(newCommunityBoard.getSubCategoryName(),"하위 카테고리가 존재하지 않습니다.");
 
         AccountContext accountContext = (AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
+        String username = accountContext.getUsername();
         // 파일 시스템에 저장하고 랜덤 파일명 반환
         MultipartFile file = newCommunityBoard.getFile();
         String uri = null;
-        if (file != null) {
-            uri = userFileManager.storeFileInUserDirectory(file);
-        }
+        uri = userFileManager.storeFile(username, file);
 
         // 카테고리 조회
         Category category = categoryRepository.findByCategoryName("COMMUNITY")

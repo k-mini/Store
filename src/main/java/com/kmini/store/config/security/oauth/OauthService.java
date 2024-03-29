@@ -1,6 +1,7 @@
 package com.kmini.store.config.security.oauth;
 
 import com.kmini.store.config.security.jwt.JwtTokenUtil;
+import com.kmini.store.config.security.oauth.OAuthAttributes.OAuth2UserProfile;
 import com.kmini.store.domain.User;
 import com.kmini.store.domain.type.Gender;
 import com.kmini.store.domain.type.UserRole;
@@ -54,9 +55,9 @@ public class OauthService implements OAuth2UserService {
                                                 .getUserInfoEndpoint()
                                                 .getUserNameAttributeName();
         // 사용자 이메일 추출
-        User tmpUser = OAuthAttributes.extractUser(registrationId, oAuth2User.getAttributes());
-        String email = tmpUser.getEmail();
-        String nickname = tmpUser.getUsername();
+        OAuth2UserProfile oAuth2UserProfile = OAuthAttributes.extractUser(registrationId, oAuth2User.getAttributes());
+        String email = oAuth2UserProfile.getEmail();
+        String nickname = oAuth2UserProfile.getUsername();
 
         User user;
         try {

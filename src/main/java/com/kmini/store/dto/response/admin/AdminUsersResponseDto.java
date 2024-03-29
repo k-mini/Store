@@ -28,6 +28,8 @@ public class AdminUsersResponseDto<T> {
         private String username;
         private String gender;
         private String birthdate;
+        private String roadAddress;
+        private String jibunAddress;
         private String createdDate;
         private String lastModifiedDate;
 
@@ -40,6 +42,8 @@ public class AdminUsersResponseDto<T> {
                     .username(user.getUsername())
                     .gender(user.getGender().toString())
                     .birthdate(CustomTimeUtils.convertTime(user.getBirthdate()))
+                    .roadAddress(user.getRoadAddress())
+                    .jibunAddress(user.getJibunAddress())
                     .createdDate(CustomTimeUtils.convertTime(user.getCreatedDate()))
                     .lastModifiedDate(CustomTimeUtils.convertTime(user.getLastModifiedDate()))
                     .build();

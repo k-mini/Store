@@ -2,7 +2,7 @@ package com.kmini.store.controller;
 
 import com.kmini.store.domain.CommunityBoard;
 import com.kmini.store.dto.request.BoardDto.CommunityBoardSaveReqDto;
-import com.kmini.store.dto.request.BoardDto.ItemBoardSaveReqDto;
+import com.kmini.store.dto.request.ItemBoardDto.ItemBoardSaveReqDto;
 import com.kmini.store.dto.response.CommunityBoardDto.CommunityBoardViewRespDto;
 import com.kmini.store.service.CommunityBoardService;
 import lombok.RequiredArgsConstructor;
