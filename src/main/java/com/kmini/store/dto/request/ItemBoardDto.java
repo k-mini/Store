@@ -5,9 +5,45 @@ import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 public class ItemBoardDto {
+
+    /**
+     *  거래 게시판 업로드
+     */
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ItemBoardSaveReqDto {
+
+        @NotEmpty
+        private String title;
+        @NotEmpty
+        private String content;
+        private MultipartFile file;
+        private String itemName;
+        private Double latitude;
+        private Double longitude;
+    }
+
+    /**
+     *  거래 게시판 업로드
+     */
+    @Getter
+    @AllArgsConstructor @NoArgsConstructor
+    public static class ItemBoardSaveReqApiDto {
+
+        @NotEmpty
+        private String title;
+        @NotEmpty
+        private String content;
+        @NotEmpty
+        private String itemName;
+        private Double latitude;
+        private Double longitude;
+    }
 
     @Data
     @AllArgsConstructor
@@ -24,14 +60,18 @@ public class ItemBoardDto {
         private MultipartFile file;
         // 서브 카테고리
         private String subCategory;
+        private Double latitude;
+        private Double longitude;
 
 
-        public static ItemBoardUpdateReqDto toDto(ItemBoard board) {
+        public static ItemBoardUpdateReqDto toDto(ItemBoard itemBoard) {
             return ItemBoardUpdateReqDto.builder()
 //                    .boardId(board.getId())
-                    .title(board.getTitle())
-                    .content(board.getContent())
-                    .file(board.getFile())
+                    .title(itemBoard.getTitle())
+                    .content(itemBoard.getContent())
+                    .file(itemBoard.getFile())
+                    .latitude(itemBoard.getLatitude())
+                    .longitude(itemBoard.getLongitude())
                     .build();
         }
     }
@@ -50,14 +90,17 @@ public class ItemBoardDto {
         // 내용
         @NotBlank
         private String content;
-
         private String subCategory;
+        private Double latitude;
+        private Double longitude;
 
-        public static ItemBoardUpdateReqApiDto toDto(ItemBoard board) {
+        public static ItemBoardUpdateReqApiDto toDto(ItemBoard itemBoard) {
             return ItemBoardUpdateReqApiDto.builder()
-                    .itemName(board.getItemName())
-                    .title(board.getTitle())
-                    .content(board.getContent())
+                    .itemName(itemBoard.getItemName())
+                    .title(itemBoard.getTitle())
+                    .content(itemBoard.getContent())
+                    .latitude(itemBoard.getLatitude())
+                    .longitude(itemBoard.getLongitude())
                     .build();
         }
     }

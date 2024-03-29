@@ -51,6 +51,11 @@ public class User extends BaseTime {
 
     private LocalDate birthdate;
 
+    private Integer zonecode;
+    private String roadAddress;
+    private String jibunAddress;
+    private String detailAddress;
+
     @Transient
     private MultipartFile file;
 

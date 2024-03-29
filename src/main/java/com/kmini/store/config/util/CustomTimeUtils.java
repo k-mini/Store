@@ -10,10 +10,10 @@ public class CustomTimeUtils {
     static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
 
     public static String convertTime(LocalDateTime localDateTime) {
-        return dateTimeFormatter.format(localDateTime);
+        return localDateTime != null ? dateTimeFormatter.format(localDateTime) : null;
     }
 
     public static String convertTime(LocalDate localDate) {
-        return dateFormatter.format(localDate);
+        return localDate != null ? dateFormatter.format(localDate) : null;
     }
 }

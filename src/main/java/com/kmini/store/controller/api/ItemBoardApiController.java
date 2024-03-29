@@ -4,8 +4,7 @@ package com.kmini.store.controller.api;
 import com.kmini.store.domain.Board;
 import com.kmini.store.domain.ItemBoard;
 import com.kmini.store.dto.CommonRespDto;
-import com.kmini.store.dto.request.BoardDto;
-import com.kmini.store.dto.request.BoardDto.ItemBoardSaveReqApiDto;
+import com.kmini.store.dto.request.ItemBoardDto.ItemBoardSaveReqApiDto;
 import com.kmini.store.dto.request.ItemBoardDto.ItemBoardUpdateReqApiDto;
 import com.kmini.store.dto.response.ItemBoardDto.ItemBoardDeleteRespDto;
 import com.kmini.store.dto.response.ItemBoardDto.ItemBoardSaveRespDto;
@@ -22,9 +21,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/board/trade/{subCategory}")
@@ -53,9 +52,10 @@ public class ItemBoardApiController {
     public ResponseEntity<?> saveBoard(
             @PathVariable("subCategory") String subCategory,
             @RequestPart ItemBoardSaveReqApiDto itemBoardSaveReqApiDto,
-            @RequestPart(required = false) MultipartFile file) {
+            @RequestPart(required = false) MultipartFile file,
+            @RequestPart(required = false) List<MultipartFile> itemImages) {
         log.debug("itemBoardSaveReqApiDto = {}", itemBoardSaveReqApiDto);
-        log.debug("file = {}", file);
+        log.debug("itemImages = {}", itemImages);
 
         ItemBoard savingBoard = ItemBoard.builder()
                 .title(itemBoardSaveReqApiDto.getTitle())
@@ -63,6 +63,9 @@ public class ItemBoardApiController {
                 .itemName(itemBoardSaveReqApiDto.getItemName())
                 .subCategoryName(subCategory)
                 .file(file)
+                .itemImageFiles(itemImages !=  null ? itemImages : new ArrayList<>())
+                .latitude(itemBoardSaveReqApiDto.getLatitude())
+                .longitude(itemBoardSaveReqApiDto.getLongitude())
                 .build();
 
         ItemBoardSaveRespDto result = itemBoardService.saveBoard(savingBoard);
@@ -94,6 +97,7 @@ public class ItemBoardApiController {
     public ResponseEntity<?> updateBoard(@PathVariable String subCategory, @PathVariable Long boardId,
                                          @RequestPart @Validated ItemBoardUpdateReqApiDto itemBoardUpdateReqApiDto, BindingResult bindingResult,
                                          @RequestPart(required = false) MultipartFile file,
+                                         @RequestPart(required = false) List<MultipartFile> itemImages,
                                          Model model) {
         log.debug("itemBoardUpdateReqApiDto = {}", itemBoardUpdateReqApiDto);
 
@@ -103,6 +107,9 @@ public class ItemBoardApiController {
                 .title(itemBoardUpdateReqApiDto.getTitle())
                 .content(itemBoardUpdateReqApiDto.getContent())
                 .file(file)
+                .itemImageFiles(itemImages)
+                .latitude(itemBoardUpdateReqApiDto.getLatitude())
+                .longitude(itemBoardUpdateReqApiDto.getLongitude())
                 .build();
 
         ItemBoard itemBoard = itemBoardService.patchBoard(editingItemBoard, itemBoardUpdateReqApiDto.getSubCategory());

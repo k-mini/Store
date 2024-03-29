@@ -6,9 +6,11 @@ import com.kmini.store.domain.Comment;
 import com.kmini.store.domain.ItemBoard;
 import com.kmini.store.dto.response.CommentDto.BoardCommentUpdateRespDto;
 import lombok.*;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 public class ItemBoardDto {
 
@@ -103,6 +105,8 @@ public class ItemBoardDto {
         private String title;
         // 게시물 썸네일
         private String boardThumbnail;
+        // 게시물 이미지
+        private List<String> itemImageURLs;
         // 내용
         private String content;
         // 작성 시간
@@ -115,6 +119,10 @@ public class ItemBoardDto {
         private List<BoardCommentUpdateRespDto> comments = new ArrayList<>();
         // 거래 상태
         private boolean tradePossible;
+        // 위도
+        private Double latitude;
+        // 경도
+        private Double longitude;
 
         public static ItemBoardViewRespDto toDto(ItemBoard itemBoard, List<Comment> comments, boolean tradePossible) {
             return ItemBoardViewRespDto.builder()
@@ -125,12 +133,15 @@ public class ItemBoardDto {
                     .userThumbnail(itemBoard.getUser().getThumbnail())
                     .title(itemBoard.getTitle())
                     .boardThumbnail(itemBoard.getThumbnail())
+                    .itemImageURLs(ItemBoardDto.convertStrURLsToListURLs(itemBoard.getItemImageURLs()))
                     .content(itemBoard.getContent())
                     .createdDate(CustomTimeUtils.convertTime(itemBoard.getCreatedDate()))
                     .views(itemBoard.getViews())
                     .commentTotalCount(itemBoard.getComments().size())
                     .comments(BoardCommentUpdateRespDto.toDtos(comments))
                     .tradePossible(tradePossible)
+                    .latitude(itemBoard.getLatitude())
+                    .longitude(itemBoard.getLongitude())
                     .build();
         }
     }
@@ -212,5 +223,18 @@ public class ItemBoardDto {
                     .createdDate(CustomTimeUtils.convertTime(board.getCreatedDate()))
                     .build();
         }
+    }
+
+    public static List<String> convertStrURLsToListURLs(String urls) {
+        if (!StringUtils.hasText(urls)) {
+            return new ArrayList<>();
+        }
+
+        StringTokenizer st = new StringTokenizer(urls, ",");
+        List<String> itemImageURLs = new ArrayList<>();
+        while (st.hasMoreTokens()) {
+            itemImageURLs.add(st.nextToken());
+        }
+        return itemImageURLs;
     }
 }

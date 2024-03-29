@@ -5,6 +5,8 @@ import com.kmini.store.domain.ItemBoard;
 import com.kmini.store.domain.User;
 import com.kmini.store.dto.request.BoardDto;
 import com.kmini.store.dto.request.CommentDto.BoardCommentSaveReqDto;
+import com.kmini.store.dto.request.ItemBoardDto;
+import com.kmini.store.dto.request.ItemBoardDto.ItemBoardSaveReqDto;
 import com.kmini.store.dto.response.CommentDto.BoardCommentSaveRespDto;
 import com.kmini.store.dto.response.ItemBoardDto.ItemBoardSaveRespDto;
 import com.kmini.store.service.CommentService;
@@ -32,7 +34,7 @@ public class TestDataProvider {
         String contentType = "png";
         FileInputStream inputStream = new FileInputStream(".\\docs\\test\\" + fileName + "." + contentType);
         MockMultipartFile existingFile = new MockMultipartFile("file", fileName + "." + contentType, contentType, inputStream);
-        BoardDto.ItemBoardSaveReqDto itemBoardSaveReqDto = new BoardDto.ItemBoardSaveReqDto(title, content, existingFile, itemName);
+        ItemBoardSaveReqDto itemBoardSaveReqDto = new ItemBoardSaveReqDto(title, content, existingFile, itemName, null, null);
         ItemBoard itemBoard = ItemBoard.builder()
                 .title(itemBoardSaveReqDto.getTitle())
                 .content(itemBoardSaveReqDto.getContent())
