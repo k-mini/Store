@@ -46,6 +46,9 @@ dependencies {
 	implementation 'com.querydsl:querydsl-jpa'
 //	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.1'
 
+	// AWS S3 파일 업로드
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
 	// jwt
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
 

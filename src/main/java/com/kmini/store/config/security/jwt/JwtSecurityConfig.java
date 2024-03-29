@@ -39,6 +39,7 @@ public class JwtSecurityConfig {
         // 인가 정책
         http.authorizeRequests()
                 .antMatchers("/api/user/authentication").authenticated()
+//                .antMatchers("/api/user/**").authenticated()
                 .anyRequest().permitAll();
 
         // 로그인 방식
