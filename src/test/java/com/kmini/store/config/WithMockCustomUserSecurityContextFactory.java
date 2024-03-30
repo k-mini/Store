@@ -1,11 +1,10 @@
 package com.kmini.store.config;
 
-import com.kmini.store.config.auth.AccountContext;
-import com.kmini.store.domain.User;
-import com.kmini.store.domain.type.Gender;
-import com.kmini.store.domain.type.UserRole;
-import com.kmini.store.domain.type.UserStatus;
-import com.kmini.store.repository.UserRepository;
+import com.kmini.store.global.config.security.auth.AccountContext;
+import com.kmini.store.domain.entity.User;
+import com.kmini.store.global.constants.UserRole;
+import com.kmini.store.global.constants.UserStatus;
+import com.kmini.store.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
@@ -15,8 +14,8 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 
-import static com.kmini.store.domain.type.Gender.MAN;
-import static com.kmini.store.domain.type.Gender.WOMAN;
+import static com.kmini.store.global.constants.Gender.MAN;
+import static com.kmini.store.global.constants.Gender.WOMAN;
 
 @Component
 @RequiredArgsConstructor

@@ -1,12 +1,11 @@
 package com.kmini.store.config;
 
-import com.kmini.store.aop.CategoryInterceptor;
-import com.kmini.store.domain.User;
-import com.kmini.store.domain.type.Gender;
-import com.kmini.store.domain.type.UserRole;
-import com.kmini.store.domain.type.UserStatus;
-import com.kmini.store.repository.UserRepository;
-import com.kmini.store.service.CategoryService;
+import com.kmini.store.global.interceptor.CategoryInterceptor;
+import com.kmini.store.domain.entity.User;
+import com.kmini.store.global.constants.UserRole;
+import com.kmini.store.global.constants.UserStatus;
+import com.kmini.store.domain.user.repository.UserRepository;
+import com.kmini.store.domain.board.category.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
@@ -17,8 +16,8 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 
-import static com.kmini.store.domain.type.Gender.MAN;
-import static com.kmini.store.domain.type.Gender.WOMAN;
+import static com.kmini.store.global.constants.Gender.MAN;
+import static com.kmini.store.global.constants.Gender.WOMAN;
 
 @Component
 @Profile({"test"})

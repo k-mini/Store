@@ -1,10 +1,10 @@
 package com.kmini.store.controller;
 
 import com.kmini.store.config.WithMockCustomUser;
-import com.kmini.store.domain.ItemBoard;
-import com.kmini.store.dto.request.ItemBoardDto.ItemBoardSaveReqDto;
-import com.kmini.store.dto.response.ItemBoardDto.ItemBoardSaveRespDto;
-import com.kmini.store.service.ItemBoardService;
+import com.kmini.store.domain.entity.ItemBoard;
+import com.kmini.store.domain.board.item.dto.ItemBoardRequestDto.ItemBoardSaveReqDto;
+import com.kmini.store.domain.board.item.dto.ItemBoardReponseDto.ItemBoardSaveRespDto;
+import com.kmini.store.domain.board.item.service.ItemBoardService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
