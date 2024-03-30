@@ -1,6 +1,6 @@
 package com.kmini.store.config;
 
-import com.kmini.store.domain.type.UserRole;
+import com.kmini.store.global.constants.UserRole;
 import org.springframework.security.test.context.support.WithSecurityContext;
 
 import java.lang.annotation.Retention;

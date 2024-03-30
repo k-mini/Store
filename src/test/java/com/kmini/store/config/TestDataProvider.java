@@ -1,16 +1,13 @@
 package com.kmini.store.config;
 
-import com.kmini.store.domain.Comment;
-import com.kmini.store.domain.ItemBoard;
-import com.kmini.store.domain.User;
-import com.kmini.store.dto.request.BoardDto;
-import com.kmini.store.dto.request.CommentDto.BoardCommentSaveReqDto;
-import com.kmini.store.dto.request.ItemBoardDto;
-import com.kmini.store.dto.request.ItemBoardDto.ItemBoardSaveReqDto;
-import com.kmini.store.dto.response.CommentDto.BoardCommentSaveRespDto;
-import com.kmini.store.dto.response.ItemBoardDto.ItemBoardSaveRespDto;
-import com.kmini.store.service.CommentService;
-import com.kmini.store.service.ItemBoardService;
+import com.kmini.store.domain.entity.Comment;
+import com.kmini.store.domain.entity.ItemBoard;
+import com.kmini.store.domain.entity.User;
+import com.kmini.store.domain.board.item.dto.ItemBoardRequestDto.ItemBoardSaveReqDto;
+import com.kmini.store.domain.comment.dto.CommentResponseDto.BoardCommentSaveRespDto;
+import com.kmini.store.domain.board.item.dto.ItemBoardReponseDto.ItemBoardSaveRespDto;
+import com.kmini.store.domain.comment.service.CommentService;
+import com.kmini.store.domain.board.item.service.ItemBoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Component;

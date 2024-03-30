@@ -1,6 +1,7 @@
 package com.kmini.store.repository;
 
-import com.kmini.store.domain.Category;
+import com.kmini.store.domain.entity.Category;
+import com.kmini.store.domain.board.category.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
