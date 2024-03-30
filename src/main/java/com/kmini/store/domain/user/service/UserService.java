@@ -1,7 +1,7 @@
 package com.kmini.store.domain.user.service;
 
+import com.kmini.store.domain.file.service.FileUploadService;
 import com.kmini.store.domain.user.repository.UserRepository;
-import com.kmini.store.global.config.file.UserResourceManager;
 import com.kmini.store.domain.entity.User;
 import com.kmini.store.global.constants.UserRole;
 import com.kmini.store.global.constants.UserStatus;
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final UserResourceManager userResourceManager;
+    private final FileUploadService fileUploadService;
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
@@ -35,7 +35,7 @@ public class UserService {
                 });
 
         // 유저 프로필 설정
-        String userProfilePath = userResourceManager.storeFile(user.getUsername(), user.getFile());
+        String userProfilePath = fileUploadService.storeUserFile(user.getUsername(), user.getFile());
         user.setThumbnail(userProfilePath);
         
         if (user.getRole() == null) {
@@ -67,7 +67,7 @@ public class UserService {
     @Transactional
     public User updateUser(User mergingUser) {
 
-        String thumbnailUri = userResourceManager.updateFile(mergingUser.getThumbnail(), mergingUser.getFile());
+        String thumbnailUri = fileUploadService.updateUserFile(mergingUser.getThumbnail(), mergingUser.getFile());
         mergingUser.setThumbnail(thumbnailUri);
         mergingUser.setPassword(bCryptPasswordEncoder.encode(mergingUser.getPassword()));
 

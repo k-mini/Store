@@ -1,13 +1,12 @@
 package com.kmini.store.domain.board.community.service;
 
-import com.kmini.store.domain.board.common.BoardCategoryRepository;
 import com.kmini.store.domain.board.category.repository.CategoryRepository;
+import com.kmini.store.domain.board.common.BoardCategoryRepository;
+import com.kmini.store.domain.board.community.dto.CommunityBoardReponseDto.CommunityBoardViewRespDto;
 import com.kmini.store.domain.board.community.repository.CommunityBoardRepository;
 import com.kmini.store.domain.comment.repository.CommentRepository;
-import com.kmini.store.domain.board.community.dto.CommunityBoardReponseDto.CommunityBoardViewRespDto;
 import com.kmini.store.domain.entity.*;
-import com.kmini.store.global.config.file.UserResourceManager;
-import com.kmini.store.global.entity.*;
+import com.kmini.store.domain.file.dao.UserResourceManager;
 import com.kmini.store.global.config.security.auth.AccountContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
