@@ -7,7 +7,6 @@ import com.kmini.store.domain.board.trade.dto.TradeResponseDto.*;
 import com.kmini.store.domain.board.trade.repository.TradeRepository;
 import com.kmini.store.domain.entity.*;
 import com.kmini.store.global.constants.TradeStatus;
-import com.kmini.store.global.entity.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

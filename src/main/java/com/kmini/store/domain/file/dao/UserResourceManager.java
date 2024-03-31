@@ -1,4 +1,4 @@
-package com.kmini.store.global.config.file;
+package com.kmini.store.domain.file.dao;
 
 import org.springframework.web.multipart.MultipartFile;
 

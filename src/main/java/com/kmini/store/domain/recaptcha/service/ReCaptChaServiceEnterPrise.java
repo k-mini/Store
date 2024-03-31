@@ -1,4 +1,4 @@
-package com.kmini.store.domain.recaptcha;
+package com.kmini.store.domain.recaptcha.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -6,11 +6,11 @@ import com.kmini.store.domain.recaptcha.service.ReCaptChaService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.*;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,26 +46,27 @@ public class ReCaptChaServiceEnterPrise implements ReCaptChaService {
         event.put("siteKey", siteKey);
         params.put("event", event);
 
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-
         String requestBody = null;
         try {
             requestBody = objectMapper.writeValueAsString(params);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-        HttpEntity<String> httpEntity = new HttpEntity<>(requestBody, httpHeaders);
-        Map<String,Object> result =
-                restTemplate
-                        .postForObject(RECAPTCHA_VERIFY_URL_ENTERPRISE,
-                                httpEntity,
-                                Map.class,
-                                Map.of(
-                                        "key", secretKey,
-                                        "projectId", projectId));
 
-        System.out.println("responseObject = " + result);
+        String uri = UriComponentsBuilder
+                .fromHttpUrl(RECAPTCHA_VERIFY_URL_ENTERPRISE)
+                .buildAndExpand(Map.of("projectId",projectId ,"secretKey",secretKey))
+                .toUriString();
+
+        RequestEntity<Object> request = RequestEntity
+                .post(uri)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(requestBody);
+
+        ResponseEntity<Map<String, Object>> result =
+                restTemplate.exchange(request, new ParameterizedTypeReference<Map<String, Object>>() {});
+
+        System.out.println("responseBody = " + result.getBody());
         return true;
     }
 }

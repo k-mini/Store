@@ -1,13 +1,15 @@
-package com.kmini.store.global.config.file;
+package com.kmini.store.domain.file.dao;
 
 import com.kmini.store.domain.entity.User;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,10 +17,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-@Profile({"default","local","test"})
+@Profile({"default", "local", "test"})
 @Component
 @Slf4j
-public class UserFileTestingManager implements UserResourceManager {
+public class UserFileLocalManager implements UserResourceManager {
 
     // 최상위 루트
     @Value("${file.dir}")
@@ -35,36 +37,25 @@ public class UserFileTestingManager implements UserResourceManager {
         String originalFilename = multipartFile.getOriginalFilename();
         String ext = extractExt(originalFilename);
         String randomName = createRandomFileName(ext);
-        log.trace("dirPath = {}" , username);
         String realUserDirectoryPath = getRealPath(username);
+
+        log.trace("[{}] 저장 될 디렉토리 = {}", MDC.get("transactionId"), realUserDirectoryPath);
         File directory = new File(realUserDirectoryPath);
 
         if (!directory.exists()) {
             directory.mkdirs();
         }
 
-        File file= new File(plusPath(realUserDirectoryPath ,randomName));
+        File file = new File(plusPath(realUserDirectoryPath, randomName));
 
         try {
             multipartFile.transferTo(file);
+            log.info("[{}] 성공적으로 저장되었습니다. 파일 경로 : {}",MDC.get("transactionId"),
+                    file.getCanonicalPath());
         } catch (Exception e) {
             throw new IllegalStateException("파일을 저장하는데에 실패했습니다", e);
         }
         return plusPath(username, randomName);
-    }
-
-    @Override
-    public String storeFiles(String username, List<MultipartFile> multipartFiles) {
-        StringBuilder itemImageURLBuilder = new StringBuilder();
-
-        multipartFiles.stream()
-                .filter(Objects::nonNull)
-                .forEach((multipartFile) -> {
-                    String imageUri = storeFile(username, multipartFile);
-                    itemImageURLBuilder.append(imageUri).append(",");
-                });
-
-        return itemImageURLBuilder.toString();
     }
 
     @Override
@@ -108,22 +99,23 @@ public class UserFileTestingManager implements UserResourceManager {
 
     @Override
     public File getFile(String uri) {
-        log.trace("uri = {}",uri);
-        return new File(getRealPath(uri)) ;
+        log.trace("uri = {}", uri);
+        return new File(getRealPath(uri));
     }
 
     // ex1) abcd + eftg => abcd/eftg
     // ex) abcd/ + /zxcv/ => abcd/zxcv/
     private String plusPath(String path1, String path2) {
-        StringBuilder sb = new StringBuilder(path1);
-
-        if ( !path1.endsWith("/") && !path2.startsWith("/") ) {
-            sb.append("/");
+        if (path1.startsWith("/")) {
+            return UriComponentsBuilder
+                    .fromPath(path1)
+                    .path(path2)
+                    .toUriString();
         }
-        if ( path1.endsWith("/") && path2.startsWith("/") ) {
-            path2 = path2.substring(1);
-        }
-        return sb.append(path2).toString();
+        return UriComponentsBuilder
+                .fromPath(path1)
+                .pathSegment(path2)
+                .toUriString();
     }
 
     private String plusPaths(String... paths) {
@@ -133,17 +125,17 @@ public class UserFileTestingManager implements UserResourceManager {
         }
 
         String answer = paths[0];
-        for (int i=1;i<paths.length;i++) {
+        for (int i = 1; i < paths.length; i++) {
             answer = plusPath(answer, paths[i]);
         }
         return answer;
     }
 
     private String getRealPath(String path) {
-        if (path.startsWith("/")) {
-            path = path.substring(1);
-        }
-        return fileDir + path;
+        return UriComponentsBuilder
+                .fromPath(fileDir)
+                .path(path)
+                .toUriString();
     }
 
     private String getRealUserDirectoryPath() {

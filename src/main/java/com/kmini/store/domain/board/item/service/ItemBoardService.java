@@ -1,16 +1,16 @@
 package com.kmini.store.domain.board.item.service;
 
-import com.kmini.store.domain.board.common.service.BoardCategoryService;
 import com.kmini.store.domain.board.category.service.CategoryService;
+import com.kmini.store.domain.board.common.service.BoardCategoryService;
+import com.kmini.store.domain.board.item.dto.ItemBoardReponseDto.ItemBoardSaveRespDto;
+import com.kmini.store.domain.board.item.dto.ItemBoardReponseDto.ItemBoardViewRespDto;
+import com.kmini.store.domain.board.item.dto.ItemBoardRequestDto.ItemBoardUpdateReqDto;
 import com.kmini.store.domain.board.item.repository.ItemBoardRepository;
 import com.kmini.store.domain.board.trade.service.TradeService;
 import com.kmini.store.domain.comment.service.CommentService;
-import com.kmini.store.domain.board.item.dto.ItemBoardRequestDto.ItemBoardUpdateReqDto;
-import com.kmini.store.domain.board.item.dto.ItemBoardReponseDto.ItemBoardSaveRespDto;
-import com.kmini.store.domain.board.item.dto.ItemBoardReponseDto.ItemBoardViewRespDto;
 import com.kmini.store.domain.entity.*;
-import com.kmini.store.global.config.file.UserResourceManager;
-import com.kmini.store.global.entity.*;
+import com.kmini.store.domain.file.dao.UserResourceManager;
+import com.kmini.store.domain.file.service.FileUploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +29,7 @@ public class ItemBoardService {
     private final BoardCategoryService boardCategoryService;
     private final CategoryService categoryService;
     private final CommentService commentService;
-    private final UserResourceManager userResourceManager;
+    private final FileUploadService fileUploadService;
 
     // 게시물 상세 조회
     @Transactional
@@ -68,12 +68,12 @@ public class ItemBoardService {
         String username = User.getSecurityContextUser().getUsername();
         MultipartFile file = savingItemBoard.getFile();
         String thumbnail = null;
-        thumbnail = userResourceManager.storeFile(username, file);
+        thumbnail = fileUploadService.storeUserFile(username, file);
         savingItemBoard.setThumbnail(thumbnail);
 
         // 게시물 이미지들 저장
         List<MultipartFile> itemImageFiles = savingItemBoard.getItemImageFiles();
-        String itemImageURLs = userResourceManager.storeFiles(username, itemImageFiles);
+        String itemImageURLs = fileUploadService.storeUserFiles(username, itemImageFiles);
         savingItemBoard.setItemImageURLs(itemImageURLs);
 
         // 카테고리 조회
@@ -102,11 +102,11 @@ public class ItemBoardService {
 
         MultipartFile submittedFile = editingItemBoard.getFile();
         String filePath = null;
-        filePath = userResourceManager.updateFile(itemBoard.getThumbnail(), submittedFile);
+        filePath = fileUploadService.updateUserFile(itemBoard.getThumbnail(), submittedFile);
 
         String username = User.getSecurityContextUser().getUsername();
         List<MultipartFile> itemImageFiles = editingItemBoard.getItemImageFiles();
-        String itemImageURLs = userResourceManager.storeFiles(username, itemImageFiles);
+        String itemImageURLs = fileUploadService.storeUserFiles(username, itemImageFiles);
 
         itemBoard.setThumbnail(filePath);
         itemBoard.setItemImageURLs(itemImageURLs);
@@ -150,7 +150,7 @@ public class ItemBoardService {
         itemBoardRepository.delete(itemBoard);
 
         // 파일 삭제
-        userResourceManager.deleteFile(itemBoard.getThumbnail());
+        fileUploadService.deleteUserFile(itemBoard.getThumbnail());
 
         return itemBoard;
     }

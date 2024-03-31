@@ -1,4 +1,4 @@
-package com.kmini.store.global.config.file;
+package com.kmini.store.domain.file.dao;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
